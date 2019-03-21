@@ -1,0 +1,32 @@
+{
+    "dataset_reader": {
+        "type": "constituency_ancestor_prediction",
+        "ancestor": "parent"
+    },
+    "train_data_path": "tests/fixtures/data/syntactic_constituency/wsj.txt",
+    "validation_data_path": "tests/fixtures/data/syntactic_constituency/wsj.txt",
+    "model": {
+        "type": "tagger",
+        "contextualizer": {
+            "type": "scalar_mixed_precomputed_contextualizer",
+            "representations_path": "tests/fixtures/contextualizers/precomputed_elmo/elmo_layers_all.hdf5",
+            "num_layers": 3
+        },
+        "token_representation_dim": 1024
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 1,
+        "grad_norm": 1.0,
+        "patience": 500,
+        "cuda_device": -1,
+        "optimizer": {
+            "type": "adadelta",
+            "lr": 0.000001,
+            "rho": 0.95
+        }
+    }
+}

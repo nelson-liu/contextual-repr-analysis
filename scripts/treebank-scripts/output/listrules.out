@@ -1,0 +1,334 @@
+# created Tue Apr  2 16:51:30 2002 by "listrules"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Mar  8 05:18:37 1999]
+# created Tue Apr  2 16:51:30 2002 by "flatten -f -w"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon May 21 18:40:02 2001]
+# created Tue Apr  2 16:51:30 2002 by "marknulls"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Wed Jan 28 21:09:56 1998]
+# created Tue Apr  2 16:51:30 2002 by "slashnulls"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Tue Apr  2 16:34:52 2002]
+# created Tue Apr  2 16:51:30 2002 by "headall -l"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Tue Apr  2 16:12:56 2002]
+# created Tue Apr  2 16:51:30 2002 by "headify -c newmarked.mrk"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Sat Mar 30 14:22:13 2002]
+# created Tue Apr  2 16:51:30 2002 by "discardbugs -c newmarked.bug"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Wed Jan 14 23:04:30 1998]
+# created Tue Apr  2 16:51:29 2002 by "normcase -i"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Tue Mar 26 11:18:19 2002]
+# created Tue Apr  2 16:51:29 2002 by "articulate -c"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Wed Jan 14 23:04:31 1998]
+# created Tue Apr  2 16:51:29 2002 by "markargs"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Jan 26 22:52:10 1998]
+# created Tue Apr  2 16:51:29 2002 by "fixsay"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Mar 25 16:07:43 2002]
+# created Tue Apr  2 16:51:29 2002 by "oneline ../corpus/wsj_1783.mrg"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Mar 25 15:46:39 2002]
+# START OF SECTION 0: file ../corpus/wsj_1783.mrg
+NNP|Shearson	@
+NNP|Lehman	@
+NNP|Hutton	@
+NNP|Holdings	@
+NP~-SBJ|Inc.	NNP|Shearson NNP|Lehman NNP|Hutton NNP|Holdings @
+S~|posted	NP~-SBJ|Inc. @ NP~|turnaround
+DT|a	@
+JJ|sharp	@
+NN|third-quarter	@
+NP~|turnaround	DT|a JJ|sharp NN|third-quarter @ PP|from
+PP|from	@ ADVP~-TMP|earlier
+DT|a	@
+NP|year	DT|a @
+ADVP~-TMP|earlier	NP|year @
+,|,	@
+CC|but	@
+JJ|net	@
+NP~-SBJ|income	JJ|net @
+MD|would	@
+VB|have	@
+S~|dropped	NP~-SBJ|income MD|would VB|have @ PP|from PP|without
+PP|from	@ NP~|quarter
+DT|the	@
+JJ|second	@
+NP~|quarter	DT|the JJ|second @
+PP|without	@ NP~|gain
+DT|a	@
+ADJP|$	@ QP|million
+CD|37	@
+QP|million	CD|37 @
+JJ|after-tax	@
+NP~|gain	DT|a ADJP|$ JJ|after-tax @
+S|.	S~|posted ,|, CC|but S~|dropped @
+DT|the	@
+NNS|securities	@
+NP~-SBJ|firm	DT|the NNS|securities @
+S|posted	NP~-SBJ|firm @ NP~|net .|.
+NN|third-quarter	@
+NP~|net	NN|third-quarter @ PP|of PP|compared
+PP|of	@ NP~|$
+NP~|$	@ QP|million ,|, CC|or NP|cents ,|,
+CD|66	@
+QP|million	CD|66 @
+,|,	@
+CC|or	@
+QP|64	@
+NP|cents	QP|64 @ NP-ADV|share
+DT|a	@
+NP-ADV|share	DT|a @
+,|,	@
+PP|compared	@ PP~|with
+PP~|with	@ NP~|loss
+DT|a	@
+VBN|restated	@
+JJ|year-earlier	@
+NP~|loss	DT|a VBN|restated JJ|year-earlier @ PP|of
+PP|of	@ NP~|$
+NP~|$	@ QP|million ,|, CC|or NP|cents
+CD|3	@
+QP|million	CD|3 @
+,|,	@
+CC|or	@
+QP|11	@
+NP|cents	QP|11 @ NP-ADV|share
+DT|a	@
+NP-ADV|share	DT|a @
+.|.	@
+NP~-SBJ|revenue	@
+S|climbed	NP~-SBJ|revenue @ NP-EXT|% PP-DIR|to PP-DIR|from .|.
+QP|25	@
+NP-EXT|%	QP|25 @
+PP-DIR|to	@ NP~|$
+NP~|$	@ QP|billion
+CD|3.3	@
+QP|billion	CD|3.3 @
+PP-DIR|from	@ NP~|$
+NP~|$	@ QP|billion
+CD|2.6	@
+QP|billion	CD|2.6 @
+.|.	@
+DT|the	@
+JJS|latest	@
+NP~-SBJ|period	DT|the JJS|latest @
+S|included	NP~-SBJ|period @ NP~|gain .|.
+DT|the	@
+NP~|gain	DT|the @ ,|, SBAR|which ,|, PP|from
+,|,	@
+SBAR|which	@ S~\NP~-SBJ-1|was
+0NP~-SBJ\NP~-SBJ-1|0	@
+S~\NP~-SBJ-1|was	0NP~-SBJ\NP~-SBJ-1|0 @ NP~-PRD|$ PP-TMP|before
+NP~-PRD|$	@ QP|million
+CD|77	@
+QP|million	CD|77 @
+PP-TMP|before	@ NP~|tax
+NP~|tax	@
+,|,	@
+PP|from	@ NP~|sale
+DT|the	@
+RB|previously	@
+ADJP|announced	RB|previously @
+NP~|sale	DT|the ADJP|announced @ PP|of
+PP|of	@ NP~|business
+DT|the	@
+JJ|institutional	@
+NN|money	@
+NN|management	@
+NP~|business	DT|the JJ|institutional NN|money NN|management @ PP|of
+PP|of	@ NP~|Co
+NNP|Lehman	@
+NNP|Management	@
+NP~|Co	NNP|Lehman NNP|Management @
+.|.	@
+DT|the	@
+QP|1988	@
+NP~-SBJ-1|period	DT|the QP|1988 @
+VBD|was	@
+S|restated	NP~-SBJ-1|period VBD|was @ 0NP~/NP~-1|0 PP|from S-PRP\NP~-SBJ-2|correct .|.
+0NP~/NP~-1|0	@
+PP|from	@ NP~|income
+JJ|net	@
+NP~|income	JJ|net @ PP|of
+PP|of	@ NP~|$
+NP~|$	@ QP|million
+CD|8	@
+QP|million	CD|8 @
+0NP~-SBJ\NP~-SBJ-2|0	@
+TO|to	@
+S-PRP\NP~-SBJ-2|correct	0NP~-SBJ\NP~-SBJ-2|0 TO|to @ NP~|overstatement
+DT|an	@
+NP~|overstatement	DT|an @ PP-LOC|in
+PP-LOC|in	@ NP~|subsidiary
+DT|the	@
+NP|company	DT|the @
+NP$|'s	NP|company @
+NNP|Boston	@
+NPR|Co.	NNP|Boston @
+NP~|subsidiary	NP$|'s NPR|Co. @
+.|.	@
+PP-TMP|in	@ NP~|quarter
+DT|the	@
+QP|1989	@
+JJ|second	@
+NP~|quarter	DT|the QP|1989 JJ|second @
+,|,	@
+NP~-SBJ|Shearson	@
+S|had	PP-TMP|in ,|, NP~-SBJ|Shearson @ NP~|income .|.
+JJ|net	@
+NP~|income	JJ|net @ PP|of
+PP|of	@ NP~|$
+NP~|$	@ QP|million ,|, CC|or NP|cents
+CD|55	@
+QP|million	CD|55 @
+,|,	@
+CC|or	@
+QP|54	@
+NP|cents	QP|54 @ NP-ADV|share
+DT|a	@
+NP-ADV|share	DT|a @
+.|.	@
+DT|an	@
+JJ|average	@
+CD|102.5	@
+QP|million	CD|102.5 @
+JJ|common	@
+NP~-SBJ|shares	DT|an JJ|average QP|million JJ|common @
+S|were	NP~-SBJ|shares @ ADJP-PRD|outstanding PP-TMP|in ,|, ADVP|up .|.
+ADJP-PRD|outstanding	@
+PP-TMP|in	@ NP~|quarter
+DT|the	@
+JJS|latest	@
+NP~|quarter	DT|the JJS|latest @
+,|,	@
+ADVP|up	@ PP|from
+PP|from	@ NP~|million
+CD|87.1	@
+NP~|million	CD|87.1 @
+.|.	@
+PP-LOC|in	@ NP~|trading
+NNP|New	@
+NNP|York	@
+NNP|Stock	@
+NPR|Exchange	NNP|New NNP|York NNP|Stock @
+JJ|composite	@
+NP~|trading	NPR|Exchange JJ|composite @
+NP-TMP|yesterday	@
+,|,	@
+NPR|Shearson	@
+NP~-SBJ|shares	NPR|Shearson @
+S|lost	PP-LOC|in NP-TMP|yesterday ,|, NP~-SBJ|shares @ NP~|cents PP-DIR|to .|.
+QP|37.5	@
+NP~|cents	QP|37.5 @
+PP-DIR|to	@ NP~|$
+NP~|$	@ QP|18.125
+QP|18.125	@
+.|.	@
+DT|the	@
+NP~-SBJ|company	DT|the @
+S|said	NP~-SBJ|company @ SBAR~|reflects .|.
+0IN\IN|0	@
+DT|the	@
+VBN|improved	@
+NP~-SBJ|performance	DT|the VBN|improved @ PP|from
+PP|from	@ ADVP~-TMP|ago
+DT|a	@
+NP|year	DT|a @
+ADVP~-TMP|ago	NP|year @
+SBAR~|reflects	0IN\IN|0 NP~-SBJ|performance @ NP~|revenue
+JJR|higher	@
+NNS|commissions	@
+CC|and	@
+NP~|revenue	JJR|higher NNS|commissions CC|and @ PP|from
+PP|from	@ NP~|trading
+NN|marketmaking	@
+CC|and	@
+NP~|trading	NN|marketmaking CC|and @ PP|for
+PP|for	@ NP~|account
+PRP$|its	@
+JJ|own	@
+NP~|account	PRP$|its JJ|own @
+.|.	@
+NN|Commission	@
+NP~-SBJ|revenue	NN|Commission @
+S|was	NP~-SBJ|revenue @ NP~-PRD|$ ,|, ADVP|up .|.
+NP~-PRD|$	@ QP|million
+CD|522	@
+QP|million	CD|522 @
+,|,	@
+ADVP|up	@ NP|%
+QP|49	@
+NP|%	QP|49 @
+.|.	@
+CC|but	@
+JJ|industrywide	@
+NN|trading	@
+NP~-SBJ|activity	JJ|industrywide NN|trading @
+S|slowed	CC|but NP~-SBJ|activity @ PP-TMP|in SBAR-ADV|as .|.
+PP-TMP|in	@ NP~|September
+NP~|September	@
+SBAR-ADV|as	@ S~|continued
+JJ|institutional	@
+NP~-SBJ|investors	JJ|institutional @
+S~|turned	NP~-SBJ|investors @ ADJP-PRD|cautious
+ADJP-PRD|cautious	@
+CC|and	@
+NP~-SBJ-1|individuals	@
+S~|continued	S~|turned CC|and NP~-SBJ-1|individuals @ S~\NP~-SBJ-1|shy
+0NP~-SBJ\NP~-SBJ-1|0	@
+TO|to	@
+S~\NP~-SBJ-1|shy	0NP~-SBJ\NP~-SBJ-1|0 TO|to @ ADVP-DIR|away PP-DIR|from
+ADVP-DIR|away	@
+PP-DIR|from	@ NP~|market
+DT|the	@
+NP~|market	DT|the @
+.|.	@
+NN|Investment	@
+NN|banking	@
+NP~-SBJ|revenue	NN|Investment NN|banking @
+S|fell	NP~-SBJ|revenue @ NP-EXT|% PP-DIR|to ,|, S-ADV\NP~-SBJ-1|reflecting .|.
+QP|32	@
+NP-EXT|%	QP|32 @
+PP-DIR|to	@ NP~|$
+NP~|$	@ QP|million
+CD|205	@
+QP|million	CD|205 @
+,|,	@
+0NP~-SBJ\NP~-SBJ-1|0	@
+PP|in	@ NP~|part
+NP~|part	@
+S-ADV\NP~-SBJ-1|reflecting	0NP~-SBJ\NP~-SBJ-1|0 PP|in @ NP~|slowdown
+DT|the	@
+VBN|continued	@
+NP~|slowdown	DT|the VBN|continued @ PP|of
+PP|of	@ NP~|business
+DT|the	@
+NN|underwriting	@
+NP~|business	DT|the NN|underwriting @
+.|.	@
+PP-TMP|in	@ NP~|months
+DT|the	@
+QP|nine	@
+NP~|months	DT|the QP|nine @
+,|,	@
+NP~-SBJ|net	@
+S|fell	PP-TMP|in ,|, NP~-SBJ|net @ NP-EXT|% PP-DIR|to ,|, PP-DIR|from .|.
+QP|3	@
+NP-EXT|%	QP|3 @
+PP-DIR|to	@ NP~|$
+NP~|$	@ QP|million ,|, CC|or NP|cents
+CD|106	@
+QP|million	CD|106 @
+,|,	@
+CC|or	@
+QP|98	@
+NP|cents	QP|98 @ NP-ADV|share
+DT|a	@
+NP-ADV|share	DT|a @
+,|,	@
+PP-DIR|from	@ NP~|$
+NP~|$	@ QP|million ,|, CC|or NP|$
+CD|110	@
+QP|million	CD|110 @
+,|,	@
+CC|or	@
+NP|$	@ QP|1.05 NP-ADV|share
+QP|1.05	@
+DT|a	@
+NP-ADV|share	DT|a @
+.|.	@
+NP~-SBJ|revenue	@
+S|advanced	NP~-SBJ|revenue @ NP-EXT|% PP-DIR|to PP-DIR|from .|.
+QP|26	@
+NP-EXT|%	QP|26 @
+PP-DIR|to	@ NP~|$
+NP~|$	@ QP|billion
+CD|9.6	@
+QP|billion	CD|9.6 @
+PP-DIR|from	@ NP~|$
+NP~|$	@ QP|billion
+CD|7.6	@
+QP|billion	CD|7.6 @
+.|.	@

@@ -1,0 +1,385 @@
+#begin document (bc/cctv/00/cctv_0001); part 000
+bc/cctv/00/cctv_0001   0   0      What   WP  (TOP(SBARQ(WHNP(WHNP*        -   -   -   Speaker#1   *   -
+bc/cctv/00/cctv_0001   0   1      kind   NN                      *)       -   -   -   Speaker#1   *   -
+bc/cctv/00/cctv_0001   0   2        of   IN                   (PP*        -   -   -   Speaker#1   *   -
+bc/cctv/00/cctv_0001   0   3    memory   NN                 (NP*)))   memory  -   1   Speaker#1   *   -
+bc/cctv/00/cctv_0001   0   4         ?    .                     *))       -   -   -   Speaker#1   *   -
+
+bc/cctv/00/cctv_0001   0    0              We   PRP   (TOP(S(NP*)       -    -   -   Speaker#1       *        (ARG0*)        *   -
+bc/cctv/00/cctv_0001   0    1    respectfully    RB       (ADVP*)       -    -   -   Speaker#1       *    (ARGM-MNR*)        *   -
+bc/cctv/00/cctv_0001   0    2          invite    VB         (VP*    invite  01   3   Speaker#1       *           (V*)        *   -
+bc/cctv/00/cctv_0001   0    3             you   PRP         (NP*)       -    -   -   Speaker#1       *        (ARG1*)   (ARG0*)  -
+bc/cctv/00/cctv_0001   0    4              to    TO       (S(VP*        -    -   -   Speaker#1       *        (ARG2*         *   -
+bc/cctv/00/cctv_0001   0    5           watch    VB         (VP*     watch  01   1   Speaker#1       *             *       (V*)  -
+bc/cctv/00/cctv_0001   0    6               a    DT      (NP(NP*        -    -   -   Speaker#1       *             *    (ARG1*   -
+bc/cctv/00/cctv_0001   0    7         special    JJ            *        -    -   -   Speaker#1       *             *         *   -
+bc/cctv/00/cctv_0001   0    8         edition    NN            *)       -    -   -   Speaker#1       *             *         *   -
+bc/cctv/00/cctv_0001   0    9              of    IN         (PP*        -    -   -   Speaker#1       *             *         *   -
+bc/cctv/00/cctv_0001   0   10          Across   NNP         (NP*        -    -   -   Speaker#1   (ORG*             *         *   -
+bc/cctv/00/cctv_0001   0   11           China   NNP      *)))))))       -    -   -   Speaker#1       *)            *)        *)  -
+bc/cctv/00/cctv_0001   0   12               .     .           *))       -    -   -   Speaker#1       *             *         *   -
+
+bc/cctv/00/cctv_0001   0    0           WW    NNP  (TOP(NP(NP(NP*   -   -   -   Speaker#1   (WORK_OF_ART*      -
+bc/cctv/00/cctv_0001   0    1           II    NNP               *   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0    2    Landmarks   NNPS               *)  -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0    3           on     IN            (PP*   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0    4          the     DT         (NP(NP*   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0    5        Great    NNP               *   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0    6        Earth    NNP               *)  -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0    7           of     IN            (PP*   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0    8        China    NNP        (NP*)))))  -   -   -   Speaker#1               *    (59)
+bc/cctv/00/cctv_0001   0    9            :      ,               *   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0   10      Eternal     JJ         (NP(NP*   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0   11     Memories   NNPS               *)  -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0   12           of     IN            (PP*   -   -   -   Speaker#1               *      -
+bc/cctv/00/cctv_0001   0   13      Taihang    NNP            (NP*   -   -   -   Speaker#1               *    (74
+bc/cctv/00/cctv_0001   0   14     Mountain    NNP           *)))))  -   -   -   Speaker#1               *)    74)
+
+bc/cctv/00/cctv_0001   0    0     Standing    VBG  (TOP(SINV(VP*    stand  01   -   Speaker#1               *           (V*)     *         -
+bc/cctv/00/cctv_0001   0    1         tall     JJ      (S(ADJP*))      -    -   -   Speaker#1               *    (ARGM-ADV*)     *         -
+bc/cctv/00/cctv_0001   0    2           on     IN           (PP*       -    -   -   Speaker#1               *    (ARGM-LOC*      *         -
+bc/cctv/00/cctv_0001   0    3      Taihang    NNP           (NP*       -    -   -   Speaker#1           (LOC*             *      *       (74
+bc/cctv/00/cctv_0001   0    4     Mountain    NNP            *)))      -    -   -   Speaker#1               *)            *)     *        74)
+bc/cctv/00/cctv_0001   0    5           is    VBZ           (VP*)      be  03   -   Speaker#1               *             *    (V*)        -
+bc/cctv/00/cctv_0001   0    6          the     DT        (NP(NP*       -    -   -   Speaker#1   (WORK_OF_ART*             *      *       (22
+bc/cctv/00/cctv_0001   0    7     Monument    NNP              *)      -    -   -   Speaker#1               *             *      *         -
+bc/cctv/00/cctv_0001   0    8           to     IN           (PP*       -    -   -   Speaker#1               *             *      *         -
+bc/cctv/00/cctv_0001   0    9          the     DT           (NP*       -    -   -   Speaker#1               *             *      *       (65
+bc/cctv/00/cctv_0001   0   10      Hundred    NNP          (NML*       -    -   -   Speaker#1               *             *      *         -
+bc/cctv/00/cctv_0001   0   11    Regiments   NNPS              *)      -    -   -   Speaker#1               *             *      *         -
+bc/cctv/00/cctv_0001   0   12    Offensive    NNP            *)))      -    -   -   Speaker#1               *)            *      *    65)|22)
+bc/cctv/00/cctv_0001   0   13            .      .             *))      -    -   -   Speaker#1               *             *      *         -
+
+bc/cctv/00/cctv_0001   0    0           It   PRP   (TOP(S(NP*)          -    -   -   Speaker#1               *      *    (ARG1*)   (22)
+bc/cctv/00/cctv_0001   0    1           is   VBZ         (VP*           be  03   -   Speaker#1               *    (V*)        *      -
+bc/cctv/00/cctv_0001   0    2     composed   VBN         (VP*      compose  01   2   Speaker#1               *      *       (V*)     -
+bc/cctv/00/cctv_0001   0    3           of    IN         (PP*           -    -   -   Speaker#1               *      *    (ARG2*      -
+bc/cctv/00/cctv_0001   0    4            a    DT      (NP(NP*           -    -   -   Speaker#1               *      *         *    (24
+bc/cctv/00/cctv_0001   0    5      primary    JJ            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0    6        stele    NN            *)          -    -   -   Speaker#1               *      *         *     24)
+bc/cctv/00/cctv_0001   0    7            ,     ,            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0    8    secondary    JJ         (NP*           -    -   -   Speaker#1               *      *         *    (13
+bc/cctv/00/cctv_0001   0    9       steles   NNS            *)          -    -   -   Speaker#1               *      *         *     13)
+bc/cctv/00/cctv_0001   0   10            ,     ,            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   11            a    DT         (NP*           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   12         huge    JJ            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   13        round    NN            *        round   -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   14    sculpture    NN    (NML(NML*)   sculpture   -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   15          and    CC            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   16       beacon    NN        (NML*       beacon   -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   17        tower    NN          *)))          -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   18            ,     ,            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   19          and    CC            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   20          the    DT         (NP*           -    -   -   Speaker#1   (WORK_OF_ART*      *         *      -
+bc/cctv/00/cctv_0001   0   21        Great   NNP            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   22         Wall   NNP            *)          -    -   -   Speaker#1               *)     *         *      -
+bc/cctv/00/cctv_0001   0   23            ,     ,            *           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   24        among    IN         (PP*           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   25        other    JJ         (NP*           -    -   -   Speaker#1               *      *         *      -
+bc/cctv/00/cctv_0001   0   26       things   NNS       *))))))          -    -   -   Speaker#1               *      *         *)     -
+bc/cctv/00/cctv_0001   0   27            .     .           *))          -    -   -   Speaker#1               *      *         *      -
+
+bc/cctv/00/cctv_0001   0    0            A    DT  (TOP(NP(NP*          -    -   -   Speaker#1            *         *   (24
+bc/cctv/00/cctv_0001   0    1      primary    JJ            *          -    -   -   Speaker#1            *         *     -
+bc/cctv/00/cctv_0001   0    2        stele    NN            *)         -    -   -   Speaker#1            *         *    24)
+bc/cctv/00/cctv_0001   0    3            ,     ,            *          -    -   -   Speaker#1            *         *     -
+bc/cctv/00/cctv_0001   0    4        three    CD         (NP*          -    -   -   Speaker#1    (CARDINAL)        *   (13
+bc/cctv/00/cctv_0001   0    5    secondary    JJ            *          -    -   -   Speaker#1            *         *     -
+bc/cctv/00/cctv_0001   0    6       steles   NNS            *)         -    -   -   Speaker#1            *         *    13)
+bc/cctv/00/cctv_0001   0    7            ,     ,            *          -    -   -   Speaker#1            *         *     -
+bc/cctv/00/cctv_0001   0    8          and    CC            *          -    -   -   Speaker#1            *         *     -
+bc/cctv/00/cctv_0001   0    9          two    CD         (NP*          -    -   -   Speaker#1    (CARDINAL)        *     -
+bc/cctv/00/cctv_0001   0   10    inscribed   VBN            *    inscribe  01   -   Speaker#1            *       (V*)    -
+bc/cctv/00/cctv_0001   0   11       steles   NNS            *)         -    -   -   Speaker#1            *    (ARG1*)    -
+bc/cctv/00/cctv_0001   0   12            .     .           *))         -    -   -   Speaker#1            *         *     -
+
+bc/cctv/00/cctv_0001   0    0           The     DT     (TOP(S(NP*          -    -   -   Speaker#1   (EVENT*   (ARG1*            *   (65
+bc/cctv/00/cctv_0001   0    1       Hundred    NNP          (NML*          -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0    2     Regiments   NNPS              *)         -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0    3     Offensive    NNP              *)         -    -   -   Speaker#1         *)       *)           *    65)
+bc/cctv/00/cctv_0001   0    4           was    VBD           (VP*          be  01   1   Speaker#1         *      (V*)           *     -
+bc/cctv/00/cctv_0001   0    5           the     DT     (NP(NP(NP*          -    -   -   Speaker#1         *   (ARG2*       (ARG1*     -
+bc/cctv/00/cctv_0001   0    6      campaign     NN              *)   campaign   -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0    7            of     IN           (PP*          -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0    8           the     DT           (NP*          -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0    9       largest    JJS              *          -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0   10         scale     NN            *)))      scale   -   -   Speaker#1         *        *            *)    -
+bc/cctv/00/cctv_0001   0   11      launched    VBN           (VP*      launch  01   2   Speaker#1         *        *          (V*)    -
+bc/cctv/00/cctv_0001   0   12            by     IN           (PP*          -    -   -   Speaker#1         *        *       (ARG0*     -
+bc/cctv/00/cctv_0001   0   13           the     DT           (NP*          -    -   -   Speaker#1     (ORG*        *            *   (36
+bc/cctv/00/cctv_0001   0   14        Eighth    NNP          (NML*          -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0   15         Route    NNP              *)         -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0   16          Army    NNP             *))         -    -   -   Speaker#1         *)       *            *)   36)
+bc/cctv/00/cctv_0001   0   17        during     IN           (PP*          -    -   -   Speaker#1         *        *   (ARGM-TMP*     -
+bc/cctv/00/cctv_0001   0   18           the     DT        (NP(NP*          -    -   -   Speaker#1   (EVENT*        *            *     -
+bc/cctv/00/cctv_0001   0   19           War    NNP              *)         -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0   20            of     IN           (PP*          -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0   21    Resistance    NNP        (NP(NP*)         -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0   22       against     IN           (PP*          -    -   -   Speaker#1         *        *            *     -
+bc/cctv/00/cctv_0001   0   23         Japan    NNP   (NP*)))))))))         -    -   -   Speaker#1         *)       *)           *)    -
+bc/cctv/00/cctv_0001   0   24             .      .             *))         -    -   -   Speaker#1         *        *            *     -
+
+bc/cctv/00/cctv_0001   0    0             This    DT    (TOP(S(NP*           -    -      -   Speaker#1        *       (ARG0*   (ARG0*       (ARG0*   (ARG0*   (65
+bc/cctv/00/cctv_0001   0    1         campaign    NN             *)    campaign   -      -   Speaker#1        *            *)       *)           *)       *)   65)
+bc/cctv/00/cctv_0001   0    2            broke   VBD          (VP*        break  01   16.5   Speaker#1        *          (V*)       *            *        *     -
+bc/cctv/00/cctv_0001   0    3          through    IN          (PP*           -    -      -   Speaker#1        *       (ARG1*        *            *        *     -
+bc/cctv/00/cctv_0001   0    4              the    DT       (NP(NP*           -    -      -   Speaker#1        *            *        *            *        *   (87
+bc/cctv/00/cctv_0001   0    5         Japanese    JJ             *           -    -      -   Speaker#1    (NORP)           *        *            *        *     -
+bc/cctv/00/cctv_0001   0    6             army    NN             *           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0    7               's   POS             *)          -    -      -   Speaker#1        *            *        *            *        *    87)
+bc/cctv/00/cctv_0001   0    8         blockade    NN            *))    blockade   -      -   Speaker#1        *            *)       *            *        *     -
+bc/cctv/00/cctv_0001   0    9               to    TO        (S(VP*           -    -      -   Speaker#1        *   (ARGM-PRP*        *            *        *     -
+bc/cctv/00/cctv_0001   0   10            reach    VB          (VP*        reach  01      1   Speaker#1        *            *      (V*)           *        *     -
+bc/cctv/00/cctv_0001   0   11             base    NN       (NP(NP*         base   -      -   Speaker#1        *            *   (ARG1*            *        *     -
+bc/cctv/00/cctv_0001   0   12            areas   NNS             *)          -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   13           behind    IN          (PP*           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   14            enemy    NN          (NP*           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   15            lines   NNS        *))))))        line   -      -   Speaker#1        *            *)       *)           *        *     -
+bc/cctv/00/cctv_0001   0   16                ,     ,             *           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   17         stirring   VBG     (S(VP(VP*         stir  04      2   Speaker#1        *   (ARGM-PRD*        *          (V*)       *     -
+bc/cctv/00/cctv_0001   0   18               up    RP         (PRT*)          -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   19    anti-Japanese    JJ          (NP*           -    -      -   Speaker#1    (NORP)           *        *       (ARG1*        *     -
+bc/cctv/00/cctv_0001   0   20           spirit    NN             *)          -    -      -   Speaker#1        *            *        *            *)       *     -
+bc/cctv/00/cctv_0001   0   21       throughout    IN          (PP*           -    -      -   Speaker#1        *            *        *   (ARGM-LOC*        *     -
+bc/cctv/00/cctv_0001   0   22              the    DT          (NP*           -    -      -   Speaker#1        *            *        *            *        *   (59
+bc/cctv/00/cctv_0001   0   23           nation    NN           *)))          -    -      -   Speaker#1        *            *        *            *)       *    59)
+bc/cctv/00/cctv_0001   0   24              and    CC             *           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   25      influencing   VBG          (VP*    influence  01      -   Speaker#1        *            *        *            *      (V*)    -
+bc/cctv/00/cctv_0001   0   26              the    DT       (NP(NP*           -    -      -   Speaker#1        *            *        *            *   (ARG1*     -
+bc/cctv/00/cctv_0001   0   27        situation    NN             *)          -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   28               of    IN          (PP*           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   29              the    DT       (NP(NP*           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   30     anti-fascist    JJ             *           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   31              war    NN             *)          -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   32               of    IN          (PP*           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   33              the    DT          (NP*           -    -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   34           people   NNS          *))))      people   -      -   Speaker#1        *            *        *            *        *     -
+bc/cctv/00/cctv_0001   0   35        worldwide    RB   (ADVP*))))))          -    -      -   Speaker#1        *            *)       *            *        *)    -
+bc/cctv/00/cctv_0001   0   36                .     .            *))          -    -      -   Speaker#1        *            *        *            *        *     -
+
+bc/cctv/00/cctv_0001   0    0             This    DT      (TOP(S(NP*)            -    -   -   Speaker#1       *    (ARG1*)     *             *     -
+bc/cctv/00/cctv_0001   0    1               is   VBZ            (VP*             be  01   2   Speaker#1       *       (V*)     *             *     -
+bc/cctv/00/cctv_0001   0    2          Zhuanbi   NNP      (NP(NP(NP*             -    -   -   Speaker#1   (GPE*    (ARG2*      *             *     -
+bc/cctv/00/cctv_0001   0    3          Village   NNP               *)            -    -   -   Speaker#1       *         *      *             *     -
+bc/cctv/00/cctv_0001   0    4                ,     ,               *             -    -   -   Speaker#1       *         *      *             *     -
+bc/cctv/00/cctv_0001   0    5          Wuxiang   NNP         (NP(NP*             -    -   -   Speaker#1       *         *      *             *     -
+bc/cctv/00/cctv_0001   0    6           County   NNP               *)            -    -   -   Speaker#1       *)        *      *             *     -
+bc/cctv/00/cctv_0001   0    7               of    IN            (PP*             -    -   -   Speaker#1       *         *      *             *     -
+bc/cctv/00/cctv_0001   0    8           Shanxi   NNP            (NP*             -    -   -   Speaker#1   (GPE*         *      *             *     -
+bc/cctv/00/cctv_0001   0    9         Province   NNP            *))))            -    -   -   Speaker#1       *)        *      *             *     -
+bc/cctv/00/cctv_0001   0   10                ,     ,               *             -    -   -   Speaker#1       *         *      *             *     -
+bc/cctv/00/cctv_0001   0   11            where   WRB   (SBAR(WHADVP*)            -    -   -   Speaker#1       *         *      *    (ARGM-LOC*)    -
+bc/cctv/00/cctv_0001   0   12              the    DT          (S(NP*             -    -   -   Speaker#1   (ORG*         *      *        (ARG1*   (36
+bc/cctv/00/cctv_0001   0   13           Eighth   NNP           (NML*             -    -   -   Speaker#1       *         *      *             *     -
+bc/cctv/00/cctv_0001   0   14            Route   NNP               *)            -    -   -   Speaker#1       *         *      *             *     -
+bc/cctv/00/cctv_0001   0   15             Army   NNP               *)            -    -   -   Speaker#1       *)        *      *             *)   36)
+bc/cctv/00/cctv_0001   0   16              was   VBD            (VP*             be  03   -   Speaker#1       *         *    (V*)            *     -
+bc/cctv/00/cctv_0001   0   17    headquartered   VBN            (VP*    headquarter  01   -   Speaker#1       *         *      *           (V*)    -
+bc/cctv/00/cctv_0001   0   18             back    RB          (ADVP*             -    -   -   Speaker#1       *         *      *    (ARGM-TMP*     -
+bc/cctv/00/cctv_0001   0   19             then    RB         *)))))))            -    -   -   Speaker#1       *         *)     *             *)    -
+bc/cctv/00/cctv_0001   0   20                .     .              *))            -    -   -   Speaker#1       *         *      *             *     -
+
+bc/cctv/00/cctv_0001   0    0              On    IN  (TOP(S(PP*      -    -   -   Speaker#1   *   (ARGM-LOC*     -
+bc/cctv/00/cctv_0001   0    1               a    DT     (NP(NP*      -    -   -   Speaker#1   *            *     -
+bc/cctv/00/cctv_0001   0    2            wall    NN           *)   wall   -   -   Speaker#1   *            *     -
+bc/cctv/00/cctv_0001   0    3         outside    IN        (PP*      -    -   -   Speaker#1   *            *     -
+bc/cctv/00/cctv_0001   0    4             the    DT        (NP*      -    -   -   Speaker#1   *            *     -
+bc/cctv/00/cctv_0001   0    5    headquarters    NN        *))))     -    -   -   Speaker#1   *            *)    -
+bc/cctv/00/cctv_0001   0    6              we   PRP        (NP*)     -    -   -   Speaker#1   *       (ARG0*)    -
+bc/cctv/00/cctv_0001   0    7           found   VBD        (VP*    find  01   1   Speaker#1   *          (V*)    -
+bc/cctv/00/cctv_0001   0    8               a    DT        (NP*      -    -   -   Speaker#1   *       (ARG1*   (61
+bc/cctv/00/cctv_0001   0    9             map    NN          *))    map   -   -   Speaker#1   *            *)   61)
+bc/cctv/00/cctv_0001   0   10               .     .          *))     -    -   -   Speaker#1   *            *     -
+
+bc/cctv/00/cctv_0001   0    0             This    DT  (TOP(S(NP*      -    -   -   Speaker#1       *   (ARG1*   (61
+bc/cctv/00/cctv_0001   0    1              map    NN           *)    map   -   -   Speaker#1       *        *)   61)
+bc/cctv/00/cctv_0001   0    2              was   VBD        (VP*      be  01   2   Speaker#1       *      (V*)    -
+bc/cctv/00/cctv_0001   0    3              the    DT  (NP(NP(NP*      -    -   -   Speaker#1   (ORG*   (ARG2*   (36
+bc/cctv/00/cctv_0001   0    4           Eighth   NNP       (NML*      -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0    5            Route   NNP           *)     -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0    6             Army   NNP           *      -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0    7               's   POS           *)     -    -   -   Speaker#1       *)       *    36)
+bc/cctv/00/cctv_0001   0    8        depiction    NN           *)     -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0    9               of    IN        (PP*      -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0   10              the    DT     (NP(NP*      -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0   11    Mediterranean   NNP       (NML*      -    -   -   Speaker#1   (LOC*        *     -
+bc/cctv/00/cctv_0001   0   12              Sea   NNP           *)     -    -   -   Speaker#1       *)       *     -
+bc/cctv/00/cctv_0001   0   13        situation    NN           *)     -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0   14               at    IN        (PP*      -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0   15             that    DT        (NP*      -    -   -   Speaker#1       *        *     -
+bc/cctv/00/cctv_0001   0   16             time    NN      *))))))   time   -   -   Speaker#1       *        *)    -
+bc/cctv/00/cctv_0001   0   17                .     .          *))     -    -   -   Speaker#1       *        *     -
+
+bc/cctv/00/cctv_0001   0   0           This    DT  (TOP(S(NP*         -    -   -   Speaker#1        *   (ARG2*   (61
+bc/cctv/00/cctv_0001   0   1            map    NN           *)       map   -   -   Speaker#1        *        *)   61)
+bc/cctv/00/cctv_0001   0   2      reflected   VBD        (VP*    reflect  01   1   Speaker#1        *      (V*)    -
+bc/cctv/00/cctv_0001   0   3            the    DT        (NP*         -    -   -   Speaker#1        *   (ARG1*     -
+bc/cctv/00/cctv_0001   0   4       European    JJ           *         -    -   -   Speaker#1    (NORP)       *     -
+bc/cctv/00/cctv_0001   0   5    battlefield    NN           *         -    -   -   Speaker#1        *        *     -
+bc/cctv/00/cctv_0001   0   6      situation    NN          *))        -    -   -   Speaker#1        *        *)    -
+bc/cctv/00/cctv_0001   0   7              .     .          *))        -    -   -   Speaker#1        *        *     -
+
+bc/cctv/00/cctv_0001   0    0                In    IN  (TOP(S(PP*        -    -   -   Speaker#1        *   (ARGM-TMP*   (ARGM-TMP*      -
+bc/cctv/00/cctv_0001   0    1             1940     CD       (NP*))       -    -   -   Speaker#1    (DATE)           *)           *)   (73)
+bc/cctv/00/cctv_0001   0    2                 ,     ,           *        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0    3               the    DT        (NP*        -    -   -   Speaker#1        *       (ARG0*       (ARG0*      -
+bc/cctv/00/cctv_0001   0    4            German    JJ           *        -    -   -   Speaker#1    (NORP)           *            *      -
+bc/cctv/00/cctv_0001   0    5              army    NN           *)       -    -   -   Speaker#1        *            *)           *)     -
+bc/cctv/00/cctv_0001   0    6           invaded   VBD        (VP*    invade  01   1   Speaker#1        *          (V*)           *      -
+bc/cctv/00/cctv_0001   0    7               and    CC           *        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0    8          occupied   VBD           *    occupy  01   1   Speaker#1        *            *          (V*)     -
+bc/cctv/00/cctv_0001   0    9    Czechoslovakia   NNP     (NP(NP*)       -    -   -   Speaker#1     (GPE)      (ARG1*       (ARG1*      -
+bc/cctv/00/cctv_0001   0   10                 ,     ,           *        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0   11            Poland   NNP        (NP*)       -    -   -   Speaker#1     (GPE)           *            *      -
+bc/cctv/00/cctv_0001   0   12                 ,     ,           *        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0   13               the    DT        (NP*        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0   14       Netherlands   NNP           *)       -    -   -   Speaker#1     (GPE)           *            *      -
+bc/cctv/00/cctv_0001   0   15                 ,     ,           *        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0   16           Belgium    NN        (NP*)       -    -   -   Speaker#1     (GPE)           *            *      -
+bc/cctv/00/cctv_0001   0   17                 ,     ,           *        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0   18               and    CC           *        -    -   -   Speaker#1        *            *            *      -
+bc/cctv/00/cctv_0001   0   19            France   NNP      (NP*)))       -    -   -   Speaker#1     (GPE)           *)           *)     -
+bc/cctv/00/cctv_0001   0   20                 .     .          *))       -    -   -   Speaker#1        *            *            *      -
+
+bc/cctv/00/cctv_0001   0    0            It   PRP         (TOP(S(NP*)        -    -   -   Speaker#1        *                *               *             *      -
+bc/cctv/00/cctv_0001   0    1           was   VBD               (VP*         be  01   1   Speaker#1        *              (V*)              *             *      -
+bc/cctv/00/cctv_0001   0    2        during    IN               (PP*         -    -   -   Speaker#1        *           (ARG2*      (ARGM-TMP*             *      -
+bc/cctv/00/cctv_0001   0    3          this    DT               (NP*         -    -   -   Speaker#1   (DATE*                *               *             *    (73
+bc/cctv/00/cctv_0001   0    4          year    NN                 *))        -    -   -   Speaker#1        *)               *)              *)            *     73)
+bc/cctv/00/cctv_0001   0    5          that    IN      (SBAR(WHADVP*)        -    -   -   Speaker#1        *    (ARG1(R-ARG2*)   (R-ARGM-TMP*)            *      -
+bc/cctv/00/cctv_0001   0    6           the    DT             (S(NP*         -    -   -   Speaker#1        *                *          (ARG0*             *    (87
+bc/cctv/00/cctv_0001   0    7      Japanese    JJ                  *         -    -   -   Speaker#1    (NORP)               *               *             *      -
+bc/cctv/00/cctv_0001   0    8          army    NN                  *)        -    -   -   Speaker#1        *                *               *)            *     87)
+bc/cctv/00/cctv_0001   0    9     developed   VBD               (VP*    develop  02   1   Speaker#1        *                *             (V*)            *      -
+bc/cctv/00/cctv_0001   0   10             a    DT            (NP(NP*         -    -   -   Speaker#1        *                *          (ARG1*        (ARG0*      -
+bc/cctv/00/cctv_0001   0   11      strategy    NN                  *)        -    -   -   Speaker#1        *                *               *             *)     -
+bc/cctv/00/cctv_0001   0   12            to    TO        (SBAR(S(VP*         -    -   -   Speaker#1        *                *               *             *      -
+bc/cctv/00/cctv_0001   0   13       rapidly    RB             (ADVP*)        -    -   -   Speaker#1        *                *               *    (ARGM-MNR*)     -
+bc/cctv/00/cctv_0001   0   14         force    VB               (VP*      force  01   1   Speaker#1        *                *               *           (V*)     -
+bc/cctv/00/cctv_0001   0   15           the    DT               (NP*         -    -   -   Speaker#1        *                *               *        (ARG1*      -
+bc/cctv/00/cctv_0001   0   16       Chinese    JJ                  *         -    -   -   Speaker#1    (NORP)               *               *             *      -
+bc/cctv/00/cctv_0001   0   17        people   NNS                  *)    people   -   -   Speaker#1        *                *               *             *)     -
+bc/cctv/00/cctv_0001   0   18          into    IN               (PP*         -    -   -   Speaker#1        *                *               *        (ARG2*      -
+bc/cctv/00/cctv_0001   0   19    submission    NN              (NP*))        -    -   -   Speaker#1        *                *               *             *)     -
+bc/cctv/00/cctv_0001   0   20            by    IN               (PP*         -    -   -   Speaker#1        *                *               *    (ARGM-TMP*      -
+bc/cctv/00/cctv_0001   0   21           the    DT            (NP(NP*         -    -   -   Speaker#1   (DATE*                *               *             *      -
+bc/cctv/00/cctv_0001   0   22           end    NN                  *)       end   -   -   Speaker#1        *                *               *             *      -
+bc/cctv/00/cctv_0001   0   23            of    IN               (PP*         -    -   -   Speaker#1        *                *               *             *      -
+bc/cctv/00/cctv_0001   0   24         1940     CD   (NP*)))))))))))))        -    -   -   Speaker#1        *)               *)              *)            *)   (73)
+bc/cctv/00/cctv_0001   0   25             .     .                 *))        -    -   -   Speaker#1        *                *               *             *      -
+
+bc/cctv/00/cctv_0001   0   0          In    IN  (TOP(S(PP*        -    -   -    Luo_huanzhang       *   (ARGM-TMP*     -
+bc/cctv/00/cctv_0001   0   1         May   NNP       (NP*))       -    -   -    Luo_huanzhang   (DATE)           *)    -
+bc/cctv/00/cctv_0001   0   2           ,     ,           *        -    -   -    Luo_huanzhang       *            *     -
+bc/cctv/00/cctv_0001   0   3         the    DT        (NP*        -    -   -    Luo_huanzhang       *       (ARG0*   (87
+bc/cctv/00/cctv_0001   0   4    Japanese    JJ           *        -    -   -    Luo_huanzhang   (NORP)           *     -
+bc/cctv/00/cctv_0001   0   5        army    NN           *)       -    -   -    Luo_huanzhang       *            *)   87)
+bc/cctv/00/cctv_0001   0   6    launched   VBD        (VP*)   launch  01   2    Luo_huanzhang       *          (V*)    -
+bc/cctv/00/cctv_0001   0   7         --      .          *))       -    -   -    Luo_huanzhang       *            *     -
+
+bc/cctv/00/cctv_0001   0    0         From    IN   (TOP(S(PP*       -    -   -    Luo_huanzhang           *   (ARGM-DIR*         *      -
+bc/cctv/00/cctv_0001   0    1          one    CD         (NP*       -    -   -    Luo_huanzhang   (CARDINAL)           *         *      -
+bc/cctv/00/cctv_0001   0    2         side    NN           *))    side   -   -    Luo_huanzhang           *            *)        *      -
+bc/cctv/00/cctv_0001   0    3            ,     ,            *       -    -   -    Luo_huanzhang           *            *         *      -
+bc/cctv/00/cctv_0001   0    4           it   PRP         (NP*)      -    -   -    Luo_huanzhang           *       (ARG0*)        *    (87)
+bc/cctv/00/cctv_0001   0    5       seized   VBD         (VP*    seize  01   3    Luo_huanzhang           *          (V*)        *      -
+bc/cctv/00/cctv_0001   0    6           an    DT   (NP(NP(NP*       -    -   -    Luo_huanzhang           *       (ARG1*    (ARG1*    (14
+bc/cctv/00/cctv_0001   0    7    important    JJ            *       -    -   -    Luo_huanzhang           *            *         *      -
+bc/cctv/00/cctv_0001   0    8         city    NN            *)      -    -   -    Luo_huanzhang           *            *         *      -
+bc/cctv/00/cctv_0001   0    9           in    IN         (PP*       -    -   -    Luo_huanzhang           *            *         *      -
+bc/cctv/00/cctv_0001   0   10        China   NNP       (NP*)))      -    -   -    Luo_huanzhang        (GPE)           *         *)   (59)
+bc/cctv/00/cctv_0001   0   11       called   VBN         (VP*     call  01   -    Luo_huanzhang           *            *       (V*)     -
+bc/cctv/00/cctv_0001   0   12      Yichang   NNP   (S(NP*)))))      -    -   -    Luo_huanzhang        (GPE)           *)   (ARG2*)    14)
+bc/cctv/00/cctv_0001   0   13            .     .           *))      -    -   -    Luo_huanzhang           *            *         *      -
+
+bc/cctv/00/cctv_0001   0    0           Um    UH   (TOP(S(INTJ*)      -    -   -    Luo_huanzhang      *    (ARGM-DIS*)     -
+bc/cctv/00/cctv_0001   0    1            ,     ,              *       -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0    2            ,     ,              *       -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0    3           uh    UH         (INTJ*)      -    -   -    Luo_huanzhang      *    (ARGM-DIS*)     -
+bc/cctv/00/cctv_0001   0    4            ,     ,              *       -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0    5      through    IN           (PP*       -    -   -    Luo_huanzhang      *    (ARGM-DIR*      -
+bc/cctv/00/cctv_0001   0    6      Yichang   NNP          (NP*))      -    -   -    Luo_huanzhang   (GPE)            *)   (14)
+bc/cctv/00/cctv_0001   0    7            ,     ,              *       -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0    8           it   PRP           (NP*)      -    -   -    Luo_huanzhang      *        (ARG0*)   (87)
+bc/cctv/00/cctv_0001   0    9        could    MD           (VP*       -    -   -    Luo_huanzhang      *    (ARGM-MOD*)     -
+bc/cctv/00/cctv_0001   0   10     directly    RB         (ADVP*)      -    -   -    Luo_huanzhang      *    (ARGM-MNR*)     -
+bc/cctv/00/cctv_0001   0   11        reach    VB           (VP*    reach  01   1    Luo_huanzhang      *           (V*)   (34)
+bc/cctv/00/cctv_0001   0   12    Chongqing   NNP         (NP*)))      -    -   -    Luo_huanzhang   (GPE)       (ARG1*)   (26)
+bc/cctv/00/cctv_0001   0   13            .     .             *))      -    -   -    Luo_huanzhang      *             *      -
+
+bc/cctv/00/cctv_0001   0   0            Ah    UH   (TOP(NP(INTJ*)         -    -   -    Luo_huanzhang      *    (ARGM-DIS*)     -
+bc/cctv/00/cctv_0001   0   1             ,     ,               *          -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0   2          that    DT            (NP*)         -    -   -    Luo_huanzhang      *        (ARG0*)   (34)
+bc/cctv/00/cctv_0001   0   3    threatened   VBD            (VP*    threaten  01   2    Luo_huanzhang      *           (V*)     -
+bc/cctv/00/cctv_0001   0   4     Chongqing   NNP           (NP*))         -    -   -    Luo_huanzhang   (GPE)       (ARG2*)   (26)
+bc/cctv/00/cctv_0001   0   5             .     .              *))         -    -   -    Luo_huanzhang      *             *      -
+
+bc/cctv/00/cctv_0001   0    0         Then    RB   (TOP(S(ADVP*)     -    -   -    Luo_huanzhang      *    (ARGM-TMP*)     -
+bc/cctv/00/cctv_0001   0    1         they   PRP           (NP*)     -    -   -    Luo_huanzhang      *        (ARG0*)   (87)
+bc/cctv/00/cctv_0001   0    2        would    MD           (VP*      -    -   -    Luo_huanzhang      *    (ARGM-MOD*)     -
+bc/cctv/00/cctv_0001   0    3            ,     ,              *      -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0    4           ah    UH         (INTJ*)     -    -   -    Luo_huanzhang      *    (ARGM-DIS*)     -
+bc/cctv/00/cctv_0001   0    5            ,     ,              *      -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0    6         bomb    VB           (VP*    bomb  01   1    Luo_huanzhang      *           (V*)     -
+bc/cctv/00/cctv_0001   0    7        these    DT        (NP(NP*      -    -   -    Luo_huanzhang      *        (ARG1*      -
+bc/cctv/00/cctv_0001   0    8        large    JJ              *      -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0    9         rear    JJ              *      -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0   10        areas   NNS              *)     -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0   11         such    JJ           (PP*      -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0   12           as    IN              *      -    -   -    Luo_huanzhang      *             *      -
+bc/cctv/00/cctv_0001   0   13    Chongqing   NNP       (NP*)))))     -    -   -    Luo_huanzhang   (GPE)            *)   (26)
+bc/cctv/00/cctv_0001   0   14            .     .             *))     -    -   -    Luo_huanzhang      *             *      -
+
+bc/cctv/00/cctv_0001   0    0              So    RB   (TOP(S(ADVP*)           -    -   -    Luo_huanzhang      *             *      *    (ARGM-DIS*)       *   -
+bc/cctv/00/cctv_0001   0    1               ,     ,              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0    2           along    IN         (ADVP*            -    -   -    Luo_huanzhang      *             *      *    (ARGM-ADV*        *   -
+bc/cctv/00/cctv_0001   0    3            with    IN           (PP*            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0    4             the    DT           (NP*            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0    5     coordinated   VBN      (NML(NML*    coordinate  01   -    Luo_huanzhang      *           (V*)     *             *        *   -
+bc/cctv/00/cctv_0001   0    6               ,     ,              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0    7              er    UH              *            -    -   -    Luo_huanzhang      *    (ARGM-DIS*)     *             *        *   -
+bc/cctv/00/cctv_0001   0    8               ,     ,              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0    9        economic    JJ              *            -    -   -    Luo_huanzhang      *        (ARG1*)     *             *        *   -
+bc/cctv/00/cctv_0001   0   10        blockade    NN              *)     blockade   -   -    Luo_huanzhang      *        (ARG1*)     *             *        *   -
+bc/cctv/00/cctv_0001   0   11               ,     ,              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   12        military    JJ          (NML*            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   13      offensives   NNS              *)           -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   14               ,     ,              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   15             and    CC              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   16       strategic    JJ          (NML*            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   17        bombings   NNS          *)))))           -    -   -    Luo_huanzhang      *             *      *             *)       *   -
+bc/cctv/00/cctv_0001   0   18               ,     ,              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   19              er    UH         (INTJ*)           -    -   -    Luo_huanzhang      *             *      *    (ARGM-DIS*)       *   -
+bc/cctv/00/cctv_0001   0   20               ,     ,              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   21               a    DT           (NP*            -    -   -    Luo_huanzhang      *             *      *        (ARG1*        *   -
+bc/cctv/00/cctv_0001   0   22    simultaneous    JJ              *            -    -   -    Luo_huanzhang      *             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   23          attack    NN              *)       attack   -   -    Luo_huanzhang      *             *      *             *)       *   -
+bc/cctv/00/cctv_0001   0   24             was   VBD           (VP*            be  03   -    Luo_huanzhang      *             *    (V*)            *        *   -
+bc/cctv/00/cctv_0001   0   25        launched   VBN           (VP*        launch  01   2    Luo_huanzhang      *             *      *           (V*)       *   -
+bc/cctv/00/cctv_0001   0   26              in    IN           (PP*            -    -   -    Luo_huanzhang      *             *      *    (ARGM-LOC*        *   -
+bc/cctv/00/cctv_0001   0   27            Hong   NNP           (NP*            -    -   -    Luo_huanzhang  (GPE*             *      *             *        *   -
+bc/cctv/00/cctv_0001   0   28            Kong   NNP             *))           -    -   -    Luo_huanzhang      *)            *      *             *)       *   -
+bc/cctv/00/cctv_0001   0   29              to    TO         (S(VP*            -    -   -    Luo_huanzhang      *             *      *    (ARGM-PRP*        *   -
+bc/cctv/00/cctv_0001   0   30            lure    VB           (VP*          lure  01   1    Luo_huanzhang      *             *      *             *      (V*)  -
+bc/cctv/00/cctv_0001   0   31             the    DT           (NP*            -    -   -    Luo_huanzhang      *             *      *             *   (ARG1*   -
+bc/cctv/00/cctv_0001   0   32             KMT   NNP              *            -    -   -    Luo_huanzhang   (ORG)            *      *             *        *   -
+bc/cctv/00/cctv_0001   0   33      government    NN              *)           -    -   -    Luo_huanzhang      *             *      *             *        *)  -
+bc/cctv/00/cctv_0001   0   34            into    IN           (PP*            -    -   -    Luo_huanzhang      *             *      *             *   (ARG2*   -
+bc/cctv/00/cctv_0001   0   35       surrender    NN     (NP*)))))))    surrender   -   -    Luo_huanzhang      *             *      *             *)       *)  -
+bc/cctv/00/cctv_0001   0   36               .     .             *))           -    -   -    Luo_huanzhang      *             *      *             *        *   -
+
+bc/cctv/00/cctv_0001   0    0            The    DT  (TOP(S(NP(NP*            -    -   -    Luo_huanzhang  *         *        (ARG1*   -
+bc/cctv/00/cctv_0001   0    1       progress    NN              *)     progress   -   -    Luo_huanzhang  *         *             *   -
+bc/cctv/00/cctv_0001   0    2             of    IN           (PP*            -    -   -    Luo_huanzhang  *         *             *   -
+bc/cctv/00/cctv_0001   0    3           this    DT           (NP*            -    -   -    Luo_huanzhang  *         *             *   -
+bc/cctv/00/cctv_0001   0    4    coordinated   VBN              *    coordinate  01   -    Luo_huanzhang  *       (V*)            *   -
+bc/cctv/00/cctv_0001   0    5      offensive    NN            *)))           -    -   -    Luo_huanzhang  *    (ARG1*)            *)  -
+bc/cctv/00/cctv_0001   0    6            was   VBD           (VP*            be  01   1    Luo_huanzhang  *         *           (V*)  -
+bc/cctv/00/cctv_0001   0    7        already    RB         (ADVP*)           -    -   -    Luo_huanzhang  *         *    (ARGM-TMP*)  -
+bc/cctv/00/cctv_0001   0    8           very    RB         (ADJP*            -    -   -    Luo_huanzhang  *         *        (ARG2*   -
+bc/cctv/00/cctv_0001   0    9     entrenched    JJ              *)           -    -   -    Luo_huanzhang  *         *             *)  -
+bc/cctv/00/cctv_0001   0   10             by    IN           (PP*            -    -   -    Luo_huanzhang  *         *    (ARGM-TMP*   -
+bc/cctv/00/cctv_0001   0   11           then    RB       (ADVP*)))           -    -   -    Luo_huanzhang  *         *             *)  -
+bc/cctv/00/cctv_0001   0   12              .     .             *))           -    -   -    Luo_huanzhang  *         *             *   -
+
+#end document

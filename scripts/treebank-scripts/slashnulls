@@ -1,0 +1,353 @@
+#!/usr/local/bin/perl 
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: slashnulls [-u] [files ...]
+#
+# Munges parses produced by headall, and for which tags are NOT
+# canonicalized.  All empty categories become simply (-NONE- 0) if
+# unrealized, or (EXP It) or (EXP it) if realized as an
+# expletive.  A slash category is given to the parent, e.g., (NP
+# (-NONE- *T*)) becomes (NP/NP (-NONE- 0)) and (NP (-NONE- *T*-5))
+# becomes (NP/NP-5 (-NONE 0)).  If this slash category is indexed, as
+# in /NP-5, then it is propagated up through its ancestors until it
+# cancels with a real NP-5 (or perhaps WHNP-5 or S-5 or something) on
+# its sibling.  If it is not indexed, than it is not propagated up --
+# meaning that its parent is considered to be complete even though
+# this piece is missing -- with one exception: (S (NP-SBJ/NP-SBJ 0)
+# ...)  passes the /NP-SBJ up one level, to get (S/NP-SBJ-i
+# (NP-SBJ/NP-SBJ-i 0) ...), for a new index i, since in fact
+# argument-dropping in this case is licensed not by the subject's
+# parent (the verb) but by its grandparent (the verb's governor).
+# Notice that -i isn't matched in this case -- really its governor
+# should be indexed with -i, in parallel to WH words, which likewise
+# license gaps and are so indexed.
+#
+# We also have a concept of "knobs," which are the opposite of gaps,
+# and represent constituents that have merely been string-moved in
+# some way (e.g., extraposed or perhaps scrambled) without taking on
+# new theta roles.  See the file SLASH-AND-PLUS for details.  An
+# indexed category such as NP-5 that does not cancel against an /NP-5
+# in its sibling is marked as +NP-5, and propagated up through
+# ancestors until it cancels with a /NP-5 at one of those siblings.
+# Note that + categories of this sort should cancel only against /
+# categories that represent *ICH* or *EXP* nulls; this is not currently 
+# checked. !!!  Where knobs are introduced, e.g., +NP-5, they do not
+# take theta roles from their parents.  The moreknobs script can 
+# be used to mark additional such constituents as knobs, using +.
+#
+# I make some effort to handle slash direction appropriately.  If the
+# empty category falls to the left of its parent's head kid, I use \.
+# if it's to the right, I use /.  There is one other possibility: that
+# the empty category is its parent's head kid.  (See killnulls -h for
+# a discussion of these cases, or rather the subcases for which the empty
+# category does have overt siblings.)  In this case, we default to /, but if
+# such an empty category is coindexed, we discard the sentence, on the
+# grounds that it's almost certainly a case of ellipsis -- note that
+# we generally discard gapped constructions, as noted below.
+#
+# Note that movement chains may have more than two positions.  
+# For example (leaving out some levels for readability):
+#
+# (SBAR (WHNP-1 which) 
+#       (S\NP-1 (NP-2\NP-1 0) (VP\NP-2 struggled (S\NP-2 (NP\NP-2 0) (VP to live)))))
+#
+# It is not reasonable to run killnulls on such output, because
+# then nothing would connect \NP-2 to WHNP-1.  This is one reason
+# one might use the -u flag, which arranges for indices in the same 
+# chain to be unified, giving
+#
+# (SBAR (WHNP-3 which) 
+#       (S\NP-3 (NP-3\NP-3 0) (VP\NP-3 struggled (S\NP-3 (NP\NP-3 0) (VP to live)))))
+#
+# It is then possible to run killnulls on the result, yielding
+# 
+# (SBAR (WHNP-3 which) 
+#       (S\NP-3 (VP\NP-3 struggled (S\NP-3 (VP to live)))))
+#
+# Of course, if killnulls is run, this result doesn't show that object 3
+# fills three roles -- without a stopping place in the subject
+# position of the S, it misleadingly looks like S is just passing the
+# gap along.
+# 
+# Note in cases of conjunction or parasitic gaps, or PRO control by an
+# already-moved element, two empty categories may have the same index
+# and the same binder.  We are careful not to pass the same slashed
+# category twice in such cases, i.e., any constituent looking for two
+# copies of NP-5 would really be satisfied by just one copy.
+# 
+# The null elements we deal with do include *RNR* (right node raising)
+# and *ICH* (site of extraposition leading to discontinuous
+# constituents), as well as *EXP* (sister to expletives, which we merge
+# with the expletive).  
+# 
+# But we simply delete the following null elements (which in practice
+# should never be heads and should always have siblings -- which we check):
+#     *PPA* nulls, which give alternative possible attachment sites  
+#     *U*, which represents absent units like "dollars"
+#
+# In addition, we discard sentences that include 
+#     tags containing =    (intrasentential gapping, e.g. in conjunction; even if we 
+#                             used discardconj, some gapping constructions may have
+#                             survived, since implicit conjunction with commas is not
+#                             always (not ever?) annotated with CONJP)
+#     FRAG tags            (intersentential gapping)
+#     ?*? nulls            (intrasentential gapping placeholder in certain environments)
+#     *NOT*                ("anti-placeholder" for not-quite-parallel gapping)
+#     coindexed nulls in head position 
+#                          (usually denotes ellipsis: see discussion above)
+#
+# Special handling:
+# (SBAR (-NONE- 0) ...) is preprocessed into (SBAR (IN (-NONE- 0)) ...), 
+# which is what it really means.  Then
+# (SBAR (IN (-NONE- 0)) (S (-NONE- *T*-n))) -- as in "It's raining, she said" -- 
+# is preprocessed into 
+# (SBAR (-NONE- *T*-n))
+# which is really what's going on, since you can't get "It's raining, she said that":
+# we'd like to pick up that SBAR/S-n always rewrites as 0, i.e., we can't extract
+# just the S-n part.  The real point of doing this is to avoid failing on these
+# cases just because a head is a coindexed null as described above.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$uniq = 1, shift(@ARGV) if $ARGV[0] eq "-u";
+die "$0: -u not implemented yet, aborting\n" if $uniq;
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+$restoftoken = "[^ \t\n()]*";
+$ind = "-[0-9]+\\b";    # index on null or overt element
+$tokennoind = "(?:(?!$ind)[^ \t\n()])+";   # part of token that does not include an index (basically, stops at first -[0-9])
+$expletiveword = "(?:[Ii]t)";   # regexp matching expletive headwords
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $sent++;
+
+    # throw out sentences involving gapping etc. -- currently have no good convention for these
+    if (/\(FRAG\b/) {
+      $discards++, $_ = "# DISCARDED by $0: contains FRAG nonterminal for intrasentential gapping";
+    } elsif (/\($token=[0-9]/o) {
+      $discards++, $_ = "# DISCARDED by $0: contains gapping $&)";
+    } elsif (/ \?\*\?/) {
+      $discards++, $_ = "# DISCARDED by $0: contains ?*? trace for intrasentential gapping";
+    } elsif (/ \*NOT\*/) {
+      $discards++, $_ = "# DISCARDED by $0: contains *NOT* placeholder for gapping";
+    } else {
+
+      # fix up various things about particular nulls
+
+      $nullcomps += s/(\(SBAR\b$restoftoken \@?)(\(-NONE- \@0\))/$1(IN \@$2)/og;                   # wrap (IN ...) around null complementizers
+      s/(\(SBAR\b$restoftoken) \@?\(IN \@\(-NONE- \@0\)\) \@?\(S\b$restoftoken( \@\(-NONE- $token\)\))\)/$1$2/og;      # fix SBAR traces that are written as having separate null complementizer and S trace
+      die "$0:$location *PPA* serves as head, aborting\n" if s/ \@\($token \@\(-NONE- \@\*PPA\*$restoftoken\)\)//og;    
+      $killnulls += s/ \($token \@\(-NONE- \@\*PPA\*$restoftoken\)\)//og;                           # remove *PPA*
+      die "$0:$location *U* serves as head, aborting\n" if s/ \@\(-NONE- \@\*U\*$restoftoken\)//og;    
+      $killnulls += s/ \(-NONE- \@\*U\*$restoftoken\)//og;                                         # remove *U*; this is different from *PPA* because it isn't promoted by any unary rule
+      s/\((NP\b$restoftoken) \@?\(NP \@\(PRP (\@$expletiveword)\)\) \@?\($token \@\(-NONE- \@\*EXP\*($ind)\)\)\)/($1 \@(-NONE- $2$3))/og;  # merge expletive with the *EXP* trace (a sister); the expletive becomes -NONE- (later to be changed to EXP), rather than an NP over PRP, and inherits the index from *EXP*.  Note that we have dropped a level of structure, to prevent the trace from looking like it was buried inside the subject and therefore being a head.  Also, we drop the nonterminal that used to dominate *EXP* (this usually shows up at the landing site), together with any index on that (which only appears occasionally, and seemingly by accident, i.e., it doesn't corefer).
+      die "$0:$location *EXP* appeared in unexpected context, aborting\n" if /\(-NONE- \*EXP\*$restoftoken\)/;
+      die "$0:$location empty constituent, probably from deleting *PPA* or *U*; aborting\n" if /\($token\)/; 
+
+      # another opportunity to discard, once we've done the fixup above
+
+      if (/\@\($token \@\(-NONE- \@$token$ind\)\)/o) {
+	$discards++, $_ = "# DISCARDED by $0: coindexed null in head position (usually denotes ellipsis): $&";
+      } else {
+
+        # ok, now go change the nulls into slashes etc.
+	
+	($_, @export) = &constit(0);
+	
+	# another opportunity to discard -- quit if there are unmatched slashes.
+
+	for ($i=1; $i < @export; $i+=2) {
+	  $_ = "# DISCARDED by $0: unmatched slash $export[$i-1]", last if $export[$i] < 0;
+	}
+	
+	unless ($i < @export) {	# unless we discarded and quit the loop early
+	  
+	  # if there were unmatched knobs left over, get rid of them throughout the parse.
+	  # contrasts with behavior of unmatched slashes, above.
+	  # the annotation standard says it's okay (though accidental) to index constituents
+	  #    that no trace refers to.  
+	  
+	  for ($i=1; $i < @export; $i+=2) {
+	    warn "$0:$location removing unwanted index from $export[$i-1]; also removing corresponding knobs\n";
+	    local($index) = -$export[$i];
+	    $export[$i-1] =~ /^\+($tokennoind)$index$/ || die "$0:$location internal error";
+	    local($simpletag) = $1;
+	    s/\(\+?$simpletag$index /\($simpletag /g; # strip the index (and any added +) from the base position
+	    s/\+$simpletag$index\b//g; # strip the knob anywhere it shows up
+	  }
+	  
+	  # as post-processing, propagate any unindexed slash for NP-SBJ
+	  # as described above.  For the purposes of this comment, I'll 
+	  # just write NP for brevity.
+	  # 
+	  # Careful about cases like (S~
+	  # (NP~-4\NP~ @(-NONE  ..., which should turn into
+	  # (S~\NP-8 (NP~-4\NP~-8 @(-NONE ..., preserving the
+	  # existing knob index.  Notice that the containing S might actually
+	  # be marked with +, and passed upward as a knob: 
+	  #   It (VP+S-1 is refreshing (+S-1 NP/NP to drink lemonade)).
+	  # We turn this into 
+	  #   (NP\NP-1 It) (VP+S-1 is refreshing (+S-1/NP-8 NP/NP-8 to drink lemonade)).
+	  # One might think we'd turn it into 
+	  #   (NP\NP-1 It) (VP+[S-1/NP-8] is refreshing (+S-1/NP-8 NP/NP-8 to drink lemonade)).
+	  # but this script never produces complex gaps or complex knobs.
+	  # Similar troublesome examples can exist before the postprocessing step:
+	  
+	  local($minind) = 0;   # interpret index as negative number
+	  while (/\($token($ind) /og) { $minind = $1 if $1 < $minind; }  
+	  s/(\(\+?S\b$restoftoken)( \(\+?NP~?-SBJ$restoftoken)(\\$tokennoind)( \@?\(-NONE- )/$minind--, $1.$3.$minind.$2.$3.$minind.$4/geo;
+	}
+
+	# Relabel expletives as EXP, not -NONE-.  We left them as -NONE- earlier
+        # so they'd be treated as slashes.
+
+	s/\(-NONE- (\@$expletiveword)\)/\(EXP $1\)/go;   
+      }
+    }
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $boundnulls bound nulls, $unboundnulls unbound nulls including $nullcomps complementizers, $killnulls removed nulls; discarded $discards of $sent sentences\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Any preceding @ is assumed to have been read by the caller.
+# 
+# input: -1, 0, or 1 according to whether this child is to the left, inside, or to the
+#            right of the caller's head
+# output: a tuple:
+#    - an appropriately slashed version of the text of the constituent.
+#         (Includes tag and index.)
+#    - a list of gaps and knobs exported by this constituent, in some
+#       aesthetically semireasonable order.  For convenience, each knob
+#       is followed by a positive integer denoting its index, and each
+#       gap is similarly followed by a negative integer. 
+#       Example: ("/NP-5", -5, "+S-3", 3, ...)
+#       This includes a knob for the constituent itself.
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($slashdir) = @_;
+  local($basictag, $index, $fulltag, $kidtext, @export);
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($tokennoind)($ind)?\s*//o || die "$0:$location no tag"; # eat tag 
+  $basictag = $1;
+  $index = $2;
+  $fulltag = $basictag.$index;   # we may add slashed categories to this.  $kidtext will be the text of the kids.
+
+  if (s/^\@\(-NONE- \@($tokennoind)($ind)?\)\s*//o) {   # this constituent holds just an empty category
+    local($null) = $1;   
+    local($traceindex) = $2;
+    $null = "0" unless $null =~ /^[Ii]t$/;    # force all nulls to be 0 (except expletives)
+    die "$0:$location internal error: indexed trace as a head, should already have discarded this sentence: $_" if $slashdir == 0 && $traceindex;  
+    if ($traceindex) { $boundnulls++ } else { $unboundnulls++ }
+    local($slash) = ($slashdir < 0 ? "\\" : "/") . "$basictag$traceindex";
+    $fulltag .= $slash;
+    $kidtext = " \@(-NONE- \@$null)"; 
+
+    @export = ($slash, $traceindex) if $traceindex;   # pass the slash up if it's indexed
+
+  } elsif (/^\@?\(/) {		# if tag is followed by at least one subconstituent (possibly marked with @)
+    local($subslashdir) = -1;   # haven't seen head yet
+    until (/^\)/) {		# eat all the subconstits recursively
+      local($headmark);
+      $headmark = "@" if s/^\@//;
+      $subslashdir++ if $headmark;
+
+      local($subtext, @subexport) = &constit($subslashdir);
+      $kidtext .= " $headmark$subtext";
+      # In the lines below, we're a little careful to get a nice order
+      # for the various knobs and slashes, sort of reflecting their
+      # obliqueness.  Not perfect though!
+      if ($subslashdir <= 0) {                
+	unshift(@export, @subexport);
+      } else {
+	push(@export, @subexport);
+      }
+
+      $subslashdir++ if $headmark;
+    }
+
+
+    # Duplicate slashes can arise in across-the-board gapping.  "Unify" them
+    # by removing one.  They may have different forms, such as /X-i and \Y-i;
+    # pick one arbitrarily.  Similarly check for duplicate knobs, though we don't
+    # expect these to ever occur.
+    
+    for ($i=$#export; $i >= 1; $i-=2) {    
+      for ($j=$#export; $j > $i; $j-=2) {
+	if ($export[$j] == $export[$i]) {   # duplication
+	  warn "$0:$location astonished by duplicate knobs $export[$i-1] and $export[$j-1] (removing one)\n" if $export[$j] > 0;  
+	  splice(@export, $j-1, 2);        # remove $j, but not $i
+	}
+      }
+    }
+
+    # Now cancel knobs against gaps.
+
+    for ($i=$#export; $i >= 1; $i-=2) {    
+      local($matched) = 0;
+      for ($j=$#export; $j > $i; $j-=2) {
+	if ($export[$j] == -$export[$i]) { # cancellation
+	  splice(@export, $j-1, 2);        # remove $j
+	  $matched = 1;                    # and remember to remove $i
+	}
+      }
+      splice(@export, $i-1, 2) if $matched;   # now delete $i
+    }
+
+
+    # add the remaining knobs and slashes to the tag.
+
+    for ($i=0; $i < @export; $i += 2) {    
+      $fulltag .= $export[$i]; 
+      if ($export[$i+1] > 0) {  
+	
+      }
+    }
+
+  } else {                       # tag is followed by lexical item
+    s/^(\@$token)\s*//o || die "$0:$location no lex item or lex item not marked as head: $_";
+    $kidtext = " $1";
+    @export = ();
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+
+  # this constituent itself provides a knob if indexed.  Before adding
+  # it to @export, we'll check that it doesn't match anything already
+  # in @export, which would be an error.
+
+  if ($index) {
+    local($knob) = "+$basictag$index";
+    for ($i=1; $i<@export; $i+=2) {
+      if ($index == $export[$i] || $index == -$export[$i]) {
+	warn "$0:$location i-within-i condition violated by $knob and $export[$i-1] (will ignore higher one)\n";
+	undef $knob, last;
+      } 
+    }
+    unshift(@export, $knob, -$index) if defined $knob;
+  }
+  
+
+  # return value.
+
+  ("($fulltag$kidtext)", @export);
+}
+
+
+
+

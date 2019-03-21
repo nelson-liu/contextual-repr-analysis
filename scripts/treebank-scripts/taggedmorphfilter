@@ -1,0 +1,118 @@
+#!/usr/local/bin/perl5.003 -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: taggedmorphfilter <database file> [files ...]
+
+$0 =~ s|.*/||;                                # remove the path preceding the program name, to clean up messages
+
+die "Usage: taggedmorphfilter <database file> [files ...]\n" unless @ARGV;
+$dbase = shift(@ARGV);
+
+# The list below is from Anoop.  It omits only the VVC and NVC tags,
+# which are precisely those used for words with apostrophes,
+#      VVC    "could 've" "should 've" etc.
+#      NVC    "they 'd" "that 'd" "it 'll" etc.  (10/31 version also has "that" as an NVC)
+# and punctuation.
+#      Punct  "." "!" ":" etc.
+
+%treebank2morph = (   "CC" =>  "Conj",
+		      "CD" =>  "Det",
+		      "DT" =>  "Det Comp",
+		      "EX" =>  "Pron",
+		      "FW" =>  "N",  # kludge 
+		      "IN" =>  "Prep Comp Conj", 
+		      "JJ" =>  "A",   #without COMP
+		      "JJR" => "A",   #COMP
+		      "JJS" => "A" ,  #usually has SUPER  (but "most", "least" don't)
+		      "LS" =>  "N",  # list item marker defaults to noun
+		      "MD" =>  "V",  # usually PRES, but can/will can also be INF.
+		      "NN" =>  "N",  # 3sg
+		      "NNS" => "N",  # 3pl
+		      "NP" =>  "PropN",
+		      "NPS" => "PropN",
+		      "PDT" => "Det",
+		      "POS" => "Pron",
+		      "PP" =>  "Pron", 
+		      "PP\$" => "Det Pron",  # Possessive Pronoun
+		      "RB" =>  "Adv",   # comparative, superlative, and -ly are not stripped off!
+		      "RBR" => "Adv",
+		      "RBS" => "Adv",
+		      "RP" =>  "Part Prep Adv", # often can't tell which, but no features anyway
+		      "SYM" => "N",  # Symbol defaults to noun
+		      "TO" =>  "V Prep",  # entry is "to    Prep#to Adv#to Part#to  V CONTR NEG PAST STR pl"
+		      "UH" =>  "I N",  # anoop had "N" here.  Sometimes that's right, but more often "I" is correct: "nope" "oh" "humph" "yo-heave-ho" "faugh" "struth" "cheerio" etc.
+		      "VB" =>  "V",  # INF
+		      "VBD" => "V",  # PAST
+		      "VBG" => "V",  # INDAUX  (later versions: PROG)
+		      "VBN" => "V",  # PPART
+		      "VBP" => "V",  # 2sg PRES or (for regular verbs) just INF.  Entry for "are" includes "be V PAST STR pl" - why?
+		      "VBZ" => "V",  # 3sg PRES
+		      "WDT" => "Det Comp Pron",  # really "Det wh" in the case of "which cars," and Comp in the case of "which/that John knows" (the treebank distinguishes this from non-variable-binding complementizer IN, "believe that John knows French").  May pied-pipe: "which John lives under," "under which John lives."  I don't think Pron belongs here -- oh, this is for "Which did you order?"
+		      "WP" =>  "Pron Comp",  # "who."  Again, there's a Pron 3sg wh -- incorrectly marked refl in the 10/31 version.  And there's a complementizer.
+		      "WP\$" => "G",   
+		      "WRB" => "Prep Adv Conj");  # when, where, why, how
+    # nominalizations?
+# make this into a 2-dim table for faster access
+
+while (($tr, $mos) = each %treebank2morph) {
+  foreach $mo (split(" ",$mos)) {
+    $trmo{$tr}->{$mo} = 1;
+  }
+}
+
+map { $treebank2morph{$_} = [split(" ",$treebank2morph{$_})]} (keys %treebank2morph);  # replace elements with pointers to arrays
+
+
+# # set up interprocess communication -- a two-way pipe.
+# # cribbed from the perlipc man page.
+# 
+# use FileHandle;
+# use IPC::Open2;
+# $MorphIn = new FileHandle;
+# $MorphOut = new FileHandle;
+# print open2($MorphOut, $MorphIn, "bc"); # "morphfilter $dbase" );   # note that morphfilter flushes after every line
+# print "\n";
+# $MorphIn->autoflush();    # default here, actually
+#  
+# # require 'Comm.pl';             # discussed in the perlipc man page; available from CPAN
+# # Comm::init(1.3,"open_proc");   # functions we want
+# # $morphfilter = Comm::open_proc("morphfilter $dbase");
+# 
+# # print $MorphIn "3+4\n\n";
+# # print <$MorphOut>;
+# 
+# while (<>) {
+#    print $MorphIn $_;
+#    print <$MorphOut>;
+# }	
+# 
+# close MorphIn;
+# close MorphOut;
+
+#--------------------
+
+# I can't get the above to work, so for now, let's just do the
+# slow thing of calling morphfilter on every token separately.
+# This has the overhead of starting a new process every time.
+
+while (<>) {
+  chop;
+  (($trtag, $word) = /(\S+)\s+(\S.*)/) || die "bad format line";
+  @answers = ();
+  $morphs = `echo \'$word\' | morphfilter $dbase`;
+  chop($morphs);
+#  print "[$morphs]\n";
+  foreach $morph (split("#", $morphs)) {
+    $morph =~ /\t(\S*) ?/;  
+#    print "<$morph<$`\t$'>\n";
+    push @answers, "$`\t$'" if ($trmo{$trtag}->{$1});
+  }
+  if (@answers) {
+    warn "$0: \"$trtag $word\" had ",@answers+0," possible morphologies in $morphs (outputting first)\n" if @answers > 1;
+    print $answers[0], "\n";
+  } else {
+    print "-$word\t\n";    # just keep word literally if we couldn't find it
+  }
+}
+

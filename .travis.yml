@@ -1,0 +1,27 @@
+sudo: false
+dist: trusty
+language: python
+
+cache:
+  directories:
+  - /home/travis/download
+  - /home/travis/.cache/pip
+
+matrix:
+  include:
+    # This environment tests that the code works on Python 3.6
+    # and prints a coverage report at the end.
+    - env: PYTHON_VERSION="3.6" COVERAGE="true"
+    # This environment doesn't run tests, but does check flake8 for lint violations.
+    - env: PYTHON_VERSION="3.6" RUN_LINT="true" SKIP_TESTS="true"
+
+notifications:
+  email: false
+
+branches:
+  only: 
+    - master
+
+install: source build_tools/travis/install.sh
+script: bash build_tools/travis/test_script.sh
+after_success: source build_tools/travis/after_success.sh

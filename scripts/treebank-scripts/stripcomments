@@ -1,0 +1,21 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: stripcomments [files ...] 
+#
+# Filter that removes comments from files in oneline or similar
+# format.  Comments are lines that start with #, possibly
+# following a location tag of the form filename:linenum:\t.
+
+require("stamp.inc"); &fixprog;                 # modify $0 and @INC, but DON'T print timestamp since that would be a comment
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$comments = $lines = 0;
+while (<>) {
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  $lines++;
+  if (/^\#/) { $comments++; } else { print "$location$_"; }
+}
+print STDERR "$0: removed $comments comment lines from $lines lines total\n";

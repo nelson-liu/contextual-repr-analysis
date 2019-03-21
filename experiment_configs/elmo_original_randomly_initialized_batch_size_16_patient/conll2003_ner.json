@@ -1,0 +1,40 @@
+{
+    "dataset_reader": {
+        "type": "conll2003_ner",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original_randomly_initialized/conll2003_ner.hdf5"
+        }
+    },
+    "validation_dataset_reader": {
+        "type": "conll2003_ner",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original_randomly_initialized/conll2003_ner.hdf5"
+        }
+    },
+    "train_data_path": "data/ner/eng.train",
+    "validation_data_path": "data/ner/eng.testa",
+    "test_data_path": "data/ner/eng.testb",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "token_representation_dim": 1024,
+        "calculate_span_f1": true,
+        "label_encoding": "IOB1"
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 16
+    },
+    "trainer": {
+        "num_epochs": 100,
+        "patience": 5,
+        "cuda_device": 0,
+        "validation_metric": "+f1-measure-overall",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

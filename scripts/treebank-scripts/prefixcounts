@@ -1,0 +1,52 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: prefixcounts [files ...]
+#
+# Input is in the format produced by rules2frames.  We collapse tokens
+# of the same (word, frame) type.  Each line is therefore unique, and
+# is preceded by
+#    count TAB totalcount TAB
+# where count is the number of tokens of this (word, frame),
+# and totalcount is the number of tokens of this word.
+#
+# Leading comments are stripped, other comments discarded.  
+# Locations are retained; when several lines are combined into 
+# one, a location is kept from one arbitrarily.
+#
+# We also delete all ~ arg marks in the frames.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$inlead = 1;
+while (<>) {
+  if (/^\#/) {
+    print if $inlead;
+    next;
+  }
+  $inlead = 0;
+  
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  next if /^#/;
+    
+  s/~//g;
+  /\t/ || die "$0: bad format line";
+  $totalcount{$`}++;   # find the word 
+  $count{$_}++;
+  $loc{$_} = $location;
+  $bodylinesin++;
+}
+
+while (($line, $count) = each %count) {
+  $line =~ /\t/;   # find the word
+  $totalcount = $totalcount{$`};
+  $location = $loc{$line};
+  print "$count\t$totalcount\t$location$line\n";
+  $bodylinesout++;
+}
+
+print STDERR "$0: $bodylinesin tokens in, $bodylinesout types out\n";

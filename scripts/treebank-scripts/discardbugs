@@ -1,0 +1,107 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: discardbugs [-c] file.bug [files ...]
+#
+# Filters parses that are in the format produced by oneline or headify.
+# Discards sentences that appear to contain annotation errors.
+# Each such sentence is replaced by *DISCARDED*.
+# Note that grep -v may be used to remove such lines if desired.
+#
+# file.bug lists suspicious phrase-structure rules, which suggest
+# mistagging or misbracketing.  Use of any of these rules will get a
+# sentence discarded.  The file may be produced by a human using Emacs
+# pshead mode.  (It may also contain examples, @ and = marks, etc.,
+# and may use lowercase.)
+#
+# If file.bug uses articulated rules, pipe the input through 
+# articulate first.  Also, if file.bug assumes canonicalized
+# tags, pipe the input through canonicalize first, or else use
+# the -c flag to force discardbugs to canonicalize tags internally
+# while leaving them alone in the output.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+require("canon.inc");                         # this gives us canonicalizetag
+
+$canonicalize = 1, shift(@ARGV) if $ARGV[0] eq "-c";  
+die "$0: bad command line" unless @ARGV && $ARGV[0] !~ /^-./;
+$bugfile = shift(@ARGV);
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+
+
+# Read in the buggy rules.
+open(BUGGYRULES, $bugfile) || die "$0:$location can't open $bugfile";
+print STDERR "$0: reading buggy-rule file $bugfile ...\n";
+while (<BUGGYRULES>) {
+    next if /^\t/;     # ignore example lines
+    tr/a-z/A-Z/;
+    chop;
+    s/(\s)@?=?/$1/g;   # strip all @ and = from rule
+    $bug{$_} = 1;      # remember to discard any sentence using this rule (this may override MARKEDRULES)
+}
+
+
+# Okay, now scan each sentence for buggy rule instances.
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  $savesentence = $_;
+  unless (/^\#/) {    # unless a comment
+    $sentin++;
+    s/@//g;      # get rid of @ marks in case this was the output of headify
+    s/~//g;      # get rid of ~ marks in case this was the output of markargs
+    ($tag, @bugs) = &constit;
+    die "$0:$location more than one sentence on line ending $_" if $_;
+    if (@bugs) {
+      $_ = "# DISCARDED by $0: contained buggy rule(s) @bugs";
+    } else {
+      $_ = $savesentence;
+      $sentout++;
+    }
+  }
+  print "$location$_\n";
+}
+print STDERR "$0: $sentin sentences in, $sentout sentences out\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# 
+# input:  none
+# output: list:
+#	    - nonterminal of this constit, canonicalized if $canonicalize is on
+#	    - followed by a list of strings describing the buggy rules in this constituent
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+
+sub constit {   
+  local($ctag, @bugs);   # "ctag" denotes nonterm that may have been canonicalized (according to $canonicalize)
+  
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $ctag = $canonicalize ? &canonicalizetag($1) : $1;
+  
+  if (/^\(/) {			# if tag is followed by at least one subconstituent  
+    local($subctag, @subctags, @subbugs);
+    until (/^\)/) {		#   eat all the subconstits recursively and remember what they were
+      ($subctag, @subbugs) = &constit(); #   we could omit constits that are lexically null from our phrase structure rules, but we won't.
+      push(@subctags, $subctag);
+      push(@bugs, @subbugs);
+    }
+    push(@bugs, "[$ctag -> @subctags]") if ($bug{"$ctag\t@subctags"});
+
+  } else {			# if tag is followed by just a lexical item
+    s/^($token)\s*//o || die "$0:$location no lex item";
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  ($ctag, @bugs);
+}

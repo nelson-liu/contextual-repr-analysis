@@ -1,0 +1,104 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: fixsay [files ...]
+#
+# Filters input in oneline format.
+# 
+# The problem:
+# 
+# When "Mr. Jones says" or "says Mr. Jones" is sentence medial,
+# the Treebank records it as a parenthetical S or SINV that contains
+# a trace of the enclosing sentence.  That is hard to represent
+# with slashes.  
+#
+# Solution:
+# 
+# Just remove coindexation on traces that violate the i-within-i
+# condition (so that the "empty" object of "say" has the same status
+# as PRO_arb).  This even does a reasonable job of capturing where
+# such parentheticals tend to fall (e.g., after the first component of
+# the matrix S).  However, it doesn't recognize that "Mr. Jones says
+# blah blah" can't appear sentence medially, or that "Mr. Jones says"
+# can't be the full matrix sentence.
+#
+# Alternative solution (!!! I should implement this with a switch):
+#
+# Convert such structures by raising the S or SINV to matrix level,
+# and treating the before-and-after parts as X and S\X, as if the X
+# had been topicalized out of the embedded S.  This is basically
+# the CCG solution:  (NP John), (S/S she says), (S\NP is crazy).
+# = (NP John) (S\NP she says (t) is crazy), using crossing composition.
+# Less often, it'd be necessary to treat the before-and-after parts as 
+# S/X and X: (S/ADJP John is), (S/S she says), (ADJP crazy).  Because
+# the "wrong" directionality of the S/S, we probably want to think of
+# this as topicalizing the whole S, which contains an *ICH* in Treebank
+# style.  The same analysis applies to parentheticals like (S/S certainly).
+# and (S/S he thinks).
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+$restoftoken = "[^ \t\n()]*";
+$ind = "-[0-9]+\\b";    # index on null element
+$tokennoind = "(?:(?!$ind)[^ \t\n()])+";   # part of token that does not include an index (basically, stops at first -[0-9])
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $_ = &constit();
+  } 
+  print "$location$_\n";
+}
+print STDERR "$0: $fixed instances fixed\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Returns an appropriately munged version of the text of the constituent.
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+
+@stack = ();  # global variable containing indices for the ancestors of this constituent.  If an index is matched, it is changed to "".
+
+sub constit {   
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($tokennoind)($ind)?\s*//o || die "$0:$location no tag, or tag already marked with ~"; # eat tag.  Note that I've doctored definition of $token; see above.
+  local($tag) = $1;
+  local($index) = $2;
+  local($text) = "";
+
+  push (@stack, $index);
+  
+  if (/^\(/) {		# if tag is followed by at least one subconstituent 
+    $text .= " " . &constit until (/^\)/);     # eat subconstits
+  } else {              # tag is followed just by a lexical item
+    if ($tag ne "-NONE-") {
+      s/^($token)()\s*//o || die "$0:$location no lex item";
+      $text .= " " . $1;
+    } else {
+      s/^($tokennoind)($ind)?\s*//o || die "$0:$location no lex item";
+      $text .= " " . $1;
+      if (grep(s/^$2$//, @stack)) { 
+	# if $2 appears in the stack, change it to "" and discard it from the current trace, too
+	$fixed++;
+      } else {
+	$text .= $2 
+      }
+    }
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  $index = pop(@stack);    # possibly changed to ""
+
+  "($tag$index$text)";
+}

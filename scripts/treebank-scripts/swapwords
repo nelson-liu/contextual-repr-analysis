@@ -1,0 +1,111 @@
+#!/usr/local/bin/perl5 -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: swapwords n trainfile testfile
+#
+# trainfile and testfile are in the format produced by rules2frames.  
+#   (Actually, testfile should be piped through "nobadnonterm trainfile" first.)
+# Thus, it is a bunch of (word, frame) pairs.  We output a list of up to n DISTINCT
+# forced-choice paradigms, each consisting of four (word, frame) pairs as
+# follows:
+#    (w1, f1)   - in testfile
+#    (w2, f2)   - in testfile
+#    (w1, f2)   - not in testfile
+#    (w2, f1)   - not in testfile
+# where f1 and f2 do not appear at all in trainfile.  (We also require at least
+# one of w1, w2 to appear in trainfile, so we have some basis for making the decision -
+# this avoids unnecessary ties.)  In addition, we require f1 != f2 and w1 != w2.
+# Indeed we require w1 < w2 so we don't get symmetric duplicates.
+# We strip ~ from the LHS of all frames, to prevent duplicate frames from sneaking in.
+#
+# The n distinct paradigms are found by sampling WITHOUT REPLACEMENT from the SET of
+# possible paradigms meeting these conditions.  Note that the sampling is by type, with
+# no preference given to frequent wordframes.  
+#
+# If n is 0, we just use all the possible paradigms.
+#
+# The idea is that we'll score these four pairs with conditional probabilities 
+# p(frame | word) of p1 ... p4, and correctly guess which frame goes with which 
+# word if p1*p2 > p3*p4.
+#
+# This format is convenient, but will contain a lot of repeated
+# wordframes.  The first two wordframes in each quadruple will especially
+# get repeated a lot.  If scoring is slow, then it would be wise to score
+# a uniqified version of the output and then merge the scores back into
+# this file.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+&citestamps(@ARGV[1..2]);
+
+die "$0: bad command line args\n" unless @ARGV==3;
+($n,$trainfile,$testfile) = @ARGV;
+
+$trainwf = 0;
+open(TRAIN, $trainfile) || die "$0: can't open $trainfile";
+while (<TRAIN>) {
+  chop;
+  s/^(\S+:[0-9]+:\t)?//;   # kill loc
+  next if /^\#/;           # skip comment
+  @a=split("\t"); $a[1] =~ s/~//g; $_=join("\t",@a);  # kill ~ on LHS
+  $trainwf++;
+  /\t/ || die; 
+  $trainword{$`} = 1;
+  $trainframe{$'} = 1;
+}
+close(TRAIN);
+
+$testwf = 0;
+open(TEST, $testfile) || die "$0: can't open $testfile";
+while (<TEST>) {
+  chop;
+  s/^(\S+:[0-9]+:\t)?//;   # kill loc
+  next if /^\#/;           # skip comment
+  @a=split("\t"); $a[1] =~ s/~//g; $_=join("\t",@a);  # kill ~ on LHS
+  $testwf++;
+  /\t/ || die; 
+  next if $trainframe{$'}; # novel frames only
+  $testwf{$_} = 1;         # remember we've seen this wordframe in testing but didn't see the frame in training
+  $novelwords++ unless $trainword{$`};
+}
+close(TEST);
+
+# Create a list of ALL possible quadruples from test data.
+
+foreach (keys %testwf) {
+  print STDERR ".";
+  /\t/ || die; $w1 = $`; $f1 = $';
+  foreach (keys %testwf) {
+    /\t/ || die; $w2 = $`; $f2 = $';
+    next unless $w1 lt $w2;   
+    $ok=1;
+    $ok=0, print STDERR "w" unless $trainword{$w1} || $trainword{$w2};
+    $ok=0, print STDERR "f" if $f1 eq $f2;
+    $ok=0, print STDERR "t" if $testwf{"$w1\t$f2"} || $testwf{"$w2\t$f1"};
+    if (!$ok) { print STDERR ("/"); next; }
+    $quads{"# QUAD\n$w1\t$f1\n$w2\t$f2\n$w1\t$f2\n$w2\t$f1\n"} = 1;   # use hash table to avoid duplicates
+  }
+}
+
+# Print up to $n randomly selected quadruples, by sorting their
+# indices into a random order.  (We could have used random hash values
+# in %quads and used that to sort the hash keys into a random order,
+# but that's slow because it means hashing a long string on every
+# comparison.)
+
+@quads = keys %quads;
+if ($n==0) {
+  printf STDERR "(using all quads)\n";
+  @printindices = 0..$#quads;
+} else {
+  printf STDERR "(shuffling)\n";
+  srand(123);   # replicable
+  @rands = 0 x scalar @quads;
+  foreach $i (0..$#quads) { $rands[$i] = rand; }
+  @shuffledindices = sort { $rands[$a] <=> $rands[$b] } 0..$#quads;
+  @printindices = @shuffledindices[0..$n-1];
+}
+print @quads[@printindices];
+
+print STDERR "$0: $trainwf training and $testwf test wordframe tokens, ", scalar keys %testwf, " test tokens with novel frames, ", $novelwords, " of these had novel words and couldn't be paired with one another, ", scalar @quads, " possible quadruples, ", scalar @printindices, " selected\n";
+

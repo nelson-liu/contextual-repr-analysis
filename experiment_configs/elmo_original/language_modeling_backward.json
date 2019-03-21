@@ -1,0 +1,40 @@
+{
+    "vocabulary": {
+        "directory_path": "models/elmo_original/language_modeling_backward_vocab/vocabulary"
+    },
+    "dataset_reader": {
+        "type": "billion_word_benchmark_language_modeling",
+        "vocabulary_path": "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway_tf_checkpoint/vocab-2016-09-10.txt",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original/language_modeling.hdf5",
+            "second_half_only": true
+        },
+        "backward": true,
+        "lazy": true
+    },
+    "train_data_path": "data/language_modeling/news.en.auxiliary.train",
+    "validation_data_path": "data/language_modeling/news.en.auxiliary.dev",
+    "test_data_path": "data/language_modeling/news.en.auxiliary.test",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "token_representation_dim": 512,
+        "calculate_perplexity": true,
+        "loss_average": "token"
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 16
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+accuracy",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

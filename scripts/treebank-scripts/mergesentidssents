@@ -1,0 +1,24 @@
+#!/usr/local/bin/perl
+
+# Author: Martin Cmejrek
+
+# Usage: mergesentidssents
+#
+# Uncomments sentence id and merges with sentence, replaces ~( sequence by (~ 
+# so that it is prepared for java tools    
+
+$lastprefix="";
+
+while (<STDIN>) {      # for contents of each file, slurped whole into $_
+  if(s/^\#sentence_id\=//) {
+    #prefix found
+    $lastprefix=$_;
+    chomp($lastprefix);
+  } elsif (!/^\#/) {
+    #sentence found
+      s/\@\(/\(\@/g;
+    print "$lastprefix";
+    print;
+  }
+}
+

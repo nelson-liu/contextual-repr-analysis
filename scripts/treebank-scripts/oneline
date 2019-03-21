@@ -1,0 +1,116 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: oneline [-n] [file.mrg file.mrg ...]
+#
+# Filters Penn Treebank II parses, from the specified files or stdin, 
+# into a massaged version, known as "oneline format," and having the 
+# following properties:
+#
+#   Each sentence is now all on one line.  
+#   A blank line follows the contents of each input file ("section").
+#   Each sentence is no longer surrounded by an extra pair of parens.
+#
+#   We replace certain characters that will be special in our annotation
+#   (not all of these actually appear in the Treebank):
+#
+#      @  :at:      (so we can use @ to mark heads)
+#      ~  :tilde:   (so we can use ~ to mark arguments)
+#      ^  :caret:   (so that ^ will be free for the next substitution)
+#      |  ^         (so we can use | to separate the sequence of nonterminals projected by a word; in the original Treebank, | appears only twice, as part of the tags ADVP|PRT and PRT|ADVP)
+#      \/ :slash:   (so we can use / for CCG-style directional gaps)
+#      \* :star:    (so we can use \ for CCG-style directional gaps; we also check that there are no remaining uses of \)
+#      +  :plus:    (so we can use + for "knobs" -- the opposite of gaps) 
+#      #  :pound:   (so we can use # for comments; this is not an issue with oneline format itself, since those lines should never start with # anyway, but it's an issue in frames derived from that format, so let's eliminate # at the start)
+#      &  &amp;     ##MC added
+#      
+#   The -n option, as in grep, says to precede each line with filename:linenum:\t
+#     (where line numbers start from 1).  These marks, when present, are preserved 
+#     throughout the pipeline; they can enable better error messages and better
+#     viewing of the output.
+#
+#    	 (If you view such output with the emacs "grep" facility, it will
+#    	 allow you to jump to the corresponding source.  To view, use M-x
+#    	 grep, and specify as command either "oneline" or any other command
+#    	 (possibly just "cat"!) that produces output in the same format.
+#    	 If filenames are relativized, make sure to visit a file of the 
+#    	 appropriate directory before doing this.
+#
+# A script that filters files in oneline format should in general preserve:
+#   1) the "filename:linenum:\t" prefixes that may appear on some or all lines.
+#   2) comment lines, which start with #, possibly after the "filename:linenum:\t" prefix above.
+#   3) the number of lines.  
+#      A line that is thrown away should be replaced by a comment indicating why.
+#   4) the ~ suffixes to the principal section of some nonterminal tags.  
+#      These mark arguments (and are added by markargs).
+#
+# It need not preserve or recognize
+#   5) the @ signs before some constituents (added by headify) unless it says
+#      that it's compatible with headify format.
+
+require('stamp.inc');  &stamp;
+
+$numberlines = 1, shift(@ARGV) if $ARGV[0] eq "-n";  
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+undef $/;                # undefine the record separator (ordinarily \n); this lets us read a whole file at a time into $_
+$numsent = $numsect = 0;
+while (<>) {      # for contents of each file, slurped whole into $_
+    print STDERR "$0: reading file $ARGV ...\n";
+    print "$ARGV:1:\t" if $numberlines;          # even number the start-of-section lines (primarily so they get removed appropriately by selectsect)
+    print "# START OF SECTION $numsect: file $ARGV\n";
+    s/^\s*//;      # eat leading whitespace
+    $temp=$&;
+    $linenum = 1 + ($temp =~ tr/\n/ /);   # line number we're now on, considering any newlines we just deleted
+    s/@/:at:/g;    
+    s/~/:tilde:/g;   
+    s/\^/:caret:/g;   
+    s/\|/\^/g;
+    s|\\/|:slash:|g; 
+    s|\\\*|:star:|g; 
+    s|\+|:plus:|g; 
+    s|\#|:pound:|g; 
+    s/&/&amp;/g;   ##MC added
+    die "$0: unexpected use of backslash, aborting: $_" if /\\/;
+    while ($_) {   # until we run out of sentences in this file
+      $text = "";
+      &balexp;               # read a balanced expression (one sentence)
+
+      print "$ARGV:$linenum:\t" if $numberlines;
+      $linenum += ($text =~ tr/\n/ /);
+
+      $text =~ s/\s+/ /g;    # normalize the spacing
+      $text =~ s/ \)/\)/g;
+      $text =~ s/\( /\(/g;
+
+      $text =~ s/^\(// || die "$0:$ARGV:$linenum expected to start with (";   # get rid of extra surrounding () 
+      $text =~ s/\) ?$// || die "$0:$ARGV:$linenum expected to end with )";
+
+      print $text,"\n";
+      $numsent++;
+    }
+    $numsect++;       # end of the file
+}
+print STDERR "$0: read $numsent sentences from $numsect sections\n";
+
+
+# -------------------------
+
+# Reads off a balanced expression, plus following whitespace, from the front of $_.
+# Adds all this text to the end of the global variable $text.  No normalization is done.
+
+sub balexp {   
+
+  if (s/^\(//) {
+    $text .= $&;
+    &balexp until s/^\)\s*//; 
+    $text .= $&;
+  } elsif (/^\)/) {
+    die "$0:$ARGV:$linenum unexpected )";
+  } {
+    s/[^()]*//;
+    $text .= $&;
+  }
+}
+ 

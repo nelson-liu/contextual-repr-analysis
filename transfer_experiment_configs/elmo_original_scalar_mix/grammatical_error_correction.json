@@ -1,0 +1,42 @@
+{
+    "dataset_reader": {
+        "type": "grammatical_error_correction"
+    },
+    "train_data_path": "data/grammatical_error_correction/fce-public.train",
+    "validation_data_path": "data/grammatical_error_correction/fce-public.dev",
+    "test_data_path": "data/grammatical_error_correction/fce-public.test",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "contextualizer": {
+            "type": "elmo_contextualizer",
+            "batch_size": 80,
+            "elmo": {
+                "weight_file": "contextualizers/elmo_original/elmo_original_weights.hdf5",
+                "options_file": "contextualizers/elmo_original/elmo_original_options.json",
+                "requires_grad": false,
+                "num_output_representations": 1,
+                "dropout": 0.0
+            }
+        },
+        "pretrained_file": std.extVar('pretrained_file'),
+        "transfer_contextualizer_from_pretrained_file": true,
+        "transfer_encoder_from_pretrained_file": false,
+        "token_representation_dim": 1024,
+        "calculate_per_label_f1": true
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 10,
+        "cuda_device": 0,
+        "validation_metric": "+label_i_f1",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

@@ -1,0 +1,545 @@
+ADJP	NN PP-TMP PP
+	(convertible) (from nov. 28 , 1989 , to dec. 20 , 1993 ,) (at a 5 % premium over closing share price oct. 30 , when terms are scheduled *-2 to be fixed *-1 *t*-3)
+ADJP	NN VBD
+	(rate) (capped)
+ADJP	NNP NNP
+	(very) (big)
+ADJP	NP RBR
+	(about 40 %) (more)
+ADJP	RB PP
+	(close) (to an investigation of the utility holding company)
+	(close) (to the case)
+	(close) (to the company)
+	(close) (to the situation)
+	(close) (to the transaction)
+ADJP	RB RB
+	(so) (close)
+	(too) (many)
+ADJP	RB S
+	(about) (*-3 to be taken *-4 over)
+	(likely) (* to help the computer giant 's battered stock)
+ADJP-PRD	DT JJ JJ
+	(a) (little) (DISTURBING)
+ADJP-PRD	IN NP
+	(WORTH) (about $ 60 million *u* in sales)
+ADJP-PRD	NN S
+	(enough) (* to spark a futures rally)
+ADJP-PRD	RB NP
+	(ahead) (more than 20 % , well above the annual average for stocks over several decades)
+ADJP-PRD	RB PP
+	(ahead) (for the year)
+	(close) (to analysts ' predictions of about $ 1.40 *u* a share for the quarter)
+	(close) (to the bottom '' of the near-term ranges)
+	(due) (mostly to payments from allianz for most of the 50 % stake 0 it has agreed *-1 to acquire *t*-2 in navigation mixte 's insurance business)
+	(short) (of house arrest)
+	(together) (with existing tariffs)
+ADJP-PRD	VB PP
+	(keen) (on *-2 going)
+ADJP-PRD	@RB
+	(FOREMOST)
+ADVP	RBS JJ
+	(MOST) (serious)
+ADVP	RBS JJ
+	(most) (serious)
+ADVP	@RP
+	(BACK)
+	(BACK)
+	(BACK)
+	(DOWN)
+	(OUT)
+	(OUT)
+	(UP)
+	(UP)
+	(UP)
+ADVP	@RP PP
+	(UP) (to the $ 1.22 to $ 1.25 *u* level)
+ADVP	RP PRN
+	(out) (-lrb- of stocks -rrb-)
+ADVP	@RP
+	(DOWN)
+ADVP-LOC	IN @RB
+	(DOWN) (here)   (shouldn't this be RB RB, like "out there"?)
+NP	ADJP @JJ
+	($ 25 *u*) (preferred)
+	(8 11\/16 %) (low)
+	(8 3\/4 %) (high)
+NP	ADJP @JJR
+	(30 %) (more)
+NP	ADVP RB RB
+	(just) (so) (much)
+NP	DT JJ NN VBD
+	(a) (2-for-1) (STOCK) (split)
+NP	DT JJ NNS JJ
+	(a) (financial) (SERVICES) (firm)
+NP	DT JJ POS
+	(the) (REFORMER) ('s)
+NP	DT NN JJ @NN
+	(a) (mailroom) (clerk-turned) (AGENT)
+NP	DT NNS @VBZ
+	(the) (APPROPRIATIONS) (committees)
+NP	DT RB
+	(the) (highest)
+NP	DT VBN POS
+	(the) (won) ('s)
+NP	JJ @NN .
+	(line-item) (VETO) (.)
+NP	@NN VBZ
+	(INDEX) (puts)
+NP	@NN VBZ
+	(YESTERDAY) ('s)
+NP	NNP NNP VBZ
+	(dow) (JONES) (industrials)
+	(helmut) (KOHL) ('s)
+	(mr.) (HOFFMAN) ('s)
+	(mr.) (MILES) ('s)
+	(u.s.) (POSTAL) (inspectors)
+	(wall) (STREET) ('s)
+NP	NNP VBP POS
+	(PAN) (am) ('s)
+NP	NP NN VB `` @NX
+	(the children 's) (television) (show) (``) (BATIBOT)
+NP	NP PRN : `` S .
+	(ABBIE) (-lrb- * cont'd. *-1 -rrb-) (:) (``) (i 'll always be with you , jack) (.)
+NP	@NP VP PP
+	(PROGRAMS) (obviously made * available cheaply) (from its boss 's other ventures)
+	(TROUBLES) (facing its competitor , genetics institute ,) (over the anti-anemia drug epo)
+ADJP-PRD	VB PP
+	(keen) (on *-2 going)
+FRAG	@NP PP . ''
+	(sort) (of a two-step bear market) (.) ('')
+NP	RB RB VBZ
+	(not) (just) (phones)
+NP	VBZ SBAR
+	(rumors) (that it was he who *t*-1 kept east germany 's state police off protesters ' backs at the country 's dismal 40th anniversary celebrations earlier this month)
+NP-LOC	@IN NP
+	(ON) (the senate budget committee)
+NP-PRD	ADJP @JJ
+	(57 %) (BLACK)
+NP-PRD	NN @NP PP
+	(abducted) (*-1) (from her homeland)
+NP-PRD	NNP NNP @NNP IN
+	(den) (norske) (BANK) (as)
+NP	DT VBG
+	(THE) (refinancing)
+NP	NP NN JJ
+	(the treasury 's) (BENCHMARK) (30-year)
+NP-TMP	@NP NP-TMP
+	(THIS TIME) (next year)
+PP	@PP PP PP
+	(to $ 367 *u* *rnr*-3) (from $ 429 *u* *rnr*-3) (per ounce)
+PP	@RB NP
+	(as) (little more than tough talk)
+PP-LOC	NNP NP
+	(over) (the rainbow)
+PP-TMP	NN NP
+	(beginning) (today)
+PRN	-LRB- @NP , NP -RRB-
+	(-lrb-) (D.) (,) (hawaii) (-rrb-)
+	(-lrb-) (D.) (,) (w.va .) (-rrb-)
+QP	$ CD NN
+	($) (179) (MILLLION)
+S	ADJP-PRD NP
+	(open) (the possibility of * enacting a gains tax reduction this year)
+	(permanent) (a 3 % excise tax on long-distance telephone calls)
+S	ADJP-PRD SBAR-SBJ
+	(sure) (0 it holds on to existing customers)
+	(sure) (0 they know what they want *t*-2 before they come back)
+S	NP @NP-PRD PP-TMP
+	(the peanuts gang) (very familiar pitchmen) (in 1990)
+S	NP X
+	(tuesday 's) (was)
+S	NP @VP SBAR .
+	(ibm) (IS EXPECTED *-1 TO RESPOND TO TANDEM 'S CYCLONE BY *-2 DISCOUNTING ITS OWN MAINFRAMES ,) (which analysts say 0 *t*-3 are roughly three times the price of a comparable system from tandem) (.)
+S-ADV	NP , VP
+	(row upon row of greenhouses) (,) (stretching out behind modern mansions that *t*-2 trumpet their owners ' wealth)
+SBAR-ADV	NNP S
+	(though) (boeing 's stock price was battered *-1 along with the rest of the market friday)
+	(though) (spain has an excess of banks)
+	(though) (the cubs ' championship season ended with the national league playoffs)
+SBAR-PRD	@DT S
+	(THAT) (income must be taxed *-1 to whoever *t*-3 earns it)
+SINV	PP-TMP , @VBD NP
+	(at 2:43 p.m. edt) (,) (CAME) (the sickening news)
+VP	-NONE- , S-ADV
+	(*?*) (,) (*-1 shaking the apple establishment to its roots)
+VP	ADVP JJ NP S
+	(fully) (prepared) (*-2) (*-3 to go their separate ways)
+VP	NN ADVP PP
+	(stem) (largely) (from positions taken * last year)
+VP	NN ADVP PP S
+	(work) (more closely) (with gm 's technical staffs) (*-1 TO HELP PREVENT FUTURE LITIGATION)
+VP	NN ADVP
+	(happening) (*t*-1)
+VP	NN NP
+	(bar) (imports of beef from hormone-treated u.s. cattle)
+	(bid) (*)
+	(bid) (*)
+	(bid) (*)
+	(bid) (*)
+	(face) (competition)
+	(question) (the inevitability of the move to small machines that *t*-1 do n't make compromises)
+	(raise) (questions , at least among some u.s. officials , about what exactly her stance *ich*-2 is *t*-1 on u.s. access to the japanese semiconductor market)
+	(trigger) (a steep market decline)
+VP	NN NP ADVP ADVP
+	(screen) (customers) (carefully) (*t*-1)
+VP	NN NP PP-LOC
+	(address) (this topic) (before the supreme soviet)
+VP	NN NP PP-TMP
+	(stem) (pound selling) (in recent weeks)
+VP	NN NP PRN `` S-PRP
+	(redone) (*-2) (, mr. nelson said 0 *t*-3 ,) (``) (* to make teddy 's situation clear to viewers who *t*-1 have not been with us since the beginning)
+VP	NN NP S-ADV
+	(stage) (an astonishing recovery from an 80-point deficit) (*-1 to finish only slightly below monday 's close)
+VP	NN PP
+	(aid) (in california 's earthquake relief efforts)
+	(focus) (on short-term results)
+	(stand) (as milestones of american business history)
+VP	NN PP
+	(range) (from $ 2.25 to $ 2.45 *u* a share)
+VP	NN PP NP-TMP
+	(ground) (to its final 190.58 loss) (friday)
+VP	NN PP PP-TMP , PP
+	(rose) (to 38 cents a share) (in its fiscal-first quarter ended sept. 30) (,) (from 35 cents a shares a year ago)
+VP	NN PP-LOC
+	(battle) (in local elections)
+VP	NN PP-LOC ADVP-LOC PP-TMP
+	(standing) (in line) (next to me) (for the past three hours)
+VP	NN PP
+	(profit) (by *-3 replacing them later at a lower price)
+VP	NN PRT NP
+	(hand) (out) (machetes)
+	(turn) (on) (tv)
+VP	NN RB , ADVP , @VP
+	(will) (not) (,) (however) (,) (RESUME 24-HOUR SERVICE UNTIL POWER IN CITY IS RESTORED *-1)
+VP	NN SBAR
+	(claim) (0 *t*-2 has been maligned *-1 unjustly for years)
+	(feel) (0 *t*-3 benefited small enterprises)
+	(protest) (that his subcommittee simply seeks information for legislative change)
+VP	NN SBAR-PRD
+	(being) (that customers generally view the company 's computers as complementary to ibm 's mainframes)
+VP	NN VB NP PP-TMP PP-LOC
+	(test) (market) (a caffeine-free version of its flagship brand , coca-cola classic ,) (beginning next week) (in charlotte , n.c)
+VP	NN @VP
+	(will) (BATTLE IN LOCAL ELECTIONS)
+VP	NNP NP
+	(meet) (the press)
+VP	NNP S
+	(added) (*ich*-1)
+	(adds) (*ich*-1)
+VP	NNP SBAR
+	(say) (0 u.s. policy on palestinian terrorism is colored *-1 by an intense desire * to maintain the dialogue with the plo)
+VP	@NNS
+	(DEFAULTS)
+VP	NNS NP
+	(heads) (*t*-1)
+VP	NNS NP PP-TMP
+	(issues) (forecasts) (in the past 30 days)
+VP	NNS NP PP-TMP ADVP-LOC
+	(issues) (forecasts) (in the past 30 days) (*t*-1)
+VP	NNS PP
+	(amounts) (to an admission that the transition has n't gone as smoothly as sears had hoped)
+	(works) (with a number of smaller firms 0 it regards *t*-1 highly)
+VP	NNS PP-LOC
+	(towers) (over the brick wall surrounding his property)
+VP	NNS PRT NP , S-ADV
+	(shrugs) (off) (such criticism) (,) (*-1 noting that 3 1\/2-inch floppies were also `` unconventional '' when they first replaced five-inch disks *t*-2)
+VP	NNS PRT NP , S-ADV
+	(shrugs) (off) (such criticism) (,) (*-1 NOTING THAT 3 1\/2-INCH FLOPPIES WERE ALSO `` UNCONVENTIONAL '' WHEN THEY FIRST REPLACED FIVE-INCH DISKS *T*-2)
+VP	NNS S
+	(expects) (*-1 TO BE FULLY OPERATIONAL EARLY NEXT WEEK)
+	(needs) (*-1 TO SOON OFFER A COLOR VERSION OF ITS COMPUTER)
+VP	NNS S-PRP
+	(scrambles) (*-2 TO SPEND ITS MONEY BEFORE THE NEW FISCAL YEAR BEGINS OCT. 1)
+VP	NNS SBAR
+	(counters) (THAT HE INTENDS *-1 TO FURTHER PARE THE SIZE OF CENTRUST BY *-2 NOT RENEWING MORE THAN $ 1 BILLION *U* OF BROKERED CERTIFICATES OF DEPOSIT WHEN THEY COME DUE *T*-3)
+	(estimates) (0 *T*-2)
+	(notes) (THAT THESE TYPES OF INVESTORS ALSO ARE `` SOPHISTICATED '' ENOUGH *-1 NOT TO COMPLAIN ABOUT KIDDER 'S AGGRESSIVE USE OF PROGRAM TRADING)
+VP	NNS SBAR-NOM
+	(charges) (ABOUT HALF WHAT THOSE HOUSES DO *?* *T*-3 FOR A TICKET)
+VP	NNS SBAR-TMP
+	(soars) (WHEN BIG NEWS BREAKS *T*-1)
+VP	NP NP PP
+	(blames) (most of these) (on fatah)
+VP	NP1 PP-LOC2
+	(another) (at school)
+VP	POS ADJP-PRD SBAR
+	('s) (worth noting) (THAT BOTH DISAPPROVING RELATIVES ARE IMMIGRANTS)
+VP	POS NP-PRD
+	('s) (my forecast)
+	('s) (politics)
+VP	POS NP-PRD ADVP-LOC
+	('s) (diamonds) (out there)
+VP	POS NP-PRD PP-LOC
+	('s) (much pleasure) (in her saucy , poignant probe into the mysteries of the babylonian bronx)
+VP	POS SBAR-PRD SBAR
+	('s) (when such slapping does n't occur *t*-1) (that we 've got trouble *t*-2)
+VP	POS @VP
+	('s) (GOT TROUBLE)
+	('s) (HAD OTHER BRUSHES WITH THE LAW)
+	('s) (RAISING $ 270 MILLION *U* *-3 TO BUILD AN IRON PLANT)
+VP	ADVP NN NP
+	(hardest) (hit) (*-2)
+WHNP	@NP PRN
+	(which partnerships) (-lcb- with magazines -rcb-)
+NP	DT JJ NNS @JJ
+	(a) (financial) (services) (FIRM)
+NP	DT JJS @PRN
+	(the) (largest) (-LCB- CABLE OPERATOR -RCB-)
+PP-LOC	@NP PP
+	(WITHIN 12 HOURS) (of * completing the drawn-out process of * restarting it)
+NAC	TO NP
+	(to) (75 CENTS)
+NP	NPR . ''
+	(philip morris cos) (.) (')
+NP	DT @RB
+	(the) (HIGHEST)
+NP	NP$ NN VB `` NX
+	(the children 's) (television) (show) (``) (BATIBOT)
+NP	NPR . NNP
+	(montedison s.p) (.) (A.)
+	(murata europe management g.m.b) (.) (H.)
+NP	NPR . @NPR
+	(time inc) (.) (MAGAZINE CO.)
+NP	NPR . PRN NNP
+	(nikko securities co) (.) (-lrb- europe -rrb-) (LTD)
+NP$	DT VBN POS
+	(THE) (won) ('s)
+NP$	NNP VBP POS
+	(PAN) (am) ('s)
+NP	JJ NN NPR @NP
+	(australian) (financier) (robert holmes) (A COURT)
+NP-PRD	@NPR IN
+	(DEN NORSKE BANK) (as)
+NP	NP$ NNS VBZ
+	(xerox 's) (SALES) (increases)
+PP-LOC	NNP NP
+	(over) (the rainbow)
+PP-TMP	NN NP
+	(beginning) (today)
+VP	ADVP @JJ NP S
+	(fully) (PREPARED) (*-2) (*-3 to go their separate ways)
+VP	NN ADVP PP
+	(stem) (largely) (from positions taken * last year)
+VP	NN ADVP PP S
+	(work) (more closely) (with gm 's technical staffs) (*-1 TO HELP PREVENT FUTURE LITIGATION)
+VP	NN ADVP
+	(happening) (*t*-1)
+VP	NN NP
+	(bar) (imports of beef from hormone-treated u.s. cattle)
+	(bid) (*)
+	(bid) (*)
+	(bid) (*)
+	(bid) (*)
+	(face) (competition)
+	(question) (the inevitability of the move to small machines that *t*-1 do n't make compromises)
+	(raise) (questions , at least among some u.s. officials , about what exactly her stance *ich*-2 is *t*-1 on u.s. access to the japanese semiconductor market)
+	(trigger) (a steep market decline)
+VP	NN NP ADVP ADVP
+	(screen) (customers) (carefully) (*t*-1)
+VP	NN NP PP-LOC
+	(address) (this topic) (before the supreme soviet)
+VP	NN NP PP-TMP
+	(stem) (pound selling) (in recent weeks)
+VP	NN NP PRN `` S-PRP
+	(redone) (*-2) (, mr. nelson said 0 *t*-3 ,) (``) (* TO MAKE TEDDY 'S SITUATION CLEAR TO VIEWERS WHO *T*-1 HAVE NOT BEEN WITH US SINCE THE BEGINNING)
+VP	NN NP S-ADV
+	(stage) (an astonishing recovery from an 80-point deficit) (*-1 TO FINISH ONLY SLIGHTLY BELOW MONDAY 'S CLOSE)
+VP	NN PP
+	(aid) (in california 's earthquake relief efforts)
+	(focus) (on short-term results)
+	(stand) (as milestones of american business history)
+VP	NN PP
+	(range) (from $ 2.25 to $ 2.45 *u* a share)
+VP	NN PP NP-TMP
+	(ground) (to its final 190.58 loss) (friday)
+VP	NN PP PP-TMP , PP
+	(rose) (to 38 cents a share) (in its fiscal-first quarter ended sept. 30) (,) (from 35 cents a shares a year ago)
+VP	NN PP-LOC
+	(battle) (in local elections)
+VP	NN PP-LOC ADVP-LOC PP-TMP
+	(standing) (in line) (next to me) (for the past three hours)
+VP	NN PP
+	(profit) (by *-3 replacing them later at a lower price)
+VP	NN PRT NP
+	(hand) (out) (machetes)
+	(turn) (on) (tv)
+VP	NN RB , ADVP , @VP
+	(will) (not) (,) (however) (,) (RESUME 24-HOUR SERVICE UNTIL POWER IN CITY IS RESTORED *-1)
+VP	NN SBAR
+	(claim) (0 *T*-2 HAS BEEN MALIGNED *-1 UNJUSTLY FOR YEARS)
+	(feel) (0 *T*-3 BENEFITED SMALL ENTERPRISES)
+	(protest) (THAT HIS SUBCOMMITTEE SIMPLY SEEKS INFORMATION FOR LEGISLATIVE CHANGE)
+VP	NN SBAR-PRD
+	(being) (THAT CUSTOMERS GENERALLY VIEW THE COMPANY 'S COMPUTERS AS COMPLEMENTARY TO IBM 'S MAINFRAMES)
+VP	NN VB NP PP-TMP PP-LOC
+	(test) (MARKET) (a caffeine-free version of its flagship brand , coca-cola classic ,) (beginning next week) (in charlotte , n.c)
+VP	NN @VP
+	(will) (BATTLE IN LOCAL ELECTIONS)
+VP	NNP NP
+	(meet) (the press)
+VP	NNP S
+	(added) (*ICH*-1)
+	(adds) (*ICH*-1)
+VP	NNP SBAR
+	(say) (0 U.S. POLICY ON PALESTINIAN TERRORISM IS COLORED *-1 BY AN INTENSE DESIRE * TO MAINTAIN THE DIALOGUE WITH THE PLO)
+VP	NNS NP
+	(HEADS) (*t*-1)
+VP	NNS NP PP-TMP
+	(ISSUES) (forecasts) (in the past 30 days)
+VP	NNS NP PP-TMP ADVP-LOC
+	(ISSUES) (forecasts) (in the past 30 days) (*t*-1)
+VP	NNS PP
+	(AMOUNTS) (to an admission that the transition has n't gone as smoothly as sears had hoped)
+	(WORKS) (with a number of smaller firms 0 it regards *t*-1 highly)
+VP	NNS PP-LOC
+	(TOWERS) (over the brick wall surrounding his property)
+VP	NNS PRT NP , S-ADV
+	(SHRUGS) (off) (such criticism) (,) (*-1 noting that 3 1\/2-inch floppies were also `` unconventional '' when they first replaced five-inch disks *t*-2)
+VP	NNS S
+	(EXPECTS) (*-1 to be fully operational early next week)
+	(NEEDS) (*-1 to soon offer a color version of its computer)
+VP	NNS S-PRP
+	(SCRAMBLES) (*-2 to spend its money before the new fiscal year begins oct. 1)
+VP	NNS SBAR
+	(COUNTERS) (that he intends *-1 to further pare the size of centrust by *-2 not renewing more than $ 1 billion *u* of brokered certificates of deposit when they come due *t*-3)
+	(ESTIMATES) (0 *t*-2)
+	(NOTES) (that these types of investors also are `` sophisticated '' enough *-1 not to complain about kidder 's aggressive use of program trading)
+VP	NNS SBAR-NOM
+	(CHARGES) (about half what those houses do *?* *t*-3 for a ticket)
+VP	NNS SBAR-TMP
+	(SOARS) (when big news breaks *t*-1)
+VP	NP NP PP
+	(BLAMES) (most of these) (on fatah)
+VP	NP-ADV @VBN
+	(100 %) (CAPTURED)
+VP	NP @VBN NP PP-TMP
+	(little) (CHANGED) (*-1) (in the latest week)
+VP	POS ADJP-PRD SBAR
+	('s) (worth noting) (THAT BOTH DISAPPROVING RELATIVES ARE IMMIGRANTS)
+VP	POS NP-PRD
+	('s) (my forecast)
+	('s) (politics)
+VP	POS NP-PRD ADVP-LOC
+	('s) (diamonds) (out there)
+VP	POS NP-PRD PP-LOC
+	('s) (much pleasure) (in her saucy , poignant probe into the mysteries of the babylonian bronx)
+VP	POS SBAR-PRD SBAR
+	('s) (when such slapping does n't occur *t*-1) (that we 've got trouble *t*-2)
+VP	POS @VP
+	('s) (GOT TROUBLE)
+	('s) (HAD OTHER BRUSHES WITH THE LAW)
+	('s) (RAISING $ 270 MILLION *U* *-3 TO BUILD AN IRON PLANT)
+NP	jj @=NN vbg
+	(military) (CONSTRUCTION) (spending)
+NP	@NP pp-loc prn `` =np
+	(ANY CHAOS) (in the secondary market) (, '' says *t*-2 mr. patel ,) (``) (only a sagging tendency)
+NP	=np$ `` @S ''
+	(nbc-tv 's) (``) (* MEET THE PRESS) ('')
+NP	=pdt @DT
+	(all) (THESE)
+	(all) (THIS)
+	(all) (THIS)
+	(all) (THIS)
+PP-LOC	npr np
+	(over) (the rainbow)
+S	np @pp
+	(auto leasing companies) (about car insurance rules)
+SBAR	@=WHADVP , s
+	(WHY) (,) (* paleontologically speaking , `` it is , indeed , a wonderful life *t*-2)
+SBAR-ADV	npr =S
+	(though) (BOEING 'S STOCK PRICE WAS BATTERED *-1 ALONG WITH THE REST OF THE MARKET FRIDAY)
+	(though) (SPAIN HAS AN EXCESS OF BANKS)
+	(though) (THE CUBS ' CHAMPIONSHIP SEASON ENDED WITH THE NATIONAL LEAGUE PLAYOFFS)
+VP	nn pp pp-tmp , pp
+	(rose) (to 38 cents a share) (in its fiscal-first quarter ended sept. 30) (,) (from 35 cents a shares a year ago)
+VP	nns np pp-tmp advp-loc
+	(issues) (forecasts) (in the past 30 days) (*t*-1)
+VP	nns np pp-tmp
+	(issues) (forecasts) (in the past 30 days)
+VP	np @=VBN np pp-tmp
+	(little) (CHANGED) (*-1) (in the latest week)
+VP	np-adv @=VBN
+	(100 %) (CAPTURED)
+VP	npr np
+	(meet) (the press)
+VP	pos adjp-prd =SBAR
+	('s) (worth noting) (THAT BOTH DISAPPROVING RELATIVES ARE IMMIGRANTS)
+VP	pos np-prd
+	('s) (my forecast)
+	('s) (politics)
+VP	pos np-prd advp-loc
+	('s) (diamonds) (out there)
+VP	pos np-prd pp-loc
+	('s) (much pleasure) (in her saucy , poignant probe into the mysteries of the babylonian bronx)
+VP	pos sbar-prd sbar
+	('s) (when such slapping does n't occur *t*-1) (that we 've got trouble *t*-2)
+VP	pos @=VP
+	('s) (GOT TROUBLE)
+	('s) (HAD OTHER BRUSHES WITH THE LAW)
+	('s) (RAISING $ 270 MILLION *U* *-3 TO BUILD AN IRON PLANT)
+ADVP	rb =RB pp
+	(down) (SLIGHTLY) (from $ 110 million *u* for the year-ago period)
+	(just) (SOUTH) (of las vegas)
+	(right) (BACK) (to the forefront)
+	(up) (SLIGHTLY) (from 2 % in march)
+	(well) (AHEAD) (of 1988)
+SBAR	@X =s
+	(THE MORE) (a company relies on borrowed money)
+NP-PRD	=nn @NP pp
+	(abducted) (*-1) (from her homeland)
+NP	prp$ =nn NPR
+	(her) (friend) (SUSAN)
+	(his) (fellow) (NEW YORKERS)
+	(his) (friend) (TRAVIS)
+NP	=pdt dt @JJS
+	(all) (the) (BEST)
+NP	jj =nn npr @NP
+	(australian) (financier) (robert holmes) (A COURT)
+PP-TMP	nn np
+	(beginning) (today)
+VP	advp rb np
+	(at least) (not) (good theater)
+VP	nn advp
+	(happening) (*t*-1)
+VP	nn advp pp
+	(stem) (largely) (from positions taken * last year)
+NP	dt dt npr @=NP
+	(the) (the) (s&p) (TRADING HALT)
+NP	dt jj =NN vbd
+	(a) (2-for-1) (STOCK) (split)
+NP	dt =NNS vbz
+	(the) (APPROPRIATIONS) (committees)
+NP	=NP prn : `` @s .
+	(ABBIE) (-lrb- * cont'd. *-1 -rrb-) (:) (``) (i 'll always be with you , jack) (.)
+NP	np$ =NNS vbz
+	(xerox 's) (SALES) (increases)
+NP	npr in @=NPR
+	(u.n. secretary-general perez) (de) (CUELLAR)
+NP	npr =NP sbar
+	(uaw) (HOPES) (that gm would reopen the shuttered assembly plant that *t*-2 last built the plastic-bodied , two-seater pontiac fiero model)
+NP	prp$ qp npr =NP
+	(its) (three) (ford aerospace) (UNIT FACILITIES)
+NP	rb =RB vbz
+	(not) (JUST) (phones)
+NP$	=DT vbn pos
+	(THE) (won) ('s)
+NP-PRD	=NN np pp
+	(ABDUCTED) (*-1) (from her homeland)
+QP	qpmoney @=NN
+	($ 179) (MILLLION)
+NP	@=NPR vbz
+	(DOW JONES) (industrials)
+	(HELMUT KOHL) ('s)
+	(MCDONALD) ('s)
+	(MR. HOFFMAN) ('s)
+	(MR. MILES) ('s)
+	(SOTHEBY) ('s)
+	(U.S. POSTAL) (inspectors)
+	(WALL STREET) ('s)
+	(WENDY) ('s)
+VP	@=JJ np sbar
+	(CONVINCED) (*-2) (that we are ready *-3 to solve them yet)
+S	x-adv x-adv np =VP
+	(the more regulating) (the more) (they) (GET *-1 TO KEEP *?*)
+NP$	=POS
+	('S)

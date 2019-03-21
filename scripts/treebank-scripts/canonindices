@@ -1,0 +1,51 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: canonindices [files ...]
+#
+# Canonicalizes the indices on each line, so that 
+# the index mentioned first (farthest to the left) is
+# changed to -1 throughout the line, the index mentioned
+# second is changed to -2, etc.  
+#
+# Typically applied to the output of rules2frames, but may be applied
+# to the output of listrules, oneline, etc.
+#
+# The -f flag says to assume that each line has been produced by
+# rules2frames, and to strip any (unmatched) index from the main
+# category of the LHS of the frame.  (That is, an index on the whole,
+# finished constituent is not considered part of the frame -- unless
+# for some reason it coindexes the constituent with a trace inside
+# itself, as is the Treebank convention for parenthetical "he says.")
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$framestriplhs = 1, shift(@ARGV) if $ARGV[0] eq "-f";
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$ind = "-[0-9]+\\b";    # index on null or overt element
+
+$indices = 0;
+$indexmentions = 0;
+while (<>) {
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    if ($framestriplhs && /^[^\t]*\t[^ \t\n\\\/]+($ind)/o) {  # handle -f flag
+      $stripind = $1;
+      $translate{$stripind} = "" unless $' =~ /$stripind\b/;   # check that stripind doesn't appear later before deleteing it
+    }
+
+    $newindex = 0;    # we'll treat indices as negative numbers
+    while (/$ind/go) {
+      $translate{$&} = --$newindex unless defined $translate{$&};
+    }
+    $indices += keys %translate;
+    $indexmentions += s/$ind/$translate{$&}/geo;
+    undef %translate;
+  }
+  print "$location$_\n";
+}
+
+print STDERR "$0: canonicalized $indexmentions mentions of $indices indices\n";

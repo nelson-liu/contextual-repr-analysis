@@ -1,0 +1,4 @@
+[flake8]
+ignore = E402,E722,W504
+max-line-length = 115
+exclude = data/,lib/,bin/,.git/,__pycache__/,scripts/,dependencies/

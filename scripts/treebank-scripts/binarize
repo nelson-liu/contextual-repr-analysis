@@ -1,0 +1,137 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: binarize [files ...]
+#
+# Given a corpus in oneline or headify format, munges it using dotted
+# rules so that no node has more than two children.  To get a Chomsky
+# Normal Form corpus, this can be combined with e.g. flatten -f -1.
+# 
+# n-ary nodes are given a right-branching structure up through any
+# head child, while children to the right of the head child are attached
+# as phrasal adjuncts.  Thus:
+# 
+#  (L A B @C D E)  becomes  (L @(ABCD @(ABC A @(BC B @C)) D) E)  
+#
+#   (in reality I use nonterminals of the form AoBoC rather than ABC.
+#    Also, these composite tags have any argmarks ~ removed.
+#    The "o" is supposed to be the dot used for concatenation; the Treebank 
+#      nonterminals contain no lowercase letters, so this should be free.
+#      + would look nicer but is reserved for use by slashnulls.)
+#
+# !!! This should be modified to work well with slashnulls. 
+# At the moment, if slashnulls is run first, we'll get e.g. 
+#    (A/X-1oB (A/X-1 ...) (B ...))  rather than (AoB/X-1 (A/X-1 ...) (B ...)).
+# and also 
+#    (A (A/C-1 ...) (B ...) (C-1 ...)) 
+# will become
+#    (A (A/C-1 ...) (BoC-1 ...)) rather than (A (A/C-1) (B+C-1 (B ...) (C-1 ...))) (note that we suddenly need a knob because the ECP is violated in the binarized form)
+# I think we get similar problems if slashnulls is run second, but it's
+# probably easier to fix things under the convention that slashnulls must
+# be run second.
+#
+# Note: BC -> B C should have rewrite probability 1 no matter how
+# few times we've observed it, but ABC -> A BC may not have
+# probability 1 because ABC -> AB C could also be a rule.
+# !!! To avoid this, possibly I should encode the bracket structure 
+# into ABC; in fact, just encoding the head position would be enough. 
+#
+# Note: An alternative naming scheme would rename ABCD to L/E, ABC to L/E/D,
+# and BC to L/E/D\A.  Then (L A B @C D E) would share some rules with
+# (L @X D E) rather than with (L P A B @C Q).  But the scheme above
+# has the advantage that there is only one intermediate constituent
+# that C D can combine into, not many, which should be faster for
+# bottom-up parsing.
+#
+# Note: Another, more compact naming scheme would be derived from the
+# minimized automaton representing all grammar rules ... Or better
+# yet, find the minimum CNF CFG that generates exactly the grammar
+# rules!
+#
+# Note: If we used right branching throughout, we could end
+# up with some unheaded rules despite fully headed input, e.g.,
+# if (L A B @C D E) became (L A @(BCDE B @(CDE @C (DE D E)))).
+# Such cases would have to be fixed up (or tossed out) by headall.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]*";  # anything but parens or whitespace can be a token.  
+                         # WE ALLOW NULL TOKENS FOR COMPATIBILITY WITH flatten -w (where just @ can serve as a head placeholder).
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    ($headmark, $tag, $kids) = &constit;  # eat a constit (sentence)    
+    die "$0:$location more than one sentence on line ending $_" if $_;
+    die "$0:$location the whole sentence was unexpectedly marked as a head" if $headmark;
+
+    $_ = &assemble_text($headmark,$tag,$kids);
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $constit possibly trivial constituents in, ", $constit+$addconstit, " out\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Returns a triple ($headmark, $tag, $kids), such that the binarized version
+# of the constituent is "$headmark($tag $kids)", or just "$headmark$tag" if 
+# $kids is empty (this handles the case of a terminal).
+#
+# Single tokens (terminals) do count as constits!  (though not for the count we report)
+
+sub constit {   
+  local($headmark);
+  $headmark = "@" if s/^@//;       # delete initial @ if any
+  if (s/^\(//) {                   # a list
+    $constit++;
+    s/^($token)\s*//o || die "$0:$location no tag"; # eat LHS tag 
+    local($tag) = $1;
+    local($save_addconstit) = $addconstit;
+    local(@c) = &rb_constits;      # get the right-branching part
+    until (s/^\)\s*//) {           # until we can eat closing paren, add right adjuncts
+      @c = &assemble_binary_constit(@c,&constit);
+    } 
+    if ($addconstit==$save_addconstit) {   # special handling for unary rule: basically wraps the single child in another, redundant layer.  Why necessary?  For ternary rules, we will add 1 node; for binary rules, 0 nodes; so without this special-casing, we'd add -1 nodes for unary rules.  Of course, getting rid of unary rules would be peachy, but flatten gives us a little more control in how we do that, so we don't do it here.
+      $c[2] = &assemble_text(@c);
+      $addconstit++;
+    }
+    $addconstit--;                      # because the next line is about to merge a constit we just assembled with one that was actually in the input.
+    return ($headmark, $tag, $c[2]);    # rather than wrap the finished @c in a unary rule with $headmark and $tag, we substitute those at the outer layer of @c
+  } else {                              # just a lex item (possibly null -- i.e., a head holder "@" from which we've already stripped off "@"; see note at definition of $token)
+    s/^($token)\s*//o;  
+    local($tag) = $1;
+    die "$0:$location internal error" if $tag eq "" && $headmark eq "";  
+    return ($headmark, $tag, "");
+  }
+}
+
+sub rb_constits {    # reads and assembles right-branching part of subconstit structure
+  local(@c) = &constit;
+  if (/^\)/ || $c[0] eq "@") {    # we've reached the head or the end or both
+    return @c;
+  } else {
+    return &assemble_binary_constit(@c,&rb_constits);    
+  }
+}
+  
+sub assemble_text {      # assembles text version of constit, with appropriate parenthesization
+  local($headmark,$tag,$kids) = @_;
+  return ($kids eq "") ? "$headmark$tag" : "$headmark($tag $kids)";
+}
+
+sub assemble_binary_constit {
+  $addconstit++;
+  local($headmark1,$tag1,$kids1,$headmark2,$tag2,$kids2) = @_;
+  local($tag) = "$tag1+$tag2";
+  $tag =~ s/~//g;    
+  return ($headmark1.$headmark2,    # if either kid contributes a head, so does their fusion
+	  $tag, 
+	  &assemble_text($headmark1,$tag1,$kids1) . " " . &assemble_text($headmark2,$tag2,$kids2));
+}

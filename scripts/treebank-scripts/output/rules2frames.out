@@ -1,0 +1,335 @@
+# created Tue Apr  2 16:51:50 2002 by "rules2frames"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Jan 26 23:16:27 1998]
+# created Tue Apr  2 16:51:50 2002 by "listrules"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Mar  8 05:18:37 1999]
+# created Tue Apr  2 16:51:50 2002 by "flatten -f -w"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon May 21 18:40:02 2001]
+# created Tue Apr  2 16:51:50 2002 by "marknulls"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Wed Jan 28 21:09:56 1998]
+# created Tue Apr  2 16:51:50 2002 by "slashnulls"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Tue Apr  2 16:34:52 2002]
+# created Tue Apr  2 16:51:50 2002 by "headall -l"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Tue Apr  2 16:12:56 2002]
+# created Tue Apr  2 16:51:49 2002 by "headify -c newmarked.mrk"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Sat Mar 30 14:22:13 2002]
+# created Tue Apr  2 16:51:49 2002 by "discardbugs -c newmarked.bug"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Wed Jan 14 23:04:30 1998]
+# created Tue Apr  2 16:51:50 2002 by "normcase -i"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Tue Mar 26 11:18:19 2002]
+# created Tue Apr  2 16:51:49 2002 by "articulate -c"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Wed Jan 14 23:04:31 1998]
+# created Tue Apr  2 16:51:49 2002 by "markargs"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Jan 26 22:52:10 1998]
+# created Tue Apr  2 16:51:49 2002 by "fixsay"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Mar 25 16:07:43 2002]
+# created Tue Apr  2 16:51:49 2002 by "oneline ../corpus/wsj_1783.mrg"	[working dir: /a/ma165a/projects/ace/8800/treebank-heads/jasons_head_rules]	[program version: Mon Mar 25 15:46:39 2002]
+# START OF SECTION 0: file ../corpus/wsj_1783.mrg
+Shearson	NNP	@
+Lehman	NNP	@
+Hutton	NNP	@
+Holdings	NNP	@
+Inc.	NP~-SBJ	NNP NNP NNP NNP @
+posted	S~	NP~-SBJ @ NP~
+a	DT	@
+sharp	JJ	@
+third-quarter	NN	@
+turnaround	NP~	DT JJ NN @ PP
+from	PP	@ ADVP~-TMP
+a	DT	@
+year	NP	DT @
+earlier	ADVP~-TMP	NP @
+,	,	@
+but	CC	@
+net	JJ	@
+income	NP~-SBJ	JJ @
+would	MD	@
+have	VB	@
+dropped	S~	NP~-SBJ MD VB @ PP PP
+from	PP	@ NP~
+the	DT	@
+second	JJ	@
+quarter	NP~	DT JJ @
+without	PP	@ NP~
+a	DT	@
+$	ADJP	@ QP
+37	CD	@
+million	QP	CD @
+after-tax	JJ	@
+gain	NP~	DT ADJP JJ @
+.	S	S~ , CC S~ @
+the	DT	@
+securities	NNS	@
+firm	NP~-SBJ	DT NNS @
+posted	S	NP~-SBJ @ NP~ .
+third-quarter	NN	@
+net	NP~	NN @ PP PP
+of	PP	@ NP~
+$	NP~	@ QP , CC NP ,
+66	CD	@
+million	QP	CD @
+,	,	@
+or	CC	@
+64	QP	@
+cents	NP	QP @ NP-ADV
+a	DT	@
+share	NP-ADV	DT @
+,	,	@
+compared	PP	@ PP~
+with	PP~	@ NP~
+a	DT	@
+restated	VBN	@
+year-earlier	JJ	@
+loss	NP~	DT VBN JJ @ PP
+of	PP	@ NP~
+$	NP~	@ QP , CC NP
+3	CD	@
+million	QP	CD @
+,	,	@
+or	CC	@
+11	QP	@
+cents	NP	QP @ NP-ADV
+a	DT	@
+share	NP-ADV	DT @
+.	.	@
+revenue	NP~-SBJ	@
+climbed	S	NP~-SBJ @ NP-EXT PP-DIR PP-DIR .
+25	QP	@
+%	NP-EXT	QP @
+to	PP-DIR	@ NP~
+$	NP~	@ QP
+3.3	CD	@
+billion	QP	CD @
+from	PP-DIR	@ NP~
+$	NP~	@ QP
+2.6	CD	@
+billion	QP	CD @
+.	.	@
+the	DT	@
+latest	JJS	@
+period	NP~-SBJ	DT JJS @
+included	S	NP~-SBJ @ NP~ .
+the	DT	@
+gain	NP~	DT @ , SBAR , PP
+,	,	@
+which	SBAR	@ S~\NP~-SBJ-1
+0	0NP~-SBJ\NP~-SBJ-1	@
+was	S~\NP~-SBJ-1	0NP~-SBJ\NP~-SBJ-1 @ NP~-PRD PP-TMP
+$	NP~-PRD	@ QP
+77	CD	@
+million	QP	CD @
+before	PP-TMP	@ NP~
+tax	NP~	@
+,	,	@
+from	PP	@ NP~
+the	DT	@
+previously	RB	@
+announced	ADJP	RB @
+sale	NP~	DT ADJP @ PP
+of	PP	@ NP~
+the	DT	@
+institutional	JJ	@
+money	NN	@
+management	NN	@
+business	NP~	DT JJ NN NN @ PP
+of	PP	@ NP~
+Lehman	NNP	@
+Management	NNP	@
+Co	NP~	NNP NNP @
+.	.	@
+the	DT	@
+1988	QP	@
+period	NP~-SBJ-1	DT QP @
+was	VBD	@
+restated	S	NP~-SBJ-1 VBD @ 0NP~/NP~-1 PP S-PRP\NP~-SBJ-2 .
+0	0NP~/NP~-1	@
+from	PP	@ NP~
+net	JJ	@
+income	NP~	JJ @ PP
+of	PP	@ NP~
+$	NP~	@ QP
+8	CD	@
+million	QP	CD @
+0	0NP~-SBJ\NP~-SBJ-2	@
+to	TO	@
+correct	S-PRP\NP~-SBJ-2	0NP~-SBJ\NP~-SBJ-2 TO @ NP~
+an	DT	@
+overstatement	NP~	DT @ PP-LOC
+in	PP-LOC	@ NP~
+the	DT	@
+company	NP	DT @
+'s	NP$	NP @
+Boston	NNP	@
+Co.	NPR	NNP @
+subsidiary	NP~	NP$ NPR @
+.	.	@
+in	PP-TMP	@ NP~
+the	DT	@
+1989	QP	@
+second	JJ	@
+quarter	NP~	DT QP JJ @
+,	,	@
+Shearson	NP~-SBJ	@
+had	S	PP-TMP , NP~-SBJ @ NP~ .
+net	JJ	@
+income	NP~	JJ @ PP
+of	PP	@ NP~
+$	NP~	@ QP , CC NP
+55	CD	@
+million	QP	CD @
+,	,	@
+or	CC	@
+54	QP	@
+cents	NP	QP @ NP-ADV
+a	DT	@
+share	NP-ADV	DT @
+.	.	@
+an	DT	@
+average	JJ	@
+102.5	CD	@
+million	QP	CD @
+common	JJ	@
+shares	NP~-SBJ	DT JJ QP JJ @
+were	S	NP~-SBJ @ ADJP-PRD PP-TMP , ADVP .
+outstanding	ADJP-PRD	@
+in	PP-TMP	@ NP~
+the	DT	@
+latest	JJS	@
+quarter	NP~	DT JJS @
+,	,	@
+up	ADVP	@ PP
+from	PP	@ NP~
+87.1	CD	@
+million	NP~	CD @
+.	.	@
+in	PP-LOC	@ NP~
+New	NNP	@
+York	NNP	@
+Stock	NNP	@
+Exchange	NPR	NNP NNP NNP @
+composite	JJ	@
+trading	NP~	NPR JJ @
+yesterday	NP-TMP	@
+,	,	@
+Shearson	NPR	@
+shares	NP~-SBJ	NPR @
+lost	S	PP-LOC NP-TMP , NP~-SBJ @ NP~ PP-DIR .
+37.5	QP	@
+cents	NP~	QP @
+to	PP-DIR	@ NP~
+$	NP~	@ QP
+18.125	QP	@
+.	.	@
+the	DT	@
+company	NP~-SBJ	DT @
+said	S	NP~-SBJ @ SBAR~ .
+0	0IN\IN	@
+the	DT	@
+improved	VBN	@
+performance	NP~-SBJ	DT VBN @ PP
+from	PP	@ ADVP~-TMP
+a	DT	@
+year	NP	DT @
+ago	ADVP~-TMP	NP @
+reflects	SBAR~	0IN\IN NP~-SBJ @ NP~
+higher	JJR	@
+commissions	NNS	@
+and	CC	@
+revenue	NP~	JJR NNS CC @ PP
+from	PP	@ NP~
+marketmaking	NN	@
+and	CC	@
+trading	NP~	NN CC @ PP
+for	PP	@ NP~
+its	PRP$	@
+own	JJ	@
+account	NP~	PRP$ JJ @
+.	.	@
+Commission	NN	@
+revenue	NP~-SBJ	NN @
+was	S	NP~-SBJ @ NP~-PRD , ADVP .
+$	NP~-PRD	@ QP
+522	CD	@
+million	QP	CD @
+,	,	@
+up	ADVP	@ NP
+49	QP	@
+%	NP	QP @
+.	.	@
+but	CC	@
+industrywide	JJ	@
+trading	NN	@
+activity	NP~-SBJ	JJ NN @
+slowed	S	CC NP~-SBJ @ PP-TMP SBAR-ADV .
+in	PP-TMP	@ NP~
+September	NP~	@
+as	SBAR-ADV	@ S~
+institutional	JJ	@
+investors	NP~-SBJ	JJ @
+turned	S~	NP~-SBJ @ ADJP-PRD
+cautious	ADJP-PRD	@
+and	CC	@
+individuals	NP~-SBJ-1	@
+continued	S~	S~ CC NP~-SBJ-1 @ S~\NP~-SBJ-1
+0	0NP~-SBJ\NP~-SBJ-1	@
+to	TO	@
+shy	S~\NP~-SBJ-1	0NP~-SBJ\NP~-SBJ-1 TO @ ADVP-DIR PP-DIR
+away	ADVP-DIR	@
+from	PP-DIR	@ NP~
+the	DT	@
+market	NP~	DT @
+.	.	@
+Investment	NN	@
+banking	NN	@
+revenue	NP~-SBJ	NN NN @
+fell	S	NP~-SBJ @ NP-EXT PP-DIR , S-ADV\NP~-SBJ-1 .
+32	QP	@
+%	NP-EXT	QP @
+to	PP-DIR	@ NP~
+$	NP~	@ QP
+205	CD	@
+million	QP	CD @
+,	,	@
+0	0NP~-SBJ\NP~-SBJ-1	@
+in	PP	@ NP~
+part	NP~	@
+reflecting	S-ADV\NP~-SBJ-1	0NP~-SBJ\NP~-SBJ-1 PP @ NP~
+the	DT	@
+continued	VBN	@
+slowdown	NP~	DT VBN @ PP
+of	PP	@ NP~
+the	DT	@
+underwriting	NN	@
+business	NP~	DT NN @
+.	.	@
+in	PP-TMP	@ NP~
+the	DT	@
+nine	QP	@
+months	NP~	DT QP @
+,	,	@
+net	NP~-SBJ	@
+fell	S	PP-TMP , NP~-SBJ @ NP-EXT PP-DIR , PP-DIR .
+3	QP	@
+%	NP-EXT	QP @
+to	PP-DIR	@ NP~
+$	NP~	@ QP , CC NP
+106	CD	@
+million	QP	CD @
+,	,	@
+or	CC	@
+98	QP	@
+cents	NP	QP @ NP-ADV
+a	DT	@
+share	NP-ADV	DT @
+,	,	@
+from	PP-DIR	@ NP~
+$	NP~	@ QP , CC NP
+110	CD	@
+million	QP	CD @
+,	,	@
+or	CC	@
+$	NP	@ QP NP-ADV
+1.05	QP	@
+a	DT	@
+share	NP-ADV	DT @
+.	.	@
+revenue	NP~-SBJ	@
+advanced	S	NP~-SBJ @ NP-EXT PP-DIR PP-DIR .
+26	QP	@
+%	NP-EXT	QP @
+to	PP-DIR	@ NP~
+$	NP~	@ QP
+9.6	CD	@
+billion	QP	CD @
+from	PP-DIR	@ NP~
+$	NP~	@ QP
+7.6	CD	@
+billion	QP	CD @
+.	.	@

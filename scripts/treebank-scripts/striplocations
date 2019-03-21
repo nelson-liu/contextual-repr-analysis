@@ -1,0 +1,21 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: striplocations [files ...] 
+#
+# Despite the red-light directory promised by the title, this is just
+# a filter that strips the prefix "filename:linenum:\t" from any lines
+# on which it appears.  Files produced by oneline -n include such
+# prefixes, which are retained by most other filters.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+while (<>) {
+  $lines++;
+  $stripped++ if s/^\S+:[0-9]+:\t//;
+  print;
+}
+print STDERR "$0: stripped \"filename:linenum:\" from $stripped of $lines lines\n";

@@ -1,0 +1,103 @@
+#!/usr/local/bin/perl 
+
+# Author: Jason Eisner, University of Pennsylvania
+
+
+# Usage: articulate [-c] [file.mrg file.mrg ...]
+#
+# Filters parses that are in "oneline" format.
+# The effect is to articulate some structure that the Penn Treebank
+# leaves flat, and fix a couple of things that look like annotator errors.  
+# This is done using parserule in artic.inc.
+#
+# parserule expects canonicalized tags.  Hence, pipe the input
+# through canonicalize first, or else use the -c flag to force
+# articulate to canonicalize tags internally before passing
+# them to parserule, while leaving them alone in the output.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+require("canon.inc");                         # this gives us canonicalizetag
+require("artic.inc");                         # this gives us parserule
+
+$canonicalize = 1, shift(@ARGV) if $ARGV[0] eq "-c";  
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ ()]+";  # matches tokens: anything but parens or whitespace can be a token character
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  $sect++ unless ($_);
+  unless (/^\#/) {    # unless a comment
+    $sent++;
+    ($tag, $tree) = &constit;                   # eat a constit (sentence)    
+    die "$0:$location more than one sentence on this line?" if $_;
+    $_ = $tree;
+  }
+  print "$location$_\n";
+}
+print STDERR "$0: $sect sections, $sent sentences, $word words, $constitin constits in, $constitout constits out\n";
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# 
+# input:  none
+# output: list of two scalars:
+#	    - the nonterminal tag of this constituent (as returned by
+#	       this constituent's final call to reduceruleprint; 
+#	       will be canonicalized if $canonicalize is on (thanks to 
+#              reduceruleprint), and may be further altered (thanks to parserule))
+#	    - bracketed text version of this constit to be output
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+    local($tag, $tree, $subctag, $subtree, @subctags, @subtrees);   # "tag" denotes input tag, "ctag" denotes version that may have been canonicalized (according to $canonicalize)
+
+    $constitin++;
+
+    s/^\(\s*// || die "$0:$location open paren expected to start $_";   # eat open paren
+    s/^($token)\s*//o || die "$0:$location no tag";         # eat tag 
+    $tag = $1;                                 
+
+    if (/^\(/) {                               # if tag is followed by at least one subconstituent  
+      until (/^\)/) {                          #   eat all the subconstits recursively and remember what they were
+	($subctag, $subtree) = &constit();     #   we could omit constits that are lexically null from our phrase structure rules, but we won't.
+	push(@subctags, $subctag);
+	push(@subtrees, $subtree);
+      }
+      &parserule("reduceruletext",*tag,*subctags,*subtrees);
+    } else {                                   # if tag is followed by just a lexical item
+      $word++;
+      s/^($token)\s*//o || die "$0:$location no lex item";
+      @subctags = @subtrees = ($1);
+      &reduceruletext(*subctags, *subtrees, 0, $#subctags, $tag);  # call reduceruletext directly, rather than through parserule (since parserule doesn't expect the RHS to be a word, but we still need to handle the lexical constits)
+    }
+
+    s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+    die "$0:$location should have gotten \@subtrees = (@subtrees) down to length 1" unless @subtrees==1;
+    ($subctags[0], $subtrees[0]);      
+}
+
+
+# Reduces the rule by replacing the RHS subsequence from $start to $end inclusive
+# with $tag.  (Used as functional parameter to parserule.)
+
+sub reduceruletext {
+  local(*RHS, *RHStree, $start, $end, $tag) = @_;
+  local ($ctag) = $tag;
+  $ctag =~ s/^~//;    # delete any initial argument mark
+  $ctag = &canonicalizetag($tag) if $canonicalize;
+
+  #print STDERR "\nreducing @RHS\t(".join(") (",@RHStree).")" if $end-$start < $#RHS;
+
+  $constitout++;
+  splice(@RHS,     $start, $end - $start + 1, $ctag);
+  splice(@RHStree, $start, $end - $start + 1, "($tag @RHStree[$start..$end])");
+}
+

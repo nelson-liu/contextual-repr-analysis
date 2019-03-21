@@ -1,0 +1,85 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: markargs [files ...]
+#
+# Filters input in oneline format.
+# This should be done BEFORE canonicalizing tags.
+# 
+# Using the exact rules suggested by Collins 1997, marks all
+# constituents that are arguments of verbs, prepositions, or
+# complementizers.  This is done by appending ~ to the initial
+# segment of their tags.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()~]+";  # anything but parens or whitespace can be a token.  NOT QUITE - here I've doctored the definition to exclude ~, as a safety check to make sure tags aren't already marked.
+$inittokenseg = "[^ \t\n()~\\\\\\/+-]+";  # initial segment of a token (also used in flatten)
+%PPrules = ("IN",6,"TO",5,"VBG",4,"VBN",3,"RP",2,"FW",1);   # according to Collins's rules (personal communication), taken from Magerman, the head of a PP is the rightmost IN, or if none the rightmost TO, or .... or if none the rightmost anything (with score of 0!).
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $_ = &constit("");
+  } 
+  print "$location$_\n";
+}
+print STDERR "$0: $children children, $marks flagged as arguments\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Argument is the "simple" nonterminal tag of the parent (without ~ and without any suffixes).
+# Returns a tuple:
+#    - the constituent's own simple nonterminal tag
+#    - a string version of the constituent, with all necessary ~ added.
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($parentsimpletag) = @_;
+  local($simpletag, $suffixes, $text);
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag, or tag already marked with ~"; # eat tag.  Note that I've doctored definition of $token; see above.
+  $text = $simpletag = $1;                                 
+  $simpletag =~ s/-.*//, $suffixes = $& unless $simpletag eq "-NONE-";   # strip off suffixes
+  
+  if (/^\(/) {		# if tag is followed by at least one subconstituent 
+    local($subsimpletag, $subtext, $bestPPheadscore, $PPmarkpos);
+    until (/^\)/) {     # eat subconstits
+      ($subsimpletag, $subtext) = &constit($simpletag);
+      $text .= " $subtext";
+      $children++;
+      if ($simpletag eq "PP" && $PPrules{$subsimpletag} >= $bestPPheadscore) {   # look for head of PP
+	$bestPPheadscore = $PPrules{$subsimpletag};
+	$PPmarkpos = length($text) + 2;      # skip past " ("
+      }
+    }
+    if ($simpletag eq "PP" && $PPmarkpos <= length($text)) {
+      substr($text, $PPmarkpos) =~ s/^$inittokenseg/$&~/o;    # mark first kid following head of PP as complement, if there is one (it shouldn't already be marked)
+      $marks++;
+    }
+  } else {              # tag is followed just by a lexical item
+    s/^($token)\s*//o || die "$0:$location no lex item";
+    $text .= " $1";
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  # now figure out whether to prefix with ~  using Collins's rules
+  if ($simpletag =~ /^(NP|SBAR|S)$/ && $parentsimpletag =~ /^(S|VP)$/
+      || $simpletag eq "VP" && $parentsimpletag eq "VP"
+      || $simpletag eq "S" && $parentsimpletag eq "SBAR") {
+
+    $text =~ s/^$inittokenseg/$&~/o, $marks++ unless $suffixes =~ /\b(ADV|VOC|BNF|DIR|EXT|LOC|MNR|TMP|CLR|PRP)\b/;
+  }
+
+  ($simpletag, "($text)");
+}

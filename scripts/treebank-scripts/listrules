@@ -1,0 +1,129 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: listrules [-n] [-t] [files ...]
+#
+# Lists all the phrase-structure rules used in a corpus.
+# Input format is as produced by oneline (heads not marked) or headify (heads marked).
+#   Arguments that are marked as such (with ~) have ~ listed on RHS but not on LHS.
+#   (Blank lines and discarded sentences are ignored.)
+# Each line of the output contains 2 fields, LHS and RHS, separated by a tab.  
+# Comments and line numbers from the input are preserved.
+# 
+# Where heads are specified, the rules are enumerated in "infix" order for easy 
+# reading.  Otherwise in postfix order.
+#   (In particular, this helps when flatten has been used beforehand and 
+#    rules2frames is used afterwards.)
+#
+# -n says to list only nonterminal rules, i.e., rules where at least one child
+# has substructure.  -t says to list only terminal rules.  
+# 
+# An easy way to list dependency frames is to apply listrules to the
+# output of flatten or flatten -w.
+#
+# Examples:
+#    Input from headify:
+#      (S (NP @(NNP @John)) @(VP @(VP @(VBZ @likes) (NP @(NNP @Mary))) (RB @tremendously)))
+#    Output:
+#      NNP   @John
+#      NP    @NNP
+#      VBZ   @likes
+#      NNP   @Mary
+#      NP    @NNP
+#      VP    @VBZ NP
+#      RB    @tremendously
+#      VP    @VP RB
+#      S     NP @VP
+#
+#    Input from flatten -f:
+#       (S (NP @John) @likes (NP @Mary) (RB @tremendously))
+#    Output:
+#       NP   @John
+#       NP   @Mary
+#       RB   @tremendously
+#       S    NP @likes NP RB
+#
+#    Input from flatten -w:
+#       (S|VP|VBZ|likes (NP|NNP|John @) @ (NP|NNP|Mary @) (RB|tremendously @))
+#       NP|NNP|John        @
+#       NP|NNP|Mary        @
+#       RB|tremendously    @
+#       S|VP|VBZ|likes     NP|NNP|John @ NP|NNP|Mary RB|tremendously
+#
+# Possible improvements!!!: Might want to strip the unmatched indices
+# that can be created by flatten -f (q.v.).
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$no_term = 1, shift(@ARGV) if $ARGV[0] eq "-n";  # !!! options must be specified in order, yuck!
+$no_nonterm = 1, shift(@ARGV) if $ARGV[0] eq "-t";  
+warn "$0: -n and -t both specified, will not list any rules\n" if $no_term && $no_nonterm;
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+
+$token = "[^ \t\n()]*";  # anything but parens or whitespace can be a token.  
+                         # WE ALLOW NULL TOKENS FOR COMPATIBILITY WITH flatten -w (where just @ can serve as a head placeholder).
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $sent++;
+    ($nonterm, $isterm, $text) = &constit;
+    print $text;
+  } else {
+    print "$location$_\n";   # go ahead and print the comment
+  }
+}
+
+print STDERR "$0: $sent sentences, $frames rules\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Returns a triple:
+#    - the nonterminal tag of the constit, preceded by "@" if the constit was and by ~ if the tag was.
+#    - whether the constituent is a terminal symbol
+#         (To handle the output of flatten -b and flatten -B, anything 
+#         of the form [... or ] is considered NOT  to be a terminal symbol.)
+#    - text that lists all the frames for the constituent, in infix order 
+#        (kids to the right of the first terminal symbol, if any, are expanded
+#         only after the constituent's own frame appears. 
+# Single tokens do count as constits! 
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($headmark, $argmark);
+  local($tag, $isterm, $text);
+  local($seenterm, $posttermtext) = (0,"");
+
+  $headmark = "@" if s/^@//;       # delete initial @ if any
+  $depth = 0;    
+  if (s/^\(//) {                   # a list
+    $argmark = "~" if s/^~//;
+    s/^($token)\s*//o || die "$0:$location no tag"; # eat LHS tag 
+    $tag = $1;
+    local(@subtags) = ();
+    until (s/^\)\s*//) {               # eat RHS
+      local($subtag, $subisterm, $subtext) = &constit;
+      push (@subtags, $subtag);
+      if ($seenterm) { $posttermtext .= $subtext; } else { $text .= $subtext; }
+      $depth = $subdepth if $depth < $subdepth;
+      $seenterm = 1 if $subisterm;
+    } 
+    $frames++, $text .= "$location$tag\t@subtags\n" unless (($depth==0 && $no_term) || ($depth>0 && $no_nonterm));
+    $depth++;
+  } else {                         # just a lex item (possibly null -- i.e., a head holder "@" from which we've already stripped off "@"; see note at definition of $token)
+    s/^($token)\s*//o;  
+    $tag = $1;
+    $isterm = 1 unless $tag =~ /^\[/ || $tag eq "]";
+    die "$0:$location internal error" if $tag eq "" && $headmark eq "";  
+  }
+  
+  ($headmark.$argmark.$tag, $isterm, $text.$posttermtext);
+}

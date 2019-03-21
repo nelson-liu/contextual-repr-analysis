@@ -1,0 +1,40 @@
+{
+    "dataset_reader": {
+        "type": "constituency_ancestor_prediction",
+        "ancestor": "greatgrandparent"
+    },
+    "train_data_path": "data/syntactic_constituency/wsj.2_18.train.trees",
+    "validation_data_path": "data/syntactic_constituency/wsj.19.dev.trees",
+    "test_data_path": "data/syntactic_constituency/wsj.20.test.trees",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "contextualizer": {
+            "type": "elmo_contextualizer",
+            "batch_size": 80,
+            "elmo": {
+                "weight_file": "contextualizers/elmo_small_randomly_initialized_3/elmo_small_randomly_initialized_3_weights.hdf5",
+                "options_file": "contextualizers/elmo_small_randomly_initialized_3/elmo_small_randomly_initialized_3_options.json",
+                "num_output_representations": 1,
+                "dropout": 0.0,
+                "requires_grad": true
+            }
+        },
+        "token_representation_dim": 256
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+accuracy",
+        "num_serialized_models_to_keep": 1,
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

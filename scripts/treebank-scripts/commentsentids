@@ -1,0 +1,19 @@
+#!/usr/local/bin/perl
+
+# Author: Martin Cmejrek
+
+# Usage: iteratesentences
+#
+# Spilits each line into sentence number prefix and the rest containing the sentence in an oneline format, 
+# performs jason's scripts on a sentence. Outputs sentence prefix and resulting sentence.  
+
+
+while (<STDIN>) {      # for contents of each file, slurped whole into $_
+  s/(^[^\:]+\:[0-9]+\:\:)//;
+  $sentence_id = $1;
+  $sentence = $_;
+  print "\#sentence_id=$sentence_id\n";
+  print $sentence;
+}
+
+ 

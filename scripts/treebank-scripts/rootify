@@ -1,0 +1,45 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: rootify rootname [files ...]
+# Example: rootify ROOT corpus
+#
+# Given a corpus in oneline or headify format, wraps every parse
+# in (rootname ...) so that they all have the same root.
+#
+# For consistency, rootname is capitalized, and to make sure
+# that it does not contain any characters reserved by oneline,
+# we remove all non-alphabetic characters from it.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+die "$0: first argument should be the name of the root node (e.g., ROOT)" unless @ARGV;
+$rootname = shift(@ARGV);
+$rootname =~ tr/a-z/A-Z/;
+$rootname =~ tr/A-Z//cd;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token.  
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $sent++;
+    /^\(($token)/ || die "$0:$location sentence appears to have no root";
+    $roots{$1}=1;    
+    $_ = "($rootname $_)";
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: wrapped $rootname node around $sent trees having ",scalar keys %roots," different roots: ", join(", ", keys %roots), "\n";
+
+
+
+
+
+
+
+

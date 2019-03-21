@@ -1,0 +1,86 @@
+# Here's an extract from an old script that I used to create some
+# corpora in six different formats.  You should be able to vary these
+# recipes to get whatever format you like.  Documentation for the
+# Perl scripts (including their flags) is in the scripts themselves.
+# 
+# You will have to change the directories below, of course.
+# 
+# Some of the other scripts in this directory might also be useful
+# to you even if they're not used below.  For example, striplocations
+# and stripcomments strip some documentation from the output files.
+# Have a look and see what's there.
+
+
+MARKS=$HOME/hw/cis639/corpus
+CORPIN=$HOME/linc/info/wsj
+CORPOUT=$HOME/hw/learn/02-subcat-study/corpus
+
+# ----------- 
+# The first stage of extraction (using programs in "extract")
+# ----------- 
+# Notes: 
+# Can leave out -n tag from oneline, although then summarize wouldn't work.
+# Can leave canonicalize out, and give -c flag to articulate, discardbugs, and headify.
+# ----------- 
+
+cd $CORPIN
+oneline -n [0-1]*/*.mrg | fixsay | markargs | articulate -c | normcase -i | discardconj -q | discardbugs -c $MARKS/newmarked.bug | headify -c $MARKS/newmarked.mrk | headall > /tmp/headed
+
+# ------------
+# The second stage of extraction (using programs in "extract").
+# Gets several variants of the corpus.
+# ------------
+# Note: To get a dependency version of the corpus that can be viewed 
+# in emacs dependency mode (see ~/hw/cis639/annot), follow flatten 
+# (without -w) by flat2dep.
+# ------------
+# Note: To get fully lexicalized frames, add -w option to rules2frames.
+#       To get dependencies, replace rules2frames with rules2deps.
+# ------------
+
+cd $CORPOUT
+
+cat /tmp/headed | slashnulls | marknulls | flatten -f -w | listrules | rules2frames | canonindices > frames
+cat /tmp/headed | killnulls | headall | canonicalize | flatten -f -w | listrules | rules2frames > frames.simple
+cat /tmp/headed | slashnulls | killnulls | headall | flatten -f -w | listrules | rules2frames | canonindices > frames.nonulls
+
+cat /tmp/headed | slashnulls | marknulls | flatten -f -w -B | listrules | rules2frames | canonindices > framesB
+cat /tmp/headed | killnulls | headall | canonicalize | flatten -f -w -B | listrules | rules2frames > framesB.simple
+cat /tmp/headed | slashnulls | killnulls | headall | flatten -f -w -B | listrules | rules2frames | canonindices > framesB.nonulls
+
+# ------------
+# Summarize each extracted corpus, for our interest.
+# Extract training, development, and test sets from each corpus.
+# ------------
+
+cd $CORPOUT
+
+summarize frames wordframes lhsframes > summarize.frames
+selectsect 0 13 frames > train0-13
+selectsect 14 15 frames > dev14-15
+selectsect 16 16 frames > test16
+
+summarize framesB wordframesB lhsframesB > summarize.framesB
+selectsect 0 13 framesB > train0-13B
+selectsect 14 15 framesB > dev14-15B
+selectsect 16 16 framesB > test16B
+
+summarize frames.nonulls wordframes.nonulls lhsframes.nonulls > summarize.frames.nonulls
+selectsect 0 13 frames.nonulls > train0-13.nonulls
+selectsect 14 15 frames.nonulls > dev14-15.nonulls
+selectsect 16 16 frames.nonulls > test16.nonulls
+
+summarize framesB.nonulls wordframesB.nonulls lhsframesB.nonulls > summarize.framesB.nonulls
+selectsect 0 13 framesB.nonulls > train0-13B.nonulls
+selectsect 14 15 framesB.nonulls > dev14-15B.nonulls
+selectsect 16 16 framesB.nonulls > test16B.nonulls
+
+summarize frames.simple wordframes.simple lhsframes.simple > summarize.frames.simple
+selectsect 0 13 frames.simple > train0-13.simple
+selectsect 14 15 frames.simple > dev14-15.simple
+selectsect 16 16 frames.simple > test16.simple
+
+summarize framesB.simple wordframesB.simple lhsframesB.simple > summarize.framesB.simple
+selectsect 0 13 framesB.simple > train0-13B.simple
+selectsect 14 15 framesB.simple > dev14-15B.simple
+selectsect 16 16 framesB.simple > test16B.simple

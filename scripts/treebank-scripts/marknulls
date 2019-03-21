@@ -1,0 +1,35 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: marknulls -e [files ...]
+#
+# Filters input that is in oneline or headify or slashnulls or flatten
+# format.  
+#
+# Any nonterminal that rewrites directly as an empty category (-NONE-
+# ...) gets a 0 stuck onto its front.  For example,
+# S~-ADV/S~-ADV-5 becomes 0S~-ADV/S~-ADV-5.  Any nonterminal that 
+# rewrites as an expletive (EXP ...) gets a 1 stuck onto its front.
+#
+# Typically this script will be used right before flatten or listrules
+# or marksiblingknobs.  Its output will confuse most other scripts,
+# which care about the specific nonterminals used.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token.  
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $nulls += s/\(($token \@?\(-NONE- )/\(0$1/og;
+    $expletives += s/\(($token \@?\(EXP )/\(1$1/og;
+  } 
+  print "$location$_\n";
+}
+print STDERR "$0: $nulls nulls marked with 0; $expletives expletives marked with 1\n";
+

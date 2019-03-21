@@ -1,0 +1,28 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: fringe [files ...]
+#
+# Given a corpus in oneline or headify format, removes the tree structure,
+# so that each sentence is just a sequence of space-separated words.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token.  
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    @nodes = m/$token/g;        $nodes += @nodes;
+    @words = m/@?($token)\)/g;  $words += @words;
+    $_ = join(" ", @words);
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $nodes nodes in, $words terminal nodes out\n";
+

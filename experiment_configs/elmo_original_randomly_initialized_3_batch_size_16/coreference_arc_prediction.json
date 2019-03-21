@@ -1,0 +1,43 @@
+{
+    "dataset_reader": {
+        "type": "coreference_arc_prediction",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original_randomly_initialized_3/coreference_resolution.hdf5"
+        },
+        # This saves memory and speeds up the model if we don't need access to the tokens in the model.
+        "include_raw_tokens": false
+    },
+    "validation_dataset_reader": {
+        "type": "coreference_arc_prediction",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original_randomly_initialized_3/coreference_resolution.hdf5"
+        },
+        # This saves memory and speeds up the model if we don't need access to the tokens in the model.
+        "include_raw_tokens": false
+    },
+    "train_data_path": "data/coreference_resolution/train.english.v4_gold_conll",
+    "validation_data_path": "data/coreference_resolution/dev.english.v4_gold_conll",
+    "test_data_path": "data/coreference_resolution/test.english.v4_gold_conll",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "pairwise_tagger",
+        "token_representation_dim": 1024,
+        "combination": "x,y,x*y"
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 10
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+accuracy",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

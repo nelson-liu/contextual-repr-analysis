@@ -1,0 +1,95 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: flat2dep [files ...]
+#
+# Given parses in the form produced by flatten, produces dependency
+# parses in a form that can be edited by Emacs dependency mode or used
+# as training or testing data for the parser of Eisner (1996).  (The
+# -w tag should not be given to flatten.)
+#
+# The input
+#    (VBZ (NNP John) likes (NNP Mary) (RB tremendously))
+# yields the output
+#    1~John/NNP 4~likes/VBZ 1~Mary/NNP 1~tremendously/RB EOS/
+# i.e., the parent of "tremendously" is word 1 ("likes")
+# and the parent of "likes" is word 4 (the "end-of-sentence" mark).
+#
+# Note that ~ may also be used internal to some of the tags,
+# if markargs has been run earlier in the pipeline and flatten
+# has been asked to keep those tags.  This might confuse
+# Emacs dependency mode or the Eisner (1996) parser.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $sent++;
+    @lexseq = ();   # will be modified by &constit
+    ($pos, $headpos) = &constit(0);
+    die "$0:$location more than one sentence on line ending $_" if $_;
+
+    die "$0:$location internal error $pos @lexseq" unless $pos == @lexseq;  
+    $lexseq[$headpos] = "$pos~$lexseq[$headpos]";   # add EOS
+    push(@lexseq, "EOS/");
+
+    $_ = join(" ",@lexseq);
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $sent sentences converted\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# 
+# input:  number of this constit's first word, in the matrix sentence.  (starting with 0)
+# output: list of two scalars:
+#           - number of NEXT constit's first word (i.e., input + # words in this constit)
+#	    - position of headword of this constit 
+# side effect: appends the constit's lexical items to @lexseq, in the form 
+#    "parent~word/tag", or for the headword, just "word/tag".  The headword
+#    may later be given a parent by the caller.
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+
+  local($pos) = @_;
+  local($tag, $headpos, $subheadpos, @subheadposes);
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $tag = $1;                            
+  
+  until (/^\)/) {	 # eat all the subconstits recursively and remember what they were
+    if (/^\(/) {                # subconstit is a dependent
+      ($pos, $subheadpos) = &constit($pos);
+      push (@subheadposes, $subheadpos);
+    } else {			# subconstit is the head item
+      s/^($token)\s*//o || die "$0:$location internal error";
+      push (@lexseq, "$1/$tag");
+      $headpos = $pos++;
+    }
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  foreach (@subheadposes) {
+    $lexseq[$_] = "$headpos~$lexseq[$_]";
+  }
+
+  ($pos, $headpos);
+}

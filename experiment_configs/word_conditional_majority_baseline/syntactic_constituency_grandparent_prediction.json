@@ -1,0 +1,27 @@
+{
+    "dataset_reader": {
+        "type": "constituency_ancestor_prediction",
+        "ancestor": "grandparent"
+    },
+    "validation_dataset_reader": {
+        "type": "constituency_ancestor_prediction",
+        "ancestor": "grandparent"
+    },
+    "train_data_path": "data/syntactic_constituency/wsj.train.trees",
+    "validation_data_path": "data/syntactic_constituency/wsj.dev.trees",
+    "test_data_path": "data/syntactic_constituency/wsj.test.trees",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "word_conditional_majority_tagger"
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 1024
+    },
+    "trainer": {
+        "num_epochs": 1,
+        "optimizer": {
+            "type": "null"
+        }
+    }
+}

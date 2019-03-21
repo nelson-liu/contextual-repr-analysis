@@ -1,0 +1,29 @@
+{
+    "dataset_reader": {
+        "type": "semantic_dependency_arc_prediction",
+        "negative_sampling_method": "balanced",
+        "include_raw_tokens": true
+    },
+    "validation_dataset_reader": {
+        "type": "semantic_dependency_arc_prediction",
+        "negative_sampling_method": "balanced",
+        "include_raw_tokens": false
+    },
+    "train_data_path": "data/semantic_dependency/english_dm_augmented_train.sdp",
+    "validation_data_path": "data/semantic_dependency/english_dm_augmented_dev.sdp",
+    "test_data_path": "data/semantic_dependency/english_id_dm_augmented_test.sdp",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "word_conditional_majority_pairwise_tagger"
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 1024
+    },
+    "trainer": {
+        "num_epochs": 1,
+        "optimizer": {
+            "type": "null"
+        }
+    }
+}

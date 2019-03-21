@@ -1,0 +1,32 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: selectsect lo hi [files ...] 
+#
+# Filter that selects out certain Treebank sections from a file in
+# oneline or similar format.  Lines are only kept if they start with
+# locations whose filenames mention a two-digit number between lo and
+# hi, inclusive, or they mention no location and they're comments.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, but DON'T print timestamp since that would be a comment
+
+die "$0: must specify lo and hi on command line, aborting\n" unless @ARGV >= 2;
+$lo = shift(@ARGV);
+$hi = shift(@ARGV);
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+while (<>) {
+  $linesin++;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  if ($location eq "") {
+    next unless /^#/;
+  } else {
+    @nums = ($location =~ /\d+/g);
+    pop(@nums);   # ignore the line number
+    next unless grep (/^..$/ && $_ >= $lo && $_ <= $hi, @nums);
+  }
+  print "$location$_"; 
+  $linesout++;
+}
+print STDERR "$0: kept $linesout of $linesin lines\n";

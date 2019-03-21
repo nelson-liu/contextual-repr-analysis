@@ -1,0 +1,232 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: flatten [-f] [-l] [-u] [-w] [-1] [-b] [-B] [files ...]
+#
+# Flattens parses produced by headall.  
+#    (Can also be used to eliminate just non-branching nodes in the 
+#     output of headall or oneline: see -1 below.)
+# The result is something like dependency grammar:
+# Each constituent has one terminal on its RHS, which serves as the head.  
+#
+# Example: 
+#    (S (NP @(NNP @John)) @(VP @(VP @(VBZ @likes) (NP @(NNP @Mary))) (RB @tremendously)))
+# becomes 
+#    (S|VP|VP|VBZ (NP|NNP @John) @likes (NP|NNP @Mary) (RB @tremendously))
+#
+# While some information is lost in this transformation
+# (namely, the relative obliqueness of the arguments to likes),
+# most of it is kept by using complex tags.  The 
+# tag for the constituent headed by "likes" in the output
+# records the sequence of all nonterminals headed by 
+# the corresponding copy of "likes" in the input.
+#
+# -f says to keep only the first (i.e., maximal) tag from 
+# such a sequence:
+#    (S (NP John) likes (NP Mary) (RB tremendously))
+#
+# -l says to keep only the last (i.e., minimal, part-of-speech) tag
+# from such a sequence:
+#    (VBZ (NNP John) likes (NNP Mary) (RB tremendously))
+#
+# If -f and -l are both specified, both the first and last tags are kept:
+#    (S|VBZ (NP|NNP John) likes (NP|NNP Mary) (RB|RB tremendously))
+# Note that for consistency, even the single-tag sequence RB is turned into 
+# a pair RB|RB.
+#
+# -u basically says to run "uniq" over each tag sequence: for example,
+# S|VP|VP|VBZ above would be collapsed into S|VP|VBZ.  (That is, adjunct
+# levels are eliminated.)  This option is incompatible with -f or -l.
+#
+# -w says that the head lexeme should be lifted onto the tag sequence
+# (in addition to any tags specified by -f, -l).  Thus we get
+#    (S|VP|VP|VBZ|likes (NP|NNP|John @) @ (NP|NNP|Mary @) (RB|tremendously @))
+# which might be easier for a human to read if sisterless @ were deleted:
+#    (S|VP|VP|VBZ|likes NP|NNP|John @ NP|NNP|Mary RB|tremendously)
+#
+# -1 says that instead of eliminating any nonterminal node that is the
+# head of its parent, we should only eliminate any nonterminal node
+# that is the sole child of its parent.  In other words, just collapse
+# unary (nonbranching) nodes.  
+#
+#    If this option is specified, head markings are irrelevant: they
+#    are not required in the input, but if they appear in the input,
+#    they will be preserved in the output.
+# 
+#    Note that if -1 is combined with -w, even terminals are collapsed: 
+#    (NPR @John) becomes (NPR|John @) and (NPR John) becomes just NPR|John. 
+#
+# The -b and -B options can be useful for studying the output,
+# especially if listrules is subsequently to be applied.  These
+# "retain" the deleted internal parentheses of a maximal projection by
+# adding labeled or unlabeled brackets as new children of the
+# nonterminal.  -b uses unlabeled brackets and omits those corresponding to unary rules.
+# -B uses labeled brackets and preserves those corresponding to unary rules.
+#   (Note: One could mix and match these two options, which are controlled internally by
+#   $labbrackets and $trivbrackets - there's just not support for it on the command line
+#   right now.)
+# The -B option makes the most sense together with -f.
+#
+#   flatten -f -b:  
+#    (S (NP John) [ [ likes (NP Mary) ] (RB tremendously) ] )  
+#         which yields frame   S --> NP [ [ likes NP ] RB ]
+#   flatten -f -B:
+#    (S (NP [NNP John ]) [VP [VP [VBZ likes ] (NP [NNP Mary ]) ] [RB tremendously ] ])
+#         which yields frame S --> NP [VP [VP [VBZ likes ] NP ] RB ]   
+#
+# The ~ argument marker is handled as follows: it is removed from the sequence 
+# before any of these operations (including uniq).  If it happened to appear on
+# some sequence-maximal tag in the input, then it will be restored to
+# the maximal tag in the corresponding output sequence.  It is, however,
+# retained on all slashed or plussed material contained within a tag.
+#
+# Note: When options such as -f are used, indices may no longer match
+# up in the output.  For example, if the input is
+#     (S\NP-SBJ-2
+# 	(NP-SBJ\NP-SBJ-2
+# 	  @(-NONE- @0))
+# 	@(VP @(VBZ @makes)
+# 	     (NP
+# 	       (NPR @(NNP @Kent))
+# 	       @(NP @(NNS @cigarettes)))))
+# then flatten -w will produce
+#     (SBAR that
+# 	    (S\NP-SBJ-2
+# 	      (NP-SBJ\NP-SBJ-2 0)
+# 	      makes
+# 	      (NP (NPR Kent)
+# 		   cigarettes)))                              
+# So notice that despite the index on /NP-SBJ-2, it never gets
+# canceled against anything.  The head of the SBAR is assumed
+# to subcategorize for the gapped category S\NP-SBJ-2, just as 
+# if we had written S\NP-SBJ -- although we can't actually 
+# drop the index, since we need to track the propagation of the
+# slash.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$firsttag = 1, shift(@ARGV) if $ARGV[0] eq "-f";  # !!! options must be specified in order, yuck!
+$lasttag = 1, shift(@ARGV) if $ARGV[0] eq "-l";  
+$uniqtag = 1, shift(@ARGV) if $ARGV[0] eq "-u";
+$wordtag = 1, shift(@ARGV) if $ARGV[0] eq "-w";
+$deunarize = 1, shift(@ARGV) if $ARGV[0] eq "-1";
+$brackets = 1, shift(@ARGV) if $ARGV[0] eq "-b";
+$brackets = 1, $labbrackets = 1, $trivbrackets = 1, shift(@ARGV) if $ARGV[0] eq "-B";
+
+if ($firsttag && $lasttag) {
+  $twotags = 1; 
+  $firsttag = $lasttag = 0;
+} elsif (!$firsttag && !$lasttag) {
+  $alltags = 1;     
+}
+die "$0: -u is incompatible with -f or -l, aborting\n" if $uniqtag && !$alltags;
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+$inittokenseg = "[^ \t\n()~\\\\\\/+|-]+";  # initial segment of a token (copied from markargs 
+                                       # AND SLIGHTLY MODIFIED to add |)
+
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    ($headmark, $tag, $kids, $numkids) = &constit;  # eat a constit (sentence)    
+    die "$0:$location more than one sentence on line ending $_" if $_;
+    die "$0:$location the whole sentence was unexpectedly marked as a head" if $headmark;
+
+    $_ = "$headmark($tag$kids)";
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $constit possibly trivial constituents in, ", $constit-$deletedconstit, " out\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Any constit may start with @.
+# 
+# output is a tuple:
+#    headmark ("@" or "") according to whether this is the head of its parent
+#    composite tag of the flattened constit, respecting $firsttag and $lasttag and $wordtag
+#    a string that starts with a space and gives all the subconstits of the flattened constit, including the head
+#    number of child subconstituents
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($headmark, $tag, $kids, $numkids);
+  local($foundhead, $badkid);
+  local($argmark);
+
+  $headmark = "@" if s/^@//;       # delete initial @ if any
+
+  $constit++;
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $tag = $1;                                 
+  $argmark = 1 if $tag =~ s/^($inittokenseg)~/$1/g;   # kill any arg mark on tag, but remember it.  Don't touch arg marks on the slashed categories, though.
+  
+  $foundhead = 0;
+  $badkid = 0;
+  if (/^@?\(/) {		# if tag is followed by at least one subconstituent (possibly marked with @)
+    until (/^\)/) {		#   eat all the subconstits recursively and remember what they were
+      local($subheadmark, $subtag, $subkids, $subnumkids) = &constit;
+      $numkids++;
+      unless ($deunarize ? ($numkids==1 && /^\)/) : $subheadmark eq "@")  {   # no reason to absorb the kid: we're killing sole children ($deunarize) or head children (otherwise), and it's not one
+	$kids .= " $subheadmark" . (($subkids eq " ") ? $subtag : "($subtag$subkids)");  # subkids can be just " " if we specify -w and -1 and heads aren't marked in the input
+      } else {                   # this kid must be swallowed
+	$deletedconstit++;
+	
+        # splice the kids in without a () wrapper or $subtag, except as dictated by $brackets
+	local($addbrackets) = $brackets 
+	                        && ($trivbrackets || $subnumkids > 1)         # if trivial brackets aren't allowed, the head needs multiple kids to justify brackets around it
+	                        && ($trivbrackets || $numkids > 1 || !/^\)/); # if trivial brackets aren't allowed, the head needs siblings to justify brackets around it
+	$kids .= " [" if $addbrackets;
+	$kids .= $subtag if $labbrackets;
+	$kids .= "$subkids";   
+	$kids .= " ]" if $addbrackets;
+
+        # adjust the parent tag
+	$subtag =~ s/~//g;        # kill any arg mark on subtag -- we'll just use the higher-up one we already found
+	if ($lasttag || ($uniqtag && $subtag =~ m%^$tag(|\|$)%)) {
+	  $tag = $subtag;    # discard $tag and just keep $subtag
+	} elsif ($alltags) {
+	  $tag .= "|$subtag";
+	} elsif ($twotags || ($firsttag && $wordtag)) {
+	  $subtag =~ s/[^|]*\|//;  # kill first component of subtag
+	  $tag .= "|$subtag";
+	}  # else leave $tag alone
+      }
+    }
+  } else {			# if tag is followed by just a lexical item
+    local($subheadmark);
+    $numkids = 1;               # we assume there won't be any other kids after the lex item, thanks to input format
+    s/^@// && ($subheadmark = "@") || $deunarize || die "$0:$location lex item not marked as head and -1 not specified";
+    s/^($token)\s*//o || die "$0:$location no lex item";
+    $word = $1;
+    $kids = " $subheadmark$word";
+    if ($twotags) {
+      $tag .= "|$tag";    # use same tag for first & last
+    }
+    if ($wordtag) {
+      $tag .= "|$word";
+      $kids = " $subheadmark";   
+    }
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  $tag =~ s/^$inittokenseg/$&~/o if $argmark;   # put the arg mark on
+
+  ($headmark, $tag, $kids, $numkids);
+}
+
+

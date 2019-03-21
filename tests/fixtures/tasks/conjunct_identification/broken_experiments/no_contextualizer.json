@@ -1,0 +1,35 @@
+{
+    "dataset_reader": {
+        "type": "conjunct_identification"
+    },
+    "train_data_path": "tests/fixtures/data/coordination_boundary/conjunct_id.tsv",
+    "validation_data_path": "tests/fixtures/data/coordination_boundary/conjunct_id.tsv",
+    "model": {
+        "type": "tagger",
+        "token_representation_dim": 1024,
+        "decoder": {
+            "input_dim": 1024,
+            "hidden_dims": 3,
+            "num_layers": 1,
+            "activations": "linear"
+        },
+        "calculate_span_f1": true,
+        "label_encoding": "IOB1"
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 1,
+        "grad_norm": 1.0,
+        "patience": 500,
+        "cuda_device": -1,
+        "validation_metric": "+f1-measure-overall",
+        "optimizer": {
+            "type": "adadelta",
+            "lr": 0.000001,
+            "rho": 0.95
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "dataset_reader": {
+        "type": "conllu_pos"
+    },
+    "train_data_path": "data/pos/en_ewt-ud-train.conllu",
+    "validation_data_path": "data/pos/en_ewt-ud-dev.conllu",
+    "test_data_path": "data/pos/en_ewt-ud-test.conllu",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "encoder": {
+            "type": "lstm",
+            "input_size": 1024,
+            "hidden_size": 512,
+            "bidirectional": true,
+            "num_layers": 2
+        },
+        "decoder": "mlp",
+        "contextualizer": {
+            "type": "scalar_mixed_precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original/ewt_pos.hdf5",
+            "num_layers": 3
+        },
+        "use_crf": true,
+        "include_start_end_transitions": false,
+        "token_representation_dim": 1024
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+accuracy",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

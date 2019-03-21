@@ -1,0 +1,155 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: flatten [-f] [-l] [-u] [-a] [-w] [files ...]
+#
+# Flattens parses produced by headall.
+# The result is something like dependency grammar:
+# Each constituent has one terminal on its RHS, which serves as the head.  
+# Note that the result is back in the same format that oneline produces.
+#
+# Example: 
+#    (S (NP @(NNP @John)) @(VP @(VP @(VBZ @likes) (NP @(NNP @Mary))) (RB @tremendously)))
+# becomes 
+#    (S|VP|VP|VBZ (NP|NNP John) likes (NP|NNP Mary) (RB tremendously))
+#
+# While some information is lost in this transformation
+# (namely, the relative obliqueness of the arguments to likes),
+# most of it is kept by using complex tags.  The 
+# tag for the constituent headed by "likes" in the output
+# records the sequence of all nonterminals headed by 
+# the corresponding copy of "likes" in the input.
+#
+# -f says to keep only the first (i.e., maximal) tag from 
+# such a sequence:
+#    (S (NP John) likes (NP Mary) (RB tremendously))
+#
+# -l says to keep only the last (i.e., minimal, part-of-speech) tag
+# from such a sequence:
+#    (VBZ (NNP John) likes (NNP Mary) (RB tremendously))
+#
+# If -f and -l are both specified, both the first and last tags are kept:
+#    (S|VBZ (NP|NNP John) likes (NP|NNP Mary) (RB|RB tremendously))
+# Note that even RB|RB has two tags given (the same tag).
+#
+# -u basically says to run "uniq" over each tag sequence: for example,
+# S|VP|VP|VBZ above would be collapsed into S|VP|VBZ.  (That is, adjunct
+# levels are eliminated.)  This option is incompatible with -f or -l.
+#
+# -a says that adjuncts should be marked in the output with an initial ~, i.e.,
+#    (S|VP|VP|VBZ (NP|NNP John) likes (NP|NNP Mary) (~RB tremendously))
+#
+# -w says that the head lexeme should be lifted onto the tag sequence
+# (in addition to any tags specified by -f, -l).  Thus we get
+#    (S|VP|VBZ|likes (NP|NNP|John @) @ (NP|NNP|Mary @) (RB|tremendously @))
+# which might be easier for a human to read if sisterless @ were deleted:
+#    (S|VP|VBZ|likes NP|NNP|John @ NP|NNP|Mary RB|tremendously)
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$firsttag = 1, shift(@ARGV) if $ARGV[0] eq "-f";  # !!! options must be specified in order, yuck!
+$lasttag = 1, shift(@ARGV) if $ARGV[0] eq "-l";  
+$uniqtag = 1, shift(@ARGV) if $ARGV[0] eq "-u";
+$adjtag = 1, shift(@ARGV) if $ARGV[0] eq "-a";
+$wordtag = 1, shift(@ARGV) if $ARGV[0] eq "-w";
+
+if ($firsttag && $lasttag) {
+  $twotags = 1; 
+  $firsttag = $lasttag = 0;
+} elsif (!$firsttag && !$lasttag) {
+  $alltags = 1;     
+}
+die "$0: -u is incompatible with -f or -l, aborting\n" if $uniqtag && !$alltags;
+
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    ($headmark, $tag, $fulltag, $kids) = &constit;  # eat a constit (sentence)    
+    die "$0:$location more than one sentence on line ending $_" if $_;
+    die "$0:$location the whole sentence was unexpectedly marked as a head" if $headmark;
+
+    $_ = "($fulltag$kids)";
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $constit possibly trivial constituents in, $newconstit out\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Any constit may start with @.
+# 
+# output is a tuple:
+#    headmark ("@" or "") according to whether this is the head of its parent
+#    original nonterminal tag of the flattened constit
+#    full composite tag of the flattened constit, respecting $firsttag and $lasttag and $uniqtag and $wordtag
+#    a string that starts with a space and gives all the flattened subconstits of the flattened constit, including the head
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($headmark, $tag, $fulltag, $kids, $subheadmark, $subtag, $subfulltag, $subkids);  
+  local($foundhead, $badkid, $isadjunction);
+
+  $headmark = "@" if s/^@//;       # delete initial @ if any
+
+  $constit++;
+  $newconstit++ unless $headmark eq "@";   # if marked with @, will eventually get spliced into parent 
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $tag = $1;                                 
+  
+  $foundhead = 0;
+  $badkid = 0;
+  if (/^@?\(/) {		# if tag is followed by at least one subconstituent (possibly marked with @)
+    until (/^\)/) {		#   eat all the subconstits recursively and remember what they were
+      ($subheadmark, $subtag, $subfulltag, $subkids) = &constit;
+      if ($subheadmark eq "") {  # this kid doesn't contribute the head
+	$kids .= " (|$subfulltag$subkids)";   # mark the kids added with /, which we'll later change to ~ if this turns out to be adjunction, else delete
+      } else {                   # this kid contributes the head
+	$isadjunction = ($tag eq $subtag);     # we have same label as head kid
+	if ($lasttag || ($uniqtag && $isadjunction)) {
+	  $fulltag = $subfulltag;
+	} elsif ($alltags) {
+	  $fulltag .= "$tag|$subfulltag";
+	} elsif ($twotags || ($firsttag && $wordtag)) {    # all full tags have fixed length > 1
+	  $subfulltag =~ s/[^|]*\|//;  # kill first component of subfulltag
+	  $fulltag .= "$tag|$subfulltag";
+	} else {   # $firsttag without $wordtag
+	  $fulltag = $tag;
+	} 
+	$kids .= "$subkids";   # splice these in without a () wrapper or $subfulltag or tag-initial | marks
+      }
+    }
+  } else {			# if tag is followed by just a lexical item
+    s/^@($token)\s*//o || die "$0:$location no lex item, or lex item not marked as head";
+    $word = $1;
+    $kids = " $word";
+    $fulltag = $twotags ? "$tag|$tag" : $tag;    # use same tag for first & last
+    if ($wordtag) {
+      $kids = " @";
+      $fulltag .= "|$word";
+    }
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  if ($isadjunction) {      # fix up tag-initial | marks as described above, turning them to ~ or deleting them
+    $kids =~ s<\(\|><\(~>g;
+  } else {
+    $kids =~ s<\(\|><\(>g;
+  }
+
+  ($headmark, $tag, $fulltag, $kids);
+}

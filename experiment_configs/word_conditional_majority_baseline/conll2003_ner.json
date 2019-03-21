@@ -1,0 +1,27 @@
+{
+    "dataset_reader": {
+        "type": "conll2003_ner"
+    },
+    "validation_dataset_reader": {
+        "type": "conll2003_ner"
+    },
+    "train_data_path": "data/ner/eng.train",
+    "validation_data_path": "data/ner/eng.testa",
+    "test_data_path": "data/ner/eng.testb",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "word_conditional_majority_tagger",
+        "calculate_span_f1": true,
+        "label_encoding": "IOB1"
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 1024
+    },
+    "trainer": {
+        "num_epochs": 1,
+        "optimizer": {
+            "type": "null"
+        }
+    }
+}

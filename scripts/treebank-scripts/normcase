@@ -1,0 +1,106 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: normcase [-i] [files ...]
+#
+# Filters parses that are in the format that "oneline" outputs.  For
+# each terminal symbol, ensures that all tokens of it have the same
+# case.  In particular, we normalize these tokens to the "least
+# capitalized" version that actually appears, i.e., we prefer
+# all-lowercase to initial caps to all caps.
+#
+# The -i flag says to modify only sentence-initial words and words that
+# are in ALL CAPS.  Other words are assumed to have accurate capitalization.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$restricted = 1, shift(@ARGV) if $ARGV[0] eq "-i";  
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ ()]+";  # matches tokens: anything but parens or whitespace can be a token character
+$allcapstoken = "[^ ()a-z]+(?![^ ()])";  
+
+# Make sure we clean up gracefully when we finish, die, or are killed.
+sub END { close(TMP),print STDERR ("$0: ".(system("rm $tmpfile 2>/dev/null") ? "couldn't remove" : "removed")." temporary file $tmpfile\n"), if defined $tmpfile; }  # Perl calls this when we finish or die
+@exit_or_dumpcore_signals = ("HUP","INT","QUIT","ILL","TRAP","ABRT","EMT","FPE","KILL", "BUS","SEGV","SYS","PIPE","ALRM","TERM","USR1","USR2","POLL", "VTALRM","PROF","XCPU","XFSZ"); # signals for which the DEFAULT action would be to exit or dump core.  See signal(5).  Excludes the real-time signals, RTMIN through RTMAX.
+foreach (@exit_or_dumpcore_signals) { $SIG{$_}=sub { die "$0: aborting (signal $_[0])\n"; } }  # ensure that signal gets caught.  If it's a fatal error, Perl would automatically call END for us after the handler's executed, but we explictly die in the handler in case it's a nonfatal error.
+
+# ----------
+# This version just lowercases everything.
+#
+# while (<>) {      # for all sentences
+#     chop;  
+#     s/^(\S+:[0-9]+:\t)?//, $location = $&;
+#     $words += s/(\s$token)/\L$&\E/go unless /^\#/;   # look for token preceded by whitespace rather than paren, and lowercase it
+#     print "$location$_\n";
+# }
+# ----------
+
+
+# We'll do two passes through the input.
+# On the first pass, we save the input in a temporary file, and 
+# remember which words we've seen.
+
+$tmpfile = "/tmp/normcase.$$";
+open(TMP, ">$tmpfile");
+while (<>) {
+  print TMP;
+  chop;
+  s/^\S+:[0-9]+:\t//;              # strip off initial location
+  next if /\#/;              # skip if comment
+  $seen{$1} = 1 while /\s($token)/go;
+}
+close(TMP);
+
+
+# Now, on the second pass, read again and normalize.
+
+$lowers = $tolowers = $toinitcaps = $leavealones = 0;
+open(TMP, "<$tmpfile");
+while (<TMP>) {
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    if ($restricted) {
+      s/(\s)($token)/$1.&normcase($2)/eo;           # not global replacement - first word in sentence only!
+      s/(\s)($allcapstoken)/$1.&normcase($2)/geo;   # all-caps words
+    } else {
+      s/(\s)($token)/$1.&normcase($2)/geo;          # all the words
+    }
+  }
+  print "$location$_\n";
+}
+close(TMP);
+
+print STDERR "$0: $lowers tokens stayed lowercase; $tolowers became lowercase; $toinitcaps stayed/became Capitalized; $leavealones others\n";
+
+
+#------------------------------
+
+sub normcase {
+  local($w) = @_;
+
+  # simple version that would work but probably inefficiently:      
+  #    $seen{"\L$w\E"} ? "\L$w\E" : $seen{"\u\L$w\E"} ? "\u\L$w\E" : $w;
+
+  if ($w !~ /[A-Z]/) {    # simple case - it's already lowercase
+    $lowers++;
+    $w;
+  } else {
+    local($lower) = "\L$w\E";
+    if ($seen{$lower}) {     # we've seen a lowercase equivalent
+      $tolowers++;
+      $lower;
+    } else {
+      local($initcap) = "\u$lower";
+      if ($seen{$initcap}) {
+	$toinitcaps++;
+	$initcap;
+      } else {
+	$leavealones++;
+	$w;
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: discardconj [-q] [files ...]
+
+# Filters parses that are in the format that "oneline" outputs.
+# Discards all sentences containing conjunctions.
+# If -q is specified, the discards are "quiet," i.e., these sentences
+#   are NOT replaced by comments.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$quiet = 1, shift(@ARGV) if $ARGV[0] eq "-q";
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+while (<>) {
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $sent++;
+    if (/\((CC|CONJP)[ -]/) {
+      $discards++;
+      next if $quiet;
+      $_ = "# DISCARDED by $0: contained CC or CONJP";
+    }
+  }
+  print "$location$_\n";
+}
+print STDERR "$0: $sent sentences in, $discards discarded\n";
+
+
+
+
+

@@ -1,0 +1,89 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: prettyprint [files ...]
+#
+# Prettyprints a corpus that is in oneline format or headify format,
+# or even the format produced by flatten.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()@]+";  # anything but parens or whitespace or @ can be a token.
+$bareword = "\\@?$token";
+$nonheadword = "\\($token $bareword\\)";       
+$headword = "($bareword|\\@$nonheadword)";  # note: all barewords (except those appearing inside nonheadwords) are assumed to be heads, even if not marked with @, as in output of flatten
+$anyword = "($bareword|\\@?$nonheadword)"; 
+
+$justprintedsent = 0;
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  if (/^\#/) {    # a comment
+    $comments++;
+    print("\n") if $justprintedsent;
+    $justprintedsent = 0;
+  } else {
+    $sents++;
+    print("\n");
+    $justprintedsent = 1;
+    $locwidth = length($location)+7;          # figure out width of $location, which is either "" or ends with "\t"
+    $locwidth -= $locwidth%8;        
+    $_ = &constit("\n" . " " x $locwidth);
+  }
+  print "$location$_\n";
+}
+
+print STDERR "$0: $sents sentences, $comments comments\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Returns the text of a pretty-printed version.
+# Input is a string that should be used for internal newlines (includes indentation to
+#   the current level of the constit).
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  return($1) if s/^($anyword)\s*//o;   # simple cases; we never break up a simple tagged word
+
+  local($oldnewline) = @_;
+  local($newline);
+  local($text);
+  local($prev);   # what precedes us on current line?  (1=short parent tag, 2=simple nonhead, 3=anything heavier)
+  
+  s/^(\@?\($token)\s*// || die "$0:$location open paren and tag expected to start $_";
+  $text = $1;
+
+  $prev = (length($text) <= 5) ? 1 : 3;
+
+  until (s/^\)\s*//) {
+    local($usenewline) = 0;
+    if (/^$nonheadword/o) {
+      $usenewline = 1 if $prev >= 3;
+      $prev = 2;
+    } elsif (/^$headword/o) {
+      $usenewline = 1 if $prev >= 2;   
+      $prev = 3;                 
+    } else {   # complex constit
+      $usenewline = 1 if $prev >= 1;
+      $prev = 3;                 
+    }
+    if (!defined $newline) {   # this test will succeed for our first child
+      # we set our newline indentation so that all children will line up
+      # with the first child.  If we've decided to put first child on its own
+      # line, then we have a free hand as to how much to indent it; otherwise
+      # it depends on parent nonterminal.
+      $newline = $oldnewline . ($usenewline ? "  " : " "x(1+length($text)));
+    }
+    $text .= $usenewline ? $newline : " ";
+    $text .= &constit($newline);
+  }
+
+  $text . ")";
+}

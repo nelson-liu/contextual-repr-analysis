@@ -1,0 +1,9 @@
+.dockerignore
+**.pyc
+**/__pycache__
+.gitignore
+.git
+data
+contextualizers
+models
+language_models

@@ -1,0 +1,32 @@
+1	Pierre	_	NN	NNP	_	2	NMOD
+2	Vinken	_	NN	NNP	_	8	SUB
+3	,	_	,	,	_	2	P
+4	61	_	CD	CD	_	5	NMOD
+5	years	_	NN	NNS	_	6	AMOD
+6	old	_	JJ	JJ	_	2	NMOD
+7	,	_	,	,	_	2	P
+8	will	_	MD	MD	_	0	ROOT
+9	join	_	VB	VB	_	8	VC
+10	the	_	DT	DT	_	11	NMOD
+11	board	_	NN	NN	_	9	OBJ
+12	as	_	IN	IN	_	9	VMOD
+13	a	_	DT	DT	_	15	NMOD
+14	nonexecutive	_	JJ	JJ	_	15	NMOD
+15	director	_	NN	NN	_	12	PMOD
+16	Nov.	_	NN	NNP	_	9	VMOD
+17	29	_	CD	CD	_	16	NMOD
+18	.	_	.	.	_	8	P
+
+1	Mr.	_	NN	NNP
+2	Vinken	_	NN	NNP
+3	is	_	VB	VBZ
+4	chairman	_	NN	NN
+5	of	_	IN	IN
+6	Elsevier	_	NN	NNP
+7	N.V.	_	NN	NNP
+8	,	_	,	,
+9	the	_	DT	DT
+10	Dutch	_	NN	NNP
+11	publishing	_	VB	VBG
+12	group	_	NN	NN
+13	.	_	.	.

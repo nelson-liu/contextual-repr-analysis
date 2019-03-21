@@ -1,0 +1,53 @@
+# newdoc id = weblog-juancole.com_juancole_20051126063000_ENG_20051126_063000
+# sent_id = weblog-juancole.com_juancole_20051126063000_ENG_20051126_063000-0001
+# text = Al-Zaman : American forces killed Shaikh Abdullah al-Ani, the preacher at the mosque in the town of Qaim, near the Syrian border.
+1	Al	Al	PROPN	NNP	Number=Sing	0	root	0:root	SpaceAfter=No
+2	-	-	PUNCT	HYPH	_	1	punct	1:punct	SpaceAfter=No
+3	Zaman	Zaman	PROPN	NNP	Number=Sing	1	flat	1:flat	_
+4	:	:	PUNCT	:	_	1	punct	1:punct	_
+5	American	american	ADJ	JJ	Degree=Pos	6	amod	6:amod	_
+6	forces	force	NOUN	NNS	Number=Plur	7	nsubj	7:nsubj	_
+7	killed	kill	VERB	VBD	Mood=Ind|Tense=Past|VerbForm=Fin	1	parataxis	1:parataxis	_
+8	Shaikh	Shaikh	PROPN	NNP	Number=Sing	7	obj	7:obj	_
+9	Abdullah	Abdullah	PROPN	NNP	Number=Sing	8	flat	8:flat	_
+10	al	al	PROPN	NNP	Number=Sing	8	flat	8:flat	SpaceAfter=No
+11	-	-	PUNCT	HYPH	_	8	punct	8:punct	SpaceAfter=No
+12	Ani	Ani	PROPN	NNP	Number=Sing	8	flat	8:flat	SpaceAfter=No
+13	,	,	PUNCT	,	_	8	punct	8:punct	_
+14	the	the	DET	DT	Definite=Def|PronType=Art	15	det	15:det	_
+15	preacher	preacher	NOUN	NN	Number=Sing	8	appos	8:appos	_
+16	at	at	ADP	IN	_	18	case	18:case	_
+17	the	the	DET	DT	Definite=Def|PronType=Art	18	det	18:det	_
+18	mosque	mosque	NOUN	NN	Number=Sing	7	obl	7:obl:at	_
+19	in	in	ADP	IN	_	21	case	21:case	_
+20	the	the	DET	DT	Definite=Def|PronType=Art	21	det	21:det	_
+21	town	town	NOUN	NN	Number=Sing	18	nmod	18:nmod:in	_
+22	of	of	ADP	IN	_	23	case	23:case	_
+23	Qaim	Qaim	PROPN	NNP	Number=Sing	21	nmod	21:nmod:of	SpaceAfter=No
+24	,	,	PUNCT	,	_	21	punct	21:punct	_
+25	near	near	ADP	IN	_	28	case	28:case	_
+26	the	the	DET	DT	Definite=Def|PronType=Art	28	det	28:det	_
+27	Syrian	syrian	ADJ	JJ	Degree=Pos	28	amod	28:amod	_
+28	border	border	NOUN	NN	Number=Sing	21	nmod	21:nmod:near	SpaceAfter=No
+29	.	.	PUNCT	.	_	1	punct	1:punct	_
+
+# sent_id = weblog-juancole.com_juancole_20051126063000_ENG_20051126_063000-0002
+# text = [This killing of a respected cleric will be causing us trouble for years to come.]
+1	[	[	PUNCT	-LRB-	_	10	punct	10:punct	SpaceAfter=No
+2	This	this	DET	DT	Number=Sing|PronType=Dem	3	det	3:det	_
+3	killing	killing	NOUN	NN	Number=Sing	10	nsubj	10:nsubj	_
+4	of	of	ADP	IN	_	7	case	7:case	_
+5	a	a	DET	DT	Definite=Ind|PronType=Art	7	det	7:det	_
+6	respected	respected	ADJ	JJ	Degree=Pos	7	amod	7:amod	_
+7	cleric	cleric	NOUN	NN	Number=Sing	3	nmod	3:nmod:of	_
+8	will	will	AUX	MD	VerbForm=Fin	10	aux	10:aux	_
+9	be	be	AUX	VB	VerbForm=Inf	10	aux	10:aux	_
+10	causing	cause	VERB	VBG	VerbForm=Ger	0	root	0:root	_
+11	us	we	PRON	PRP	Case=Acc|Number=Plur|Person=1|PronType=Prs	10	iobj	10:iobj	_
+12	trouble	trouble	NOUN	NN	Number=Sing	10	obj	10:obj	_
+13	for	for	ADP	IN	_	14	case	14:case	_
+14	years	year	NOUN	NNS	Number=Plur	10	obl	10:obl:for	_
+15	to	to	PART	TO	_	16	mark	16:mark	_
+16	come	come	VERB	VB	VerbForm=Inf	14	acl	14:acl:to	SpaceAfter=No
+17	.	.	PUNCT	.	_	10	punct	10:punct	SpaceAfter=No
+18	]	]	PUNCT	-RRB-	_	10	punct	10:punct	_

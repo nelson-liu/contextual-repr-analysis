@@ -1,0 +1,39 @@
+{
+    "dataset_reader": {
+        "type": "grammatical_error_correction",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_medium/grammatical_error_correction.hdf5"
+        }
+    },
+    "validation_dataset_reader": {
+        "type": "grammatical_error_correction",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_medium/grammatical_error_correction.hdf5"
+        }
+    },
+    "train_data_path": "data/grammatical_error_correction/fce-public.train",
+    "validation_data_path": "data/grammatical_error_correction/fce-public.dev",
+    "test_data_path": "data/grammatical_error_correction/fce-public.test",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "token_representation_dim": 512,
+        "calculate_per_label_f1": true
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 10,
+        "cuda_device": 0,
+        "validation_metric": "+label_i_f1",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

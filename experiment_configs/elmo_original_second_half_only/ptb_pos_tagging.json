@@ -1,0 +1,40 @@
+{
+    "dataset_reader": {
+        "type": "conllx_pos",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original/ptb_pos.hdf5",
+            "second_half_only": true
+        }
+    },
+    "validation_dataset_reader": {
+        "type": "conllx_pos",
+        "contextualizer": {
+            "type": "precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original/ptb_pos.hdf5",
+            "second_half_only": true
+        }
+    },
+    "train_data_path": "data/pos/wsj.train.conllx",
+    "validation_data_path": "data/pos/wsj.dev.conllx",
+    "test_data_path": "data/pos/wsj.test.conllx",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "token_representation_dim": 512
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+accuracy",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

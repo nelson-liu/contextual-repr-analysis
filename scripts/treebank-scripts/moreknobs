@@ -1,0 +1,125 @@
+#!/usr/local/bin/perl5
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: markargs [-f] [files ...]
+#
+# Filters the output of slashnulls.  
+# 
+# Background: As slashnulls mentions, knobs are not given theta roles
+# at all in the position where they land.  E.g., +NP-5's parent
+# doesn't assign it a theta role, because +NP-5 represents an
+# extraposed constituent that got stuck in the middle of its parent
+# constituent.  It got propagated down from some ancestor X+NP-5
+# (where it canceled against a sibling Y/NP-5).
+#
+# But there are other cases of moved constituents that don't get theta
+# roles from their landing site.  This script attempts to mark those
+# with +, too.
+#
+# If NP-5 cancels against a sibling that is just a trace (e.g.,
+# (NP/NP-5 (-NONE- 0)) ) or (NP-1/NP-5 (-NONE- 0)), then we still mark
+# NP-5 as +NP-5, to show that it doesn't get a new theta role.  
+#
+# The -f ("flattened") flag makes us more aggressive in marking knobs:
+# it considers constituents to be siblings for the above purpose if
+# they have the same lexical parent.  For example, the subject of a 
+# a passive has moved from object position.  It doesn't receive a
+# theta role at its landing site, so we'd like to mark it as a knob.
+# The -f flag lets us do that, since in the flattened structure, the
+# VP node goes a way and subject and object are sisters.
+#
+# Note that we can assume that the NP-5 will c-command its trace,
+# or it would already be marked as a knob so that it can propagate
+# up and match its trace.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$flat = 1, shift(@ARGV) if $ARGV[0] eq "-f";
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+$unslashedtoken = "[^ \t\n()\\\\/+]+";  
+$restoftoken = "[^ \t\n()]*";
+$ind = "-[0-9]+\\b";    # index on null or overt element
+$tokennoind = "(?:(?!$ind)[^ \t\n()])+";   # part of token that does not include an index (basically, stops at first -[0-9])
+$slashtag = "(?:-NONE-|EXP)";   # tag for overt or covert null
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    ($_,@indices) = &constit("");
+  } 
+  print "$location$_\n";
+}
+print STDERR "$0: $children children, $marks flagged as arguments\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Returns a tuple:
+#    - a munged version of the text of the constituent
+#    - The index of this constituent, if it's null.  More generally, if $flat is on,
+#       the indices of all null descendants of this constituent (including perhaps
+#       the constituent itself) that will serve as siblings to the constituent's
+#       siblings, after flattening.  That means that this constituent gets special
+#       treatment if it's a head and $flat is on.
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($headmark, $tag, $kidtext, @indices);
+
+  $headmark = "@" if s/^@//;       # delete initial @ if any, but remember it;
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $tag = $1;                                 
+
+  if (s/^\@\($slashtag \@($tokennoind)($ind)?\)\s*//o) {   # this constituent holds just an empty category (maybe realized as an expletive)
+    $kidtext = " $&";
+    die "$0:$location: internal error -- expected exactly one slash in null category $tag\n" unless 1==($tag =~ m|[/\\]|);
+    @indices = ($&) if $tag =~ /$ind$/;   # this gets the index off the final portion of the tag (showing what's moved -- this will surface somewhere else as a knob)
+    print "# found index @indices on tag $tag\n";
+  } elsif (/^@?\(/) {		# if tag is followed by at least one subconstituent (possibly marked with @)
+
+    # eat kids, put all null kids in @indices (modulo flattening)
+    until (/^\)/) {		#   eat all the subconstits recursively and remember what they were
+      local($subtext, @subindices) = &constit;
+      $kidtext .= " $subtext";
+      push (@indices, @subindices);   # let @indices include indices for all null siblings, at first
+    }
+
+    # change any constituents matching thes indices into knobs.  We're
+    # indiscriminate about how deeply these are buried.  (If they're
+    # lower down, they will already have been changed, because either
+    # they don't c-command the slashes -- making them canonical knobs
+    # -- or they are siblings to the slashes at a lower level already,
+    # and we're checking them again at this level only because of
+    # flattening.)  However, this does not entitle us to change anything
+    # higher up into a knob -- if we see it higher up, it probably won't
+    # be a sibling anymore and these indices will have disappeared.
+
+    foreach $i (@indices) {
+      local($old) = $kidtext;
+      local($cnt);
+      $knobs += $cnt = ($kidtext =~ s/\(((?!\+)$unslashedtoken$i)\b/\(+$1/g);    # note the lookahead: the nonterminal may not start with + already
+      print "-- changed $old\n" if $cnt;
+      print "        to $kidtext\n" if $cnt;
+      print "    thanks to index $i of @indices\n" if $cnt;
+    }
+
+    @indices = () unless $flat && $headmark;   # the nulls that we pass up
+
+  } else {			# if tag is followed by just a lexical item
+    s/^($token)\s*//o || die "$0:$location no lex item";
+    $kidtext = " $1";
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  ("$headmark($tag$kidtext)", @indices);
+}

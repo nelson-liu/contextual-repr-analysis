@@ -1,0 +1,40 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: nobadnonterm train [test]
+#
+# Produces a version of stdin (or test) that comments out any lines
+# where RHS mentions a nonterminal not appearing in train.
+#
+# This should work even with the output of prefixcounts, or with scored data.
+#
+# The primary use is preparing input that is palatable to the transformational smoother,
+# since the other smoothers know enough to give such nonterminals a probability of 0.
+#   !!! of course I should just fix the transf. smoother.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$trainfile = shift(@ARGV);
+open(TRAIN,$trainfile) || die;
+while (<TRAIN>) {
+  next if (/^\#/);
+  chop;
+  s/~//g;      # kill arg marks
+  s/.*\t//g;   # leave only RHS behind
+  for $RHS (split) { $nt{$RHS} = 1; }
+}
+close(TRAIN);
+
+while (<>) {
+  $save = $_;
+  unless (/^\#/) {
+    chop;
+    s/~//g;      # kill arg marks (but not in saved copy)
+    s/.*\t//g;   # leave only RHS behind
+    print "# " if grep(!$nt{$_}, split);
+  }
+  print $save;
+}

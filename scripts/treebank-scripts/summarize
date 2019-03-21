@@ -1,0 +1,52 @@
+#!/bin/sh
+# $1 is a file produced by rules2frames or somesuch
+#   and containing line numbers, etc.  
+# a version summarizing all the frames for each word, with counts, is put into $2 and gzipped
+# a version summarizing all the frames for each LHS, with counts, is put into $3 and gzipped
+# some summary statistics are printed
+
+IN=$1
+WORD=$2
+LHS=$3
+perl -e '$0=$ARGV[0]; require "stamp.inc"; &stamp; &citestamps($ARGV[1]);' $0 $IN
+PROGNAME=`perl -e '$0=$ARGV[0]; require "stamp.inc"; &fixprog; print $0' $0`
+echo $PROGNAME: creating $WORD from $IN ... 1>&2 
+stripcomments $IN | sort -k 2 | uniq -f 1 -c | perl -pe 's/^(\s*[0-9]+ )(\S+\t)/$2$1/; # swap location, count' | sort -k 3,3 -k 2,2nr > $WORD
+echo $PROGNAME: creating $LHS from $IN ... 1>&2
+stripcomments $IN | sort -k 3 | uniq -f 2 -c | perl -pe 's/^(\s*[0-9]+ )(\S+\t)/$2$1/; # swap location, count' | sort -k 4,4 -k 2,2nr > $LHS
+echo $PROGNAME: computing summary statistics ... 1>&2
+set `stripcomments $IN | wc`
+TOKENS=$1
+set `wc $WORD`
+WORDFRAMETYPES=$1
+set `gawk '$2==1' $WORD | wc`
+WORDFRAMESINGLETONS=$1
+set `wc $LHS`
+FRAMETYPES=$1
+set `gawk '$2==1' $LHS | wc`
+FRAMESINGLETONS=$1
+echo $PROGNAME: Total tokens: $TOKENS
+echo $PROGNAME: Total \(word,frame\) types: $WORDFRAMETYPES
+echo $PROGNAME: Total frame types: $FRAMETYPES
+echo $PROGNAME: ---
+echo $PROGNAME: Percentage of \(word,frame\) types that are singletons: `echo "scale=1; 100*$WORDFRAMESINGLETONS/$WORDFRAMETYPES" | bc -l`
+echo $PROGNAME: Percentage of \(word,frame\) tokens that are singletons: `echo "scale=1; 100*$WORDFRAMESINGLETONS/$TOKENS" | bc -l`
+echo $PROGNAME: Expected number of type-identical copies of a random \(word,frame\) token: `echo "scale=1; $TOKENS/$WORDFRAMETYPES" | bc -l`
+echo $PROGNAME: ---
+echo $PROGNAME: Percentage of frame types that are singletons: `echo "scale=1; 100*$FRAMESINGLETONS/$FRAMETYPES" | bc -l`
+echo $PROGNAME: Percentage of frame tokens that are singletons: `echo "scale=1; 100*$FRAMESINGLETONS/$TOKENS" | bc -l`
+echo $PROGNAME: Expected number of type-identical copies of a random frame token: `echo "scale=1; $TOKENS/$FRAMETYPES" | bc -l`
+echo $PROGNAME: ---
+echo $PROGNAME: Expected number of word types for a random frame type: `echo "scale=1; $WORDFRAMETYPES/$FRAMETYPES" | bc -l`
+echo $PROGNAME: ---
+echo $PROGNAME: Average length of a frame by type: `cat $LHS | gawk "{x+=NF-4} END {print x/NR}"`
+echo $PROGNAME: Average length of a frame by token: `stripcomments $IN | gawk "{x+=NF-3} END {print x/NR}"`
+echo $PROGNAME: Histogram of frame lengths by type:
+cat $LHS | gawk '{print NF-4}' | sort | uniq -c | sort -nr
+echo $PROGNAME: Histogram of frame lengths by token:
+stripcomments $IN | gawk '{print NF-3}' | sort | uniq -c | sort -nr
+echo $PROGNAME: ---
+echo $PROGNAME: gzipping ...
+gzip -f $WORD
+gzip -f $LHS
+echo $PROGNAME: done.

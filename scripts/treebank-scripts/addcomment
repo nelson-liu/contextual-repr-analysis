@@ -1,0 +1,38 @@
+#!/usr/local/bin/perl5 -0777 -i
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: addcomment [-c comment] [files ...]
+#
+# Modifies the files listed on the command line by prepending the same
+# set of user comments to all of them.   If no files are specified, then
+# stdin is filtered.
+# 
+# The comments are read from stdin or (quoted) following -c, and "#
+# addcomment:" is prefixed to them.  
+
+require("stamp.inc"); &fixprog;   # fix $0, but don't timestamp just yet -- we'll timestamp the individual files below.
+
+die "$0: can't use stdin for both input files and comments (specify some args!); aborting\n" unless @ARGV;
+if ($ARGV[0] =~ /^-c/) {
+  shift(@ARGV);
+  $comments = $';
+  $comments = shift(@ARGV) if $comment eq "";
+}
+@saveargv = @ARGV;   # make sure that stamp mentions all files in @ARGV (so we know what else got stamped) but not the -c argument if any.
+
+unless (defined $comments) {
+  $comments = <STDIN>;
+  print STDERR "$0: modifying file(s) ...\n";
+}
+
+$comments .= "\n" unless substr($comments,-1) eq "\n";   # add final newline if not already present
+$comments =~ s/^/\# $0: /gm;                      # insert prefix at the start of each line
+
+while (<>) {
+  { local(@ARGV)=@saveargv; &stamp; }
+  print $comments;
+  print;
+}
+
+print STDERR "$0: done\n";

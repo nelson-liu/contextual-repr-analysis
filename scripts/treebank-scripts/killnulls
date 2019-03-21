@@ -1,0 +1,101 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: killnulls [-h] [files ...]
+#
+# Munges parses in oneline format, preferably with heads marked.
+# Constituents that dominate only phonologically empty material (tagged
+# with -NONE-, but not expletives, which slashnulls tags with EXP) are
+# removed, except that the full sentence is never removed.
+# 
+# This may leave some sentences that contain headless constituents:
+#    headall can be run again to remove or repair such sentences.  
+#
+#    Alternatively, specifying the -h flag ensures that
+#    constituents are kept when necessary to make everything headed.
+#    Then a few lexical nulls may find themselves into the output.
+#    This flag makes sense only if the input has been produced by headall.
+#    (In practice, -h just ends up keeping a few things:
+#       null WHNPs (0), as in "A man [(whom) I know]."  
+#       null WHADVPs (0), as in "procedures [(how) to aid these teams]", "the first time [(when) this happened]"
+#       elided VPs (*?*), as in "The government has money, we [don't (have money)].", "She speaks better than [her husband (speaks)]"
+#       moved VPs (*T*) in this case: "So [did (so)] the government.")
+#
+# See slashnulls for an alternative.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$keepheads = 1, shift(@ARGV) if $ARGV[0] eq "-h";
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+
+$constits = $nulls = 0;
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    unless ($keepheads) {
+      $nulls += s/ @?\(-NONE- $token\)//go;       # kill lexical nulls.  
+      while ($a = s/ @?\($token\)//go) {    # repeatedly kill all constits that have no kids left
+	$constits += $a;
+      }
+    } else {
+      ($_, $overt) = &constit;    # more involved version because $keepheads is set
+    }
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $nulls lexical nulls removed, as well as $constits constits dominating them\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Any preceding @ is assumed to have been read by the caller.
+# 
+# output: a tuple:
+#    - the text of the constituent, including any following whitespace.  
+#        Nulls have been removed where they are known to be deletable.
+#        The head is never completely deleted although it may be simplified.
+#    - a boolean: does the constit contain any overt words?
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($text);
+  local($overt);
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $text = $1;
+  
+  if (/^@?\(/) {		# if tag is followed by at least one subconstituent (possibly marked with @)
+    until (/^\)/) {		#   eat all the subconstits recursively, keeping the head and any other non-null constits
+      local($head) = s/^@//;
+      local($subtext, $subovert) = &constit;
+      $overt = 1 if $subovert;
+      if ($head) {
+	$text .= " @$subtext";	   # always keep the head even if null
+      } elsif ($subovert) {
+	$text .= " $subtext";
+      } else {
+	$nulls++;   # count damage from removing $subtext, which must be a unary chain that dominates a null
+	$constits += ($subtext =~ s/\(//g) - 1;
+      }
+    }
+  } else {
+    s/^(@$token)\s*//o || die "$0:$location no lex item or lex item not marked as head";
+    $overt = $text ne "-NONE-";
+    $text .= " $1";
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  ("($text)", $overt);
+}

@@ -1,0 +1,95 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: headall [-l] [files ...]
+#
+# Filters parses that are in the format produced by headify.
+# Ensures that all constituents have a head marked.
+#
+# Ordinarily this is done by discarding any parses that
+# contain headless constituents.  However, if -l is specified,
+# we "fix" headless constituents by making the last child the head.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$headlast = 1, shift(@ARGV) if $ARGV[0] eq "-l";
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $tree = &constit;                   # eat a constit (sentence)    
+    die "$0:$location more than one sentence on line ending $_" if $_;
+    
+    $sent++;
+    if ($tree) {
+      $_ = $tree;
+      $goodsent++;
+    } else {
+      $_ = "# DISCARDED by $0: missing head";     # should probably improve this error message
+    }
+  } 
+  print "$location$_\n";
+}
+if ($headlast) {
+  print STDERR "$0: $constit constituents (possibly trivial), had to assign default heads to $marks\n";
+} else {
+  print STDERR "$0: $sent sentences in, $goodsent survived\n";
+}
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Any constit may start with @.
+# 
+# input:  none
+# output: bracketed version with heads fixed, or "" if we must discard sentence
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($headmark, $tag, $subtree, @subtrees);	# "tag" denotes input tag
+  local($foundhead, $badkid);
+
+  $constit++;
+  
+  $headmark = "@" if s/^@//;       # delete initial @ if any, but remember it;
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $tag = $1;                                 
+  
+  $foundhead = 0;
+  $badkid = 0;
+  if (/^@?\(/) {		# if tag is followed by at least one subconstituent (possibly marked with @)
+    until (/^\)/) {		#   eat all the subconstits recursively and remember what they were
+      $subtree = &constit;
+      $foundhead = 1 if $subtree =~ /^@/;
+      $badkid = 1 if $subtree eq "";
+      push (@subtrees, $subtree);
+    }
+    if ($headlast && !$foundhead) {
+      $subtrees[$#subtrees] = "@" . $subtrees[$#subtrees];
+      $foundhead = 1;
+      $marks++;
+    }
+  } else {			# if tag is followed by just a lexical item
+    s/^([@]$token)\s*//o || die "$0:$location no lex item, or lex item not marked as head";
+    $foundhead = 1;
+    @subtrees = ($1);
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  ($badkid || !$foundhead) ? "" : "$headmark($tag @subtrees)";
+}
+
+
+

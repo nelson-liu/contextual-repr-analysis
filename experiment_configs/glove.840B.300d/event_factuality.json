@@ -1,0 +1,32 @@
+{
+    "dataset_reader": {
+        "type": "event_factuality",
+        "contextualizer": {
+            "type": "glove_contextualizer",
+            "embedding_dim": 300,
+            "glove_path": "https://s3-us-west-2.amazonaws.com/allennlp/datasets/glove/glove.840B.300d.txt.gz"
+        }
+    },
+    "train_data_path": "data/event_factuality/it-happened_eng_ud1.2_07092017.train.json",
+    "validation_data_path": "data/event_factuality/it-happened_eng_ud1.2_07092017.dev.json",
+    "test_data_path": "data/event_factuality/it-happened_eng_ud1.2_07092017.test.json",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "selective_regressor",
+        "token_representation_dim": 300
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+pearson_r",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

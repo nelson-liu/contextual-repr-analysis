@@ -1,0 +1,15 @@
+adposition_supersense_tagging.hdf5 data/adposition_supersenses/adposition_supersense_tagging_sentences.txt
+ptb_syntactic_dependency.hdf5 data/syntactic_dependency/ptb_sentences.txt
+ccg.hdf5 data/ccg/ccg_sentences.txt
+ewt_pos.hdf5 data/pos/en_ewt-ud_sentences.txt
+semantic_dependency.hdf5 data/semantic_dependency/semantic_dependency_sentences.txt
+conjunct_identification.hdf5 data/coordination_boundary/conjunct_identification_sentences.txt
+ewt_syntactic_dependency.hdf5 data/syntactic_dependency/en_ewt-ud_sentences.txt
+semantic_tagging.hdf5 data/semantic_tagging/semtag_sentences.txt
+conll2000_chunking.hdf5 data/chunking/chunking_sentences.txt
+grammatical_error_correction.hdf5 data/grammatical_error_correction/fce_sentences.txt
+syntactic_constituency.hdf5 data/syntactic_constituency/wsj_sentences.txt
+conll2003_ner.hdf5 data/ner/ner_sentences.txt
+ptb_pos.hdf5 data/pos/wsj_sentences.txt
+event_factuality.hdf5 data/event_factuality/it-happened_sentences.txt
+coreference_resolution.hdf5 data/coreference_resolution/coreference_resolution_sentences.txt

@@ -1,0 +1,158 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: headify -c file.mrk [files ...]
+#
+# Filters parses that are in the format produced by oneline.
+# The effect is to mark the head subconstituent of each constituent,
+# when it can be guessed, with @.
+#
+#    (S (NP (NNP John)) (VP (VBZ likes) (NP (NNP Mary))
+# will emerge with its terminal and nonterminal heads marked:
+#    (S (NP @(NNP @John)) @(VP @(VBZ @likes) (NP @(NNP @Mary))
+#
+# This is done by looking at each phrase structure rule and applying
+# the prediction methods of predicthead (in predict.inc).  file.mrk
+# gives an exception list of phrase-structure rules where predicthead
+# doesn't get it right.  Such a file may be produced by a human using
+# Emacs pshead-mode.  (It lists phrase structure rules with heads that 
+# have been marked @ by the user; it does not include = marks, and is
+# all in uppercase.)
+#
+# If a constituent's tag is marked as an argument, with ~, we drop that
+# mark if the constituent turns out to be a head.  
+#
+# If predicthead and file.mrk assume articulated rules, pipe the input
+# through articulate first.  Also, if they assume canonicalized tags,
+# pipe the input through canonicalize first, or else use the -c flag
+# to force headify to canonicalize tags internally while leaving them
+# alone in the output.  Finally, it may be useful to filter the
+# output of articulate through discardconj first.
+
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+require("predict.inc");                       # this gives us predicthead
+
+$canonicalize = 1, require("canon.inc"), shift(@ARGV) if $ARGV[0] eq "-c";  
+die "$0: bad command line flags" unless @ARGV && $ARGV[0] !~ /^-./;
+$markfile = shift(@ARGV);
+
+$token = "[^ \t\n()]+";  # anything but parens or whitespace can be a token
+
+
+# Read in the user markings.
+open(MARKEDRULES, $markfile) || die "$0: can't open $markfile";
+print STDERR "$0: reading mark file $markfile ...\n";
+while (<MARKEDRULES>) {
+    die "$0: .mrk file format no longer current (contains =). 
+    Please use updatemrkformat to create a version in the new format, 
+    and then rerun $0.  You should also pass the .bug file through
+    updatemrkformat." if /=/;
+
+    next if /^\t/;        # ignore example lines (these shouldn't occur, but...)
+    chop;
+    local($strippedrule) = $_;
+    warn "$0: wrong number of @ marks in $_ in mark file $markfile!" unless 1==($strippedrule =~ s/(\s)@/$1/g);  # strip all @ from rule
+    if (defined $mark{$strippedrule} && $mark{$strippedrule} ne $_) {
+	warn "$0: conflict between \"$_\" and \"$mark{$strippedrule}\" in $markfile -- won't use either\n";
+	$mark{$strippedrule} = "*CONFLICT*";
+    } else {
+	$mark{$strippedrule} = $_;
+    }
+}
+
+
+# Okay, now let's go ahead and mark the heads.
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $failures = 0;
+    ($tag, $tree) = &constit;                   # eat a constit (sentence)    
+    die "$0:$location more than one sentence on line ending $_" if $_;
+
+    $sent++;
+    $fullymarked++ unless $failures;
+    $_ = $tree;
+  } 
+  print "$location$_\n";
+}
+print STDERR "$0: $constits nontrivial constits, $marks marked; $sent sentences, $fullymarked fully marked\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# 
+# input:  none
+# output: list of two scalars:
+#	    - nonterminal of this constit, canonicalized if $canonicalize is on, and certainly stripped of its argument mark ~ if any
+#	    - bracketed text version of this constit, with heads marked, to be output
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($tag, $ctag, $tree, $subctag, $subtree, @subctags, @subtrees);	# "tag" denotes input tag, "ctag" denotes version that may have been canonicalized (according to $canonicalize)
+  
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $ctag = $tag = $1;           
+  $ctag =~ s/~//;      # strip argument mark
+  $ctag = &canonicalizetag($ctag) if $canonicalize;
+  
+  if (/^\(/) {			# if tag is followed by at least one subconstituent  
+    until (/^\)/) {		#   eat all the subconstits recursively and remember what they were
+      ($subctag, $subtree) = &constit(); #   we could omit constits that are lexically null from our phrase structure rules, but we won't.
+      push(@subctags, $subctag);
+      push(@subtrees, $subtree);
+    }
+    $headkid = &truehead($ctag, @subctags);   # guess the head
+    $constits++;
+    $marks++ if $headkid;
+  } else {			# if tag is followed by just a lexical item
+    s/^($token)\s*//o || die "$0:$location no lex item";
+    @subctags = @subtrees = ($1);
+    $headkid = 1;
+  }
+  
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  if ($headkid) { 
+    substr($subtrees[$headkid-1],1,1) = "" if  $subtrees[$headkid-1] =~ /^\(~/;   # drop ~ mark, if any, on the subkid's nonterminal tag
+    $subtrees[$headkid-1] = "@" . $subtrees[$headkid-1];                          # add @ mark to subconstit
+  }
+  else { $failures++; }
+
+  ($ctag, "($tag @subtrees)");
+}
+
+
+# Same vanilla interface as predicthead.
+# @RHS is canonicalized and the ~ tags have been stripped.
+# Checks whether rule is an exception -- otherwise, looks it up.
+# If no head can be found, because rule is unknown && unpredictable,
+# return 0 or "".
+
+sub truehead {
+    local($LHS,@RHS) = @_;   
+    local($answer, $sure);    
+    local($rule) = "$LHS\t@RHS";
+
+    # print STDERR "predicting $LHS\t@RHS";
+    if (defined $mark{$rule} && $mark{$rule} ne "*CONFLICT*") {   # there's a marked version of this rule
+	$mark{$rule} =~ /@/ || die "$0:$location Internal error (annotated rule has no mark); stopped";   # find the mark
+	$tmp = $`; #Martin Cmejrek changed from Perl4 version
+	$answer = ($tmp =~ s/\s//g);      # count spaces & tabs before mark
+	# print STDERR "... annotation says kid $answer\n"
+    } else {
+        ($answer, $sure) = &predicthead($LHS,@RHS);  # Try to predict on general principles.  We don't care if we're not sure, so long as we get an answer.
+        # print STDERR "... general principles say $answer\n"
+    }
+    $answer;
+}    
+       
+
+

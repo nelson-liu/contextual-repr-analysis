@@ -1,0 +1,70 @@
+# Note that movement chains may have more than two positions.  
+# For example (leaving out some levels for readability):
+#
+# (SBAR (WHNP-1 which) 
+#       (S\NP-1 (NP-2\NP-1 0) (VP\NP-2 struggled (S\NP-2 (NP\NP-2 0) (VP to live)))))
+
+# Remarks:
+# 
+#    "struggled" doesn't merely agree to pass on the gap from its
+#    complement S, but actively recruits a complement S that has such
+#    a gap.  Similarly, "to live" (because it is untensed) actively
+#    recruits a gapped subject (in fact, a completely null one) and
+#    then passes up the gap.
+#
+#    there are 3 influences on the lexical realization of this 3-step
+#    chain: its position as head of the SBAR, and its government by
+#    the verbs "struggled" and "live," where it appears as subject.
+#    These correspond to the origin and landing sites of NP-1 and NP-2
+#    (note that NP-2\NP-1 is both an origin and a landing).  
+#    Put another way, they correspond to WHNP-1, NP-2, and the NP that
+#    is slashed away by NP-2.  By contrast, the slashes in VP\NP-2
+#    and S\NP-2 are merely transmissions -- the transmission may be
+#    subject to island effects, but there is no influence here on
+#    the lexical realization of NP-2.  This is generally the right
+#    attitude, except for passives (the NP fills the subject position,
+#    but not the subject theta role, extraposition/expletives (the landing site
+#    has no theta role), ... !!!
+#
+#    Ignoring the second movement, struggled appears in the frame
+#    S --> NP-2 struggled S\NP-2.  Notice that NP-2 plays two roles
+#    here.  Object control verbs should come out the same way
+#    (S --> NP convince NP-2 S\NP-2), but the Treebank doesn't
+#    bracket them as object control.  (Might try fixing this.)
+#
+#    WHNP-1 is really an abbreviation for S/(S\NP-1).  
+#
+
+When generating fillers for traces in the probability model -- if we
+have kids Z-1 and Y/X-1, expand the Y/X-1 part first, until we fill
+some descendant X/X-1 with 0; then fill the Z-1 in such a way that it
+would also make a good X for the X/X-1's parent.  Another way of
+thinking of this is that we fill X/X-1 with something that's
+reasonable for X and then immediately move it in such a way that it
+will make a good Z-1 for Z-1's parent.
+
+Perhaps a gap like X/X-1 should be marked on the surface as an complete
+gap rather than an X with a partial gap.  There are probably edit ops
+that are willing to gap a full constituent but not a partial one.
+
+
+----(an attempt to reproduce the above when it was thought lost)----
+
+When we do lexical insertion into a chain, we'd like to have
+multiple lexical influences -- we're inserting into all the
+landing sites "at once."  What's the right generative model for this?
+
+We should be able to handle it by generating in the right order:
+
+Ignore knobs for the moment.  When we generate X/Y-i and its sister
+filler Z-i, we should pursue expanding X/Y-i until we have reached
+some X'/Y-i that expands as 0.  Then we can do lexical insertion into
+the top position Z-i, conditioned by the context of the bottom position.
+
+!!! apply this to multiple movements as above ...
+
+!!! think about knobs ...
+
+
+
+

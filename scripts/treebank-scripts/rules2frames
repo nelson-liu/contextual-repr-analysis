@@ -1,0 +1,38 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: rules2frames [-w] [-c] [files ...]
+#
+# Expects input that has been produced by "flatten -w ... | listrules ..."
+# This has lines of the format
+#   NP~|NP|NN|length	DT|the @ PP|IN|of
+# which we want to turn into
+#   length	NP~|NP|NN	DT @ PP|IN
+# i.e., three tab separated fields: word, LHS, RHS.
+#
+# -w says to leave the frames lexicalized.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$lexicalized = 1, shift(@ARGV) if $ARGV[0] eq "-w";  
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+while (<>) {
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $rules++;
+    die "$0:$location incorrect format" unless /^(.*)\t/;
+    $LHS = $1;
+    @RHS = split(" ",$');
+    unless ($lexicalized) {
+      foreach (@RHS) { s/\|[^|]*$//; } # strip off lexical item from each RHS element (note that @, [, [FOO, and ] don't have lex items but that's ok)
+    }
+    $LHS =~ /(.*)\|(.*)/ || die "$0:$location LHS $LHS missing lex item\n";   # strip off lexical item from LHS element
+    $_="$2\t$1\t@RHS";
+  }
+  print "$location$_\n";
+}
+
+print STDERR "$0: converted $rules rules to frames\n";

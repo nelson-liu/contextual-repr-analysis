@@ -1,0 +1,42 @@
+{
+    "dataset_reader": {
+        "type": "adposition_supersense_tagging",
+        "mode": "role",
+        "include_raw_tokens": true
+    },
+    "train_data_path": "data/adposition_supersenses/streusle.ud_train.json",
+    "validation_data_path": "data/adposition_supersenses/streusle.ud_dev.json",
+    "test_data_path": "data/adposition_supersenses/streusle.ud_test.json",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "selective_tagger",
+        "decoder": "mlp",
+        "encoder": {
+            "type": "lstm",
+            "input_size": 1024,
+            "hidden_size": 512,
+            "bidirectional": true,
+            "num_layers": 2
+        },
+        "contextualizer": {
+            "type": "scalar_mixed_precomputed_contextualizer",
+            "representations_path": "contextualizers/elmo_original/adposition_supersense_tagging.hdf5",
+            "num_layers": 3
+        },
+        "token_representation_dim": 1024
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+accuracy",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

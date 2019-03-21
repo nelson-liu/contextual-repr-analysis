@@ -1,0 +1,110 @@
+#!/usr/local/bin/perl5 -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: killpunc [-p] [-k tag] [-h] [files ...]
+#
+# (Code is adapted from killnulls.)
+#
+# Munges parses in oneline format, possibly with heads marked.
+# Removes all punctuation, defined as terminals whose preterminal tags
+# consist entirely of punctuation symbols, or are -LRB- or -RRB-.
+# Note that :pound: and other lowercase strings surrounded by :: are considered
+# to be punctuation symbols (see oneline).
+# 
+# The -k option (which may be used several times) says to keep 
+# nodes with preterminals matching the specified tag.  Case is significant.
+#
+# -p is an abbreviation for -k , -k : -k -LRB- -k -RRB -k $ -k :pound:
+# which keeps pauses and currency marks.
+#
+# -h ensures that constituents are kept when necessary to make
+# everything headed.  Then a few bits of punctuation (like $) may find
+# themselves into the output, This flag makes sense only if the input
+# has been produced by headall, and furthermore punctuation marks
+# can act as heads.  Without -h, we may end up with headless constituents;
+# headall can be run again to find heads for these.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+push(@keeptags, ",", ":", "-LRB-", "-RRB-", "\$", ":pound:"), shift(@ARGV) if $ARGV[0] eq "-p";
+while ($ARGV[0] =~ /^-k/) {
+  shift(@ARGV);
+  push(@keeptags, $' ne "" ? $' : shift(@ARGV));
+}
+$keepheads = 1, shift(@ARGV) if $ARGV[0] eq "-h";
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "(?:[^ \t\n()]+)";                               # anything but parens or whitespace can be a token
+$puncchar = "(?::[a-z]+:|-[LR]RB-|[^ A-Za-z0-9\t\n()])";  # punctuation characters     
+$punctag = "(?:$puncchar+)";                              # punctuation tags
+$keeptag = "(?:".join("|", map("\Q$_\E", @keeptags)).")"; # tags that we need to keep
+$killtag = "(?:(?!$keeptag(?!$token))$punctag)";          # tags we're supposed to kill.  Note that when we're looking ahead to check whether it's actually a tag we want to keep, we make sure to look all the way to the end of the token.  We don't do this for the $punctag part because we're going to use it followed by a space anyway.
+
+$constits = $nulls = 0;
+
+while (<>) {      # for each sentence
+  chop;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    unless ($keepheads) {
+	$nulls += s/ @?\($killtag $token\)//go;   # kill punctuation.
+	while ($a = s/ @?\($token\)//go) {        # repeatedly kill all constits that have no kids left
+	  $constits += $a;
+	}
+    } else {
+	($_, $overt) = &constit;    # more involved version because $keepheads is set
+    }
+  } 
+  print "$location$_\n";
+}
+
+print STDERR "$0: $nulls punctuation marks removed, as well as $constits constits dominating them\n";
+
+
+# -------------------------
+
+# Reads in the next constit, and following whitespace, from the front of $_.
+# Any preceding @ is assumed to have been read by the caller.
+# 
+# output: a tuple:
+#    - the text of the constituent, including any following whitespace.  
+#        Nulls have been removed where they are known to be deletable.
+#        The head is never completely deleted although it may be simplified.
+#    - a boolean: does the constit contain any overt (non-deleted) words?
+
+# Discipline: each regexp that eats text is required to eat
+# any following whitespace, too.
+
+sub constit {   
+  local($text);
+  local($overt);
+
+  s/^\(\s*// || die "$0:$location open paren expected to start $_"; # eat open paren
+  s/^($token)\s*//o || die "$0:$location no tag"; # eat tag 
+  $text = $1;
+  
+  if (/^@?\(/) {		# if tag is followed by at least one subconstituent (possibly marked with @)
+    until (/^\)/) {		#   eat all the subconstits recursively, keeping the head and any other non-null constits
+	local($head) = s/^@//;
+	local($subtext, $subovert) = &constit;
+	$overt = 1 if $subovert;
+	if ($head) {
+	  $text .= " @$subtext";	   # always keep the head even if null
+	} elsif ($subovert) {
+	  $text .= " $subtext";
+	} else {
+	  $nulls++;   # count damage from removing $subtext, which must be a unary chain that dominates a null
+	  $constits += ($subtext =~ s/\(//g) - 1;
+	}
+    }
+  } else {
+    s/^(@$token)\s*//o || die "$0:$location no lex item or lex item not marked as head";
+    $overt = $text !~ /$killtag/o;
+    $text .= " $1";
+  }
+
+  s/^\)\s*// || die "$0:$location close paren expected to start $_"; 
+
+  ("($text)", $overt);
+}

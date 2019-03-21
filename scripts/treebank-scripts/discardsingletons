@@ -1,0 +1,55 @@
+#!/usr/local/bin/perl -w
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: discardsingletons [-f] [-g] [files ...]
+#
+# Input is in the format produced by rules2frames.  We drop all 
+# (word, frame) pairs that only appear once (ignoring arg marks when
+# doing the comparison).
+#
+# The -g flag says not to discard singletons, but only
+# to replace word with some unique garbage string.  That way, we'll
+# still count the true number of occurrences of the frame, but no real
+# word's word-specific distribution will be affected.
+#
+# The -f flag says to discard only singleton frames, i.e., those
+# that only occur once and with a single word only.
+#
+# Partly cannibalized from prefixcounts.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+
+$frame = 1, shift(@ARGV) if $ARGV[0] eq "-f";  
+$garbage = 1, shift(@ARGV) if $ARGV[0] eq "-g";  
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+@lines = ();
+while (<>) {
+  push(@lines, $_);
+  next if /^\#/;
+  s/^(\S+:[0-9]+:\t)?//;
+  next if /^\#/;
+  s/~//g;
+  /\t/ || die "$0: bad format line";
+  $count{$frame ? $' : $_}++;
+  $bodylinesin++;
+}
+
+$gar = 0;
+foreach (@lines) {
+  print, next if /^\#/;
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  print("$location$_"), next if /^\#/;
+  ($s = $_) =~ s/~//g;
+  $s =~ /\t/ || die "$0: bad format line";
+  if ($count{$frame ? $' : $s}==1) {
+    next unless $garbage;
+    s/^[^\t]*/"_SINGLETON_".$gar++/e;  
+  } else {
+    $bodylinesout++;
+  }
+  print("$location$_");
+}
+
+print STDERR "$0: $bodylinesin frames in, $bodylinesout non-singleton frames out\n";

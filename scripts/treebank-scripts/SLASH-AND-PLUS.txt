@@ -1,0 +1,781 @@
+FIRST, AN INCORRECT VIEW OF THE PROBLEM, WITH SOLUTION
+------------------------------------------------------
+
+Think about
+
+    (NP-SBJ-80 
+      (NP (NNS Modifications) )
+      (PP (-NONE- *ICH*-3) ))
+    (VP (VBD had) 
+      (VP (VBN been) 
+        (VP (VBN made) 
+          (NP (-NONE- *-80) )
+          (PP-3 (TO to) 
+            (NP (DT the) (NNP Souper) (NNP Combo) (NN product) ))
+
+where really, just a part of "modifications to the ... product" has been
+moved.  This comes out in flattened form as 
+    NP-80/PP-3  V NP/NP-80 PP-3
+but really the way to think of it is that
+the PP got moved out of the NP:
+    V NP   --->   V NP/PP-3 PP-3
+and then the NP/PP-3 got moved to subject position.  So let's
+write   
+    [NP-SBJ/PP]-80 V [NP/PP-3]/[NP/PP]-80 PP-3
+Indeed, this is much better for the NON-flattened structure,
+where there is a VP node, since both the -3 and -80 traces are 
+discharged by c-commanding positions.
+
+Notice that the PP trace inside the NP-SBJ is not linked up with the
+overt PP in any way.  Moreover, the gap passed up within [NP-SBJ/PP]-80
+isn't indexed in any way that tracks the progress of the gap.
+So we probably want
+    [NP-SBJ/PP-6]-80 V [NP/PP-3]/[NP/PP-6]-80 PP-3
+i.e., 
+    ([NP-SBJ/PP-6]-80 
+      (NP (NNS Modifications))
+      (PP/PP-6 0))
+    (VP/[NP/PP-6]-80 (VBD had)
+      (VP/[NP/PP-6]-80 (VBN been)
+        (VP/[NP/PP-6]-80 (VBN made)
+          ([NP/PP-3]/[NP/PP-6]-80 0)
+          (PP-3 to the Souper Combo Product))))
+
+This still isn't a direct link -- PP/PP-6 is filled by PP-3.
+To figure out who is in what role, we have to do index unification at
+traces.  In particular, -3 and -6 have to be unified here, just as
+-1 and -2 would be unified in NP-1/NP-2.  That yields
+
+    ([NP-SBJ/PP-36]-80 
+      (NP (NNS Modifications))
+      (PP/PP-36 0))
+    (VP/[NP/PP-36]-80 (VBD had)
+      (VP/[NP/PP-36]-80 (VBN been)
+        (VP/[NP/PP-36]-80 (VBN made)
+          ([NP/PP-36]/[NP/PP-36]-80 0)
+          (PP-36 to the Souper Combo Product))))
+
+from which nulls can now be deleted if desired:
+
+    ([NP-SBJ/PP-36]-80 
+      (NP (NNS Modifications)))
+    (VP/[NP/PP-36]-80 (VBD had)
+      (VP/[NP/PP-36]-80 (VBN been)
+        (VP/[NP/PP-36]-80 (VBN made)
+          (PP-36 to the Souper Combo Product))))
+
+Perhaps NP-1/NP-2 should now be [NP/NP-2]-1, for consistency with
+[NP-SBJ/PP-36]-80?  No - I don't think so.  NP-1/NP-2 means that NP-1
+landed here and then we move a piece of it (actually all of it)
+farther as NP-2.  [NP-SBJ/PP-36]-80 means just that [NP-SBJ/PP-36]-80
+landed here.  We could then decide to move a piece of it higher;
+that would append /FOO-99 to the end.  If we wrote [NP/NP-2]-1, it 
+would mean that we had moved an actual trace -- i.e., we'd moved
+NP-2 away from its original site and then we'd moved the zero residue
+somewhere else!  
+
+If we wanted to undo the moves (assuming that there's been no
+unification), we should do as follows: find pairs of constituents X-i
+and Y/Z-i that rewrites as -NONE-.  In general the former should
+c-command the latter.  Note that i is the index for the whole X or Z,
+which may be a slashed category in [].  When such a category is found,
+move X-i back to fill the /Z-i gap, and remove /Z-i everywhere it
+appears (generally, on some chain of ancestors of Y/Z-i up to a
+sibling of X-i).  This may create new constituent pairs of this sort,
+which should be treated the same way, i.e., repeat until there's
+nothing left to do.
+
+    (NP-SBJ-80 t)
+    (VP (VBD had)
+      (VP (VBN been)
+        (VP (VBN made)
+          (NP-80 (NP (NNS Modifications))
+	         (PP-3 to the Souper Combo Product))
+          (PP-3 t))))
+
+An alternative would be to show the moved consituent in both
+positions, specially marking the positions where it's not actually
+present.  This could be achieved by taking the above form and redoing
+the moves in the reverse order from the order in which we undid them
+(so that we don't raise "modifications to the Souper Combo Product"
+before we've removed the PP from it):
+
+    (NP-SBJ-80 (NP (NNS Modifications))
+	       (/PP-3 to the Souper Combo Product))
+    (VP (VBD had)
+      (VP (VBN been)
+        (VP (VBN made)
+          (/NP-80 (NP (NNS Modifications))
+	          (/PP-3 to the Souper Combo Product))
+          (PP-3 to the Souper Combo Product))))
+
+We could also reproduce the slashes when doing all this:
+
+    ([NP-SBJ/PP-6]-80 
+      (NP (NNS Modifications))
+      (*PP/PP-6 to the Souper Combo Product))
+    (VP/[NP/PP-6]-80 (VBD had)
+      (VP/[NP/PP-6]-80 (VBN been)
+        (VP/[NP/PP-6]-80 (VBN made)
+          (*[NP/PP-3]/[NP/PP-6]-80 
+	    (NP (NNS Modifications))
+            (*PP/PP-6 to the Souper Combo Product))
+          (PP-3 to the Souper Combo Product))))
+
+Something funny about this is that PP-3 is not REALLY an argument of
+"made" -- it's merely left behind.  In particular, it is not assigned
+any kind of theta role by "made."  Perhaps it should be marked as such
+...  when NP is split into NP/PP-i PP-i, it should really be split
+into NP/PP-i M-i, where M has a completely free distribution.  If the
+category is always the same in this instance (namely *ICH*) anyway --
+and it is except occasionally for some minor qualifiers -- then I
+don't see any harm in this.     [But see below for a better solution.]
+
+----------------------------------------------------------------------
+
+A BETTER VIEW OF THE PROBLEM
+----------------------------
+
+The above doesn't explain the case where an UNMOVED subject ends up
+extraposing one of its modifiers down into the VP (generally following
+the object).  Some examples of this are below.  This can't have
+happened when the subject was in the VP, except perhaps by some
+minimalism-style story where the deep position of the subject follows
+the surface position of the object.
+
+So maybe I have the order of movements wrong for the example above:
+maybe really the NP raised to subject position first, and then
+extraposed a modifier back into the VP.  On this story, it's just an
+accident that the modifier landed back at its original position.
+That's not implausible.  Material moved into a VP often falls at the
+start or the end of the adjunct sequence.  In examples like the one
+above, the start would be the original position, but the end is also
+possible:
+   "Modifications were made recently to the product"
+   "Modifications were made to the product recently"
+are both good, much better than 
+   "We made recently modifications to the product"
+
+So I think I just have to bite the bullet and grant that just as
+constituents may have holes (/PP) that are unified between parents and
+kids, or filled by siblings, they may also have knobs -- extra
+material like +PP -- that are unified between parents and kids, or
+fill siblings.  
+
+    (NP-SBJ-80/PP-3
+      (NP (NNS Modifications) )
+      (PP/PP-3 0))
+    (VP/NP-SBJ-80+PP-3 (VBD had) 
+      (VP/NP-SBJ-80+PP-3 (VBN been) 
+        (VP/NP-SBJ-80+PP-3 (VBN made) 
+          (NP/NP-SBJ-80 0)
+          (+PP-3 (TO to) 
+            (NP (DT the) (NNP Souper) (NNP Combo) (NN product) )))))
+
+This is not all that different, in that /NP-SBJ-80+PP-3 is essentially
+just /[NP-SBJ-80/PP-3].  The new point is just that if the NP-SBJ
+originated in subject position, then we'd have only +PP-3 inside the
+verb phrase, with no /NP-SBJ.  We now have a way to express that.
+
+Note that if we flatten the above, so that everything depends on the verb,
+we get
+
+    NP-80/PP-3 AUX AUX V NP/NP-80 +PP-3
+   
+In both flattened and unflattened cases, the + effectively indicates
+that the +PP-3 is not assigned a theta-role by its surface parent (the
+verb), even though the verb has to licence its appearance there.
+Indeed, even if the structure had originally appeared in the above
+flat form, I would still have wanted to write +PP-3 for this reason.
+Another advantage is that all cases arise from an edit operation that
+adds /PP to one constituent and adds +PP to another (or just inserts
++PP freely).
+
+The same is even true if we move the entire constituent but don't
+change its parent, e.g.,
+    NP V NP/NP-1 PP +NP-1
+since we don't want NP-1 to get its theta role twice (as two different
+kids of V).  It should get its theta role only in the first condition.
+Note that the Treebank annotation doesn't generally allow us to conclude
+that this movement has happened: such a construction would generally look 
+like
+    NP V PP NP
+in the Treebank.
+
+The rule is that an indexed constituent is marked with + unless it
+asymmetrically c-commands its trace -- that is, unless it matches
+a sibling that constains something other than the trace.  
+
+But perhaps the rule should have something to do with headedness, in
+light of the remarks about theta roles above, which I interpret as
+meaning dependencies.  If the structure has been flattened, then the
+asymmetric c-command definition does apply.  For consider all
+the possiblities for LCA(you, your trace):
+    you: then you dominate your trace, which shouldn't happen
+           (we fix those cases where it does, namely the Treebank's funny
+              treatment of parenthetical "he says")
+    your trace: then your trace dominates you, which shouldn't happen
+    your parent: then either
+        (1) you're siblings with your trace, so you c-command it only 
+              symmetrically, and get marked with +.  That's good because
+              you have the same parent.  
+        (2) you asymmetrically c-command your trace, so you don't get marked
+              with +.  That's good because you have different parents.
+    your grandparent or higher: then you don't c-command your trace at all, and
+      get marked with +, which is good because you are merely extraposed and
+      must be propagated up as a "knob" until you do c-command your trace
+    
+In that case, the subjects of passives would be marked with +, because
+they haven't changed heads -- the c-command is symmetric in the
+flattened case.  But we wouldn't use + for borderline cases where we
+passivize out of some subconstituent: "??Sara was taken a liking to by
+the teacher," ""??Bill was kept tabs on," and "*Bill was thought that
+Mary liked."  These would still be regarded as movement, and they'd be
+candidates for multiple theta roles, I guess, although I suspect that
+to the extent that these items are grammatical in the first place,
+they're still not constrained -- just about anything can be a passive
+subject!  (Maybe the reason they're not grammatical is that they'd
+expect to get a theta role in subj position if they were, and the
+passive verb isn't capable of assigning one.)
+
+I suspect that A+B only occurs if A is a verbal category, such as VP
+or S or (in the flattened structure) V.  (Nominalizations probably
+don't qualify here: "A group departed that included several
+professors," "??Any group's departure that includes several
+professors.")
+
+Note the possibility of examples like this made-up one:
+
+    (NP (NP the stocks) 
+        (SBAR (WHNP-1 that) 
+              (S/NP-1 (NP/PP-2 enthusiasm) 
+                      (VP+PP-2/NP-1 (VBD ran) 
+				    (ADJP-PRD (JJS highest))
+				    (PP-2/NP-1 (P for) (NP/NP-1 0)) 
+				    (NP-TMP this week)))))
+
+Here, PP-2/NP-1 exports both a knob and a slash, yielding +PP-2 and
+/NP-1 on the VP.  We might think that the PP-2/NP-1 should travel
+together as a funny-shaped knob, giving VP+[PP-2/NP-1].  I can't
+imagine what this analysis would predict differently, however.  We
+might expect that PP-2/NP-1 would have to be matched by /(PP-2/NP-1),
+but that's not true in the above example.  Or we might expect that the
+NP-1 part would have to be filled first, but that's not true in the
+above example either: in fact the above example needs a rule to
+combine /PP-2 and +[PP-2/NP-1] into /NP-1, rather like CCG
+composition.  Or we could even try to predict the reverse, that 
+the PP-2 part would have to be filled first, but I don't think that's
+so either -- there might be other reasons to extract from the 
+PP within the parent VP, as in 
+
+              (S (NP/PP-2 investors' enthusiasm)    <-- but not *investors' spirits
+                 (VP+PP-2 (VP+PP-2/NP-1 (VP+PP-2/NP-1 (VBD ran) 
+		                                      (ADJP-PRD (JJ high))
+			                              (PP-2/NP-1 (P for) (NP/NP-1 0)) 
+                                        ,
+                                        and
+                                        (VP/NP-1 eventually damaged)
+                                        ,))
+                          (NP-1 the very stocks that had been recommended by the magazine)
+                       
+The above example shows a funny property of knobs: because they're just
+sitting in the middle of a constituent, they don't conjoin in the
+usual way.  Similarly, "The factory floor was nearly bare, and
+dustiest WHERE IT WAS BAREST."  "The factory floor was dusty WHERE IT
+WAS BARE, and looked like it hadn't been walked on for years."  
+
+   But wait - for extraposition, they do have to match in conjunction:
+   "It is possible that John is happy, and certain that he is
+   content."  The first SBAR cannot be present without the second.
+   This is basically a distributed reading of "possible" that gives
+   two sentences.  Is the difference that it's extraposition, or is it
+   something else?  
+
+A related case is how we might show the successive transformations
+giving tough-movement.  (This is not the Treebank analysis, which puts
+an operator into the SBAR and attaches it to "tough."  That analysis
+is lacking because it makes it difficult to see why "this boat" is the
+object of "row.")  
+
+    For John to row this boat is tough.
+    --> It is tough for John to row this boat.
+    --> This boat is tough for John to row.
+
+    (S (SBAR/SBAR-2+NP-SBJ-1 this boat)   
+       (VP+SBAR-2/NP-1 (VBZ is)
+           (ADJP-PRD tough)
+           (SBAR-2/NP-1 (IN for)
+			(S/NP-1 (NP-SBJ John)
+				(VP/NP-1 (TO to)
+					 (VB row)
+					 (NP/NP-1 0))))))
+
+    This analysis bears a close relation to a particular CCG-style
+    analysis, in which "this boat" gets category S/(S/NP) through
+    non-harmonic type-raising, and "is tough" takes an S in subject
+    position:
+
+          (SBAR/(SBAR/NP) this boat) (S\S is tough) (SBAR/NP for John to row)
+          (S/(SBAR/NP) this boat is tough)          (SBAR/NP for John to row)
+
+    Really the CCG analysis is equivalent to a version where "for John
+    to row" attaches higher.  To bury it inside the VP, we need +, which
+    CCG doesn't have.  Hence CCG would have trouble with 
+    "this boat is tougher for John to row than it used to be,"
+    or "this boat has been tough for John to row these days."
+
+    The new analysis (or its CCG version) predicts that tough movement
+    should be possible for ANY predicate that can take a sentential
+    subject.  I think that's roughly true, but I'm not sure:  
+
+       "Slime is disgusting for John to eat."  
+       "?Slime would be surprising for John to eat."  
+       "?Slime would be surprising to eat."     but * on the reading "surprising to me for anyone to eat"
+       "Slime would be surprising to find in one's bed."
+
+    But there may be stronger-than-usual island constraints for
+    the NP extraction.  "Green cheese would be ??surprising/?easy for
+    the earth to be made of."  "*This rock is possible that John
+    lifted."  (These are fine with no NP movement, or with wh-movement
+    of the NP.)
+
+    Oh - non-adjectival examples suggest it's NOT true anyway:
+    
+       "For John to eat bricks would astonish me."
+       "It would astonish me for John to eat bricks."
+       "*Bricks would astonish me for John to eat."
+
+    So the adjectives really do control it ... of course, we could say
+    that the SBAR/NP extraposes into ADJP, and that it's easier to do this
+    kind of extraction from an ADJP than from a VP ...
+
+A funny case for knobs:
+
+   VP = draw t_i and send pictures_i to us
+
+   which Debbie claims people often say, while agreeing that it feels
+   ungrammatical.  (She has a parallel example that Cathy wrote in the
+   Amherst Alumni newsletter -- contains the word endeavor.)  I
+   suppose it gets slighly better (but not much!) if "to us" is replaced by
+   something more adjuncty:
+
+      he killed and grieved over the eagle daily
+
+   This would presumably be parsed as 
+
+      (VP (VP/NP-1 draw) and (VP+NP-1 send (NP-1 pictures) to us))
+
+   so that we get a VP by conjoining two VPs, where part of one
+   VP has been extraposed into the other VP.  Note that this knob,
+   "pictures," gets theta roles in both positions.  
+
+   This analysis can be extended, of course, to the "normal"
+   right-node-raising cases.  But I wouldn't like to encourage it, I
+   don't think.
+
+Parasitic gaps:
+
+      (WHNP which papers_i) (SQ did you (VP file t_i (PP without (S-NOM PRO reading_i))))
+
+   turns into 
+ 
+      (WHNP/NP-1 which papers) (SQ/NP-1 did you (VP/NP-1 file NP-1/NP-1 (PP/NP-1 without (S-NOM/NP-1 PRO (VP/NP-1 reading)))))
+
+   (Is this handled correctly by current scripts?  Probably -- it's
+   basically the same slash unification mechanism as in conjunction.)
+
+
+Maybe think of oblique arguments as involving knobs:
+
+   (NP the apple) was devoured (PP+NP by (NP Sara))
+   I want (S+NP (NP Sara) to devour more apples)
+
+   
+
+   That is, "Sara" is simultaneously the object of "by" and the subject
+   of "devour."  Just as in "I want Sara to devour apples," where is
+   is the object of "want" and the subject of "devour."
+
+----------------------------------------------------------------------
+
+INTERESTING EXAMPLES
+--------------------
+
+Some examples of the basic phenomenon of extraposition of a modifier
+or appositive out of subject position.  In some cases, like the third,
+the whole subject (which is some kind of S) may be extraposed and
+replaced by an expletive.  In the fourth and fifth cases, the
+extraposition isn't actually out of subject position, but rather out
+of an operator that controls subject position, or an NP modified by an
+operator that controls object position.
+
+       (NP-SBJ 
+	 (NP (NNS Areas) )
+	 (PP (IN of) 
+	   (NP (DT the) (NN factory) ))
+	 (SBAR (-NONE- *ICH*-2) ))
+       (VP (VBD were) 
+	 (ADJP-PRD (RB particularly) (JJ dusty) )
+	 (SBAR-2 
+	   (WHADVP-1 (WRB where) )
+	   (S 
+	     (NP-SBJ-8 (DT the) (NN crocidolite) )
+	     (VP (VBD was) 
+	       (VP (VBN used) 
+		 (NP (-NONE- *-8) )
+		 (ADVP-LOC (-NONE- *T*-1) ))))))
+
+
+      (NP-SBJ 
+        (NP 
+          (NP (NNP Time) (POS 's) )
+          (NN ad) (NN rate) )
+        (PP (-NONE- *ICH*-2) ))
+      (VP (MD will) 
+        (VP (VB be) 
+          (ADVP (RB effectively) )
+          (ADJP-PRD 
+            (NP-ADV (CD 7.5) (NN %) )
+            (JJR higher) )
+          (PP-2 (IN per) 
+            (NP (NN subscriber) )))))
+
+
+      (NP-SBJ 
+	(NP (PRP It) )
+	(SBAR (-NONE- *EXP*-3) ))
+      (VP (VBZ is) 
+	(ADJP-PRD (JJ possible) )
+	(, ,) 
+	(PP (IN of) 
+	  (NP (NN course) ))
+	(, ,) 
+	(SBAR-3 (IN that) ...))
+
+
+
+      (WHNP-41 
+        (WHNP (WP What) )
+        (PP (-NONE- *ICH*-1) ))
+      (S 
+        (NP-SBJ (-NONE- *T*-41) )
+        (VP (VBZ 's) 
+          (ADJP-PRD (RB so) (JJ wild) )
+          (PP-1 (IN about) 
+            (NP 
+              (NP (DT the) (NNS funds) (POS ') )
+              (NN frenzy) ))
+          (ADVP-TMP (RB right) (RB now) ))))
+
+
+      (NP-SBJ 
+	(NP 
+	  (NP (DT the) (NN enthusiasm) )
+	  (PP (-NONE- *ICH*-2) ))
+	(SBAR 
+	  (WHNP-1 (-NONE- 0) )
+	  (S 
+	    (NP-SBJ (NNS investors) )
+	    (VP (VBD showed) 
+	      (NP (-NONE- *T*-1) )
+	      (PP-2 (IN for) 
+		(NP (NNS stocks) ))
+
+    (NP-SBJ 
+      (NP (DT An) (RB entirely) (JJ new) (NN band) )
+      (SBAR (-NONE- *ICH*-2) ))
+    (VP (VBZ rings) 
+      (NP-TMP (NN today) )
+      (PP-LOC (IN at) 
+        (NP (JJ Great) (NNP Torrington) ))
+      (, ,) 
+      (SBAR-2 
+        (WHNP-1 
+          (NP (JJ several) )
+          (WHPP (IN of) 
+            (WHNP (WP whom) )))
+        (S 
+          (NP-SBJ (-NONE- *T*-1) )
+          (VP (VBP are) 
+            (NP-PRD 
+              (NP (NNS members) )
+              (PP (IN of) 
+                (NP (DT the) (NN congregation) )))))))
+
+
+      (NP-SBJ 
+        (NP 
+          (QP (DT A) (NN total) (IN of) (CD 139) )
+          (NNS companies) )
+        (ADJP (-NONE- *ICH*-1) ))
+      (VP (VBD raised) 
+        (NP (NNS dividends) )
+        (PP-TMP (IN in) 
+          (NP (NNP October) ))
+        (, ,) 
+        (ADJP-1 (RB basically) (JJ unchanged) 
+          (PP (IN from) 
+            (NP 
+              (NP (CD 138) )
+              (ADVP-TMP 
+                (NP (DT a) (NN year) )
+                (RB ago) ))))))
+
+ 
+      (NP-SBJ 
+	(NP 
+	  (NP (DT a) (NN scene) )
+	  (PP (IN of) 
+	    (NP (NN devastation) )))
+	(NP (-NONE- *ICH*-1) ))
+      (VP (VBZ emerges) (: :) 
+	(NP-1 
+	  (NP 
+	    (NP (DT a) (NN freeway) )
+	    (VP (VBN crumbled) 
+	      (NP (-NONE- *) )
+	      (PP-CLR (IN into) 
+		(NP (DT a) (JJ concrete) (NN sandwich) ))))
+	  (, ,) 
+	  (NP 
+	    (NP (VBZ hoses) )
+	    (VP (VBG pumping) 
+	      (NP (NN water) )
+	      (PP-DIR (IN into) 
+		(NP (JJ once-fashionable) (NNS apartments) ))))
+	  (, ,) 
+	  (NP (VBN abandoned) (NNS autos) )))
+
+
+Passivization examples like the one I started with:
+
+      (NP-SBJ-161 
+        (NP (RB Much) (RBR less) 
+          (-LRB- -LCB-)
+          (NN index-arbitrage) (NN activity) 
+          (-RRB- -RCB-) )
+        (PP (-NONE- *ICH*-1) ))
+      (VP (VBZ is) 
+        (VP (VBN done) 
+          (NP (-NONE- *-161) )
+          (PP-LOC (IN over) 
+            (NP (RB here) ))
+          (PP-1 (IN than) 
+            (PP-LOC (IN in) 
+              (NP (DT the) (NNP U.S.) )))))
+
+    (NP-SBJ-2 
+      (NP (JJ Dark) (NNS hints) )
+      (SBAR (-NONE- *ICH*-1) ))
+    (VP (MD would) 
+      (VP (VB be) 
+        (VP (VBN raised) 
+          (NP (-NONE- *-2) )
+          (SBAR-1 (IN that) 
+            (S 
+              (NP-SBJ 
+                (NP (NNS parts) )
+                (PP (IN of) 
+                  (NP (DT the) (NN administration) )))
+              (VP (VBP hope) 
+                (SBAR (-NONE- 0) 
+                  (S 
+                    (NP-SBJ (NNP Mr.) (NNP Gorbachev) )
+                    (VP (MD would) 
+                      (VP (VB fail) ))))))))))
+
+
+The following shows that the problem can't be solved just by
+eliminating VP level, because the +PP is propagated down through TWO
+lexical verbs.  (Interestingly, the /PP is also propagated down
+through two lexical nouns.)  
+
+   It would still be possible to use a solution where PP-5 is assumed
+   to attach at a higher level where it would c-command *ICH*-5; that
+   would be blocked by a version to which we'd added "in coming years"
+   (which sounds fine).  Some such examples are shown in a moment.
+
+        Few insurers have announced 
+	(WHNP-3                                                  (WHNP-3/PP-5                                       
+	  (WHNP (WDT what) (NN amount) )		           (WHNP/PP-5 (WDT what) (NN amount) )           
+	  (PP (IN of) 					           (PP/PP-5 (IN of)                              
+	    (NP 					             (NP/PP-5                                    
+	      (NP (NNS losses) )			               (NP (NNS losses) )                        
+	      (PP (-NONE- *ICH*-5) ))))			               (PP/PP-5 0))))                            
+	(S 						         (S/NP-3+PP-5                                    
+	  (NP-SBJ-1 (PRP they) )			           (NP-SBJ-1 (PRP they) )                        
+	  (VP (VBP expect) 				           (VP\NP-SBJ-1/NP-3+PP-5 (VBP expect)           
+	    (S 						             (S\NP-SBJ-1/NP-3+PP-5                       
+	      (NP-SBJ (-NONE- *-1) )			               (NP-SBJ\NP-SBJ-1 0)                       
+	      (VP (TO to) 				               (VP/NP-3+PP-5 (TO to)                     
+		(VP (VB see) 				                 (VP/NP-3+PP-5 (VB see)                  
+		  (NP (-NONE- *T*-3) )			                   (NP/NP-3 0)                           
+		  (PP-5 (IN from) 			                   (PP-5 (IN from)                       
+		    (NP (DT the) (NN earthquake) )))))))                     (NP (DT the) (NN earthquake) )))))))
+
+
+
+
+These examples show that we can't solve the problem by attaching
+the extraposed constituent at a higher level, at least not without
+moving other material too!  The second example is remarkable for
+doing such extraposition twice -- a PP is extraposed from the subject,
+and an appositive NP is extraposed from inside that PP.
+
+	( (S 
+	    (NP-SBJ-1 
+	      (NP (DT A) (NN hearing) )
+	      (PP (-NONE- *ICH*-2) ))
+	    (VP (VBZ is) 
+	      (VP (VBN scheduled) 
+		(NP (-NONE- *-1) )
+		(PP-2 (IN on) 
+		  (NP (DT the) (NN issue) ))
+		(NP-TMP (NN today) )))
+
+	    (. .) ))
+
+	( (S 
+	    (NP-SBJ-1 
+	      (NP (NN Work) )
+	      (PP (-NONE- *ICH*-2) ))
+	    (VP (VBD was) 
+	      (VP (VBN begun) 
+		(NP (-NONE- *-1) )
+		(PP-2 (IN on) 
+		  (NP 
+		    (NP (JJ single) (NN family) (NNS homes) )
+		    (PRN (: --) 
+		      (NP 
+			(NP (DT the) (NN core) )
+			(PP (IN of) 
+			  (NP (DT the) (NN housing) (NN market) )))
+		      (: --) )))
+		(PP (IN at) 
+		  (NP 
+		    (NP 
+		      (NP (DT an) (JJ annual) (NN rate) )
+		      (PP (IN of) 
+			(NP (CD 971,000) )))
+		    (NP (-NONE- *ICH*-3) )))
+		(PP-TMP (IN in) 
+		  (NP (NNP September) ))
+		(, ,) 
+		(NP-3 
+		  (NP (DT a) (NN drop) )
+		  (PP (IN of) 
+		    (NP (CD 2.1) (NN %) ))
+		  (PP-TMP (IN from) 
+		    (NP (DT the) (JJ previous) (NN month) )))))
+	    (. .) ))
+
+
+
+
+It should be noted that some *ICH*'s are c-commanded properly,
+because they're extracted from object position.  Of course,
+we still want to mark these with +.
+
+                  (NP-SBJ (EX there) )
+                  (VP (VBP are) 
+                    (NP-PRD 
+                      (NP (JJR more) (NNS risks) )
+                      (PP (IN for) 
+                        (NP (DT the) (NN pound) ))
+                      (SBAR (-NONE- *ICH*-4) ))
+                    (PP-LOC (IN under) 
+                      (NP (JJ Major) ))
+                    (SBAR-4 (IN than) 
+                      (S 
+                        (NP-SBJ (EX there) )
+                        (VP (VBD were) 
+                          (NP-PRD (-NONE- *?*) )
+                          (PP-LOC (IN under) 
+                            (NP (NNP Lawson) ))))))
+
+
+                (S 
+                  (NP-SBJ (PRP we) )
+                  (VP (MD can) 
+                    (VP (VB bring) 
+                      (NP 
+                        (NP (DT the) (NN cost) )
+                        (PP (-NONE- *ICH*-2) ))
+                      (PRT (RP down) )
+                      (PP-2 (IN of) 
+                        (NP (DT these) (NNS systems) ))
+                      (PP-EXT (IN by) 
+                        (NP 
+                          (NP 
+                            (QP (CD 30) (NN %) (TO to) (CD 40) )
+                            (NN %) )
+                          (NP-ADV (DT a) (NN year) ))))))
+
+This one is interesting for extracting two ICH's in a row.  
+
+( (S 
+    (NP-SBJ-3 (NNS Banks) )
+    (ADVP (RB also) )
+    (VP (VBP want) 
+      (S 
+        (NP-SBJ-6 (-NONE- *-3) )
+        (VP (TO to) 
+          (VP (VB be) 
+            (ADJP-PRD (JJ able) 
+              (S 
+                (NP-SBJ (-NONE- *-6) )
+                (VP (TO to) 
+                  (VP (VB call) 
+                    (NP 
+                      (NP (NN someone) )
+                      (SBAR 
+                        (WHNP-5 (-NONE- 0) )
+                        (S (-NONE- *ICH*-4) ))
+                      (NP (-NONE- *ICH*-1) ))
+                    (PP-MNR (IN on) 
+                      (NP (DT the) (NN telephone) ))
+                    (S-4 
+                      (NP-SBJ (-NONE- *T*-5) )
+                      (VP (TO to) 
+                        (VP (VB fix) 
+                          (NP 
+                            (NP (DT a) (NN problem) )
+                            (PP (IN with) 
+                              (NP 
+                                (NP (DT a) (NN deal) )
+                                (SBAR 
+                                  (WHNP-2 (WDT that) )
+                                  (S 
+                                    (NP-SBJ (-NONE- *T*-2) )
+                                    (VP (VBZ goes) 
+                                      (ADJP-PRD (JJ bad) ))))))))))
+                    (: --) 
+                    (NP-1 
+                      (NP (RB preferably) (NN someone) )
+                      (ADJP (JJ other) 
+                        (PP (IN than) 
+                          (NP (DT a) (NN union) (NN leader) ))))))))))))
+    (. .) ))
+
+Also amusing for its lots of traces.
+
+    (SBARQ-4 
+      (WHADVP-1 (WRB Why) )
+      (SQ (VBP do) 
+        (NP-SBJ (NNS people) )
+        (VP (VB play) 
+          (NP (DT the) (NN lottery) )
+          (SBAR-TMP 
+            (WHADVP-2 (WRB when) )
+            (S 
+              (NP-SBJ 
+                (NP (DT the) (NNS odds) )
+                (PP (-NONE- *ICH*-3) ))
+              (VP (VBP are) 
+                (ADJP-PRD (JJ great) )
+                (PP-3 (IN against) 
+                  (NP (PRP them) ))
+                (ADVP-TMP (-NONE- *T*-2) ))))
+          (ADVP-PRP (-NONE- *T*-1) )))
+      (. ?) )
+

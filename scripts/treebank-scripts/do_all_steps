@@ -1,0 +1,16 @@
+#!/bin/tcsh
+
+set ORIGPATH=../../../data/PTBnum/
+set TGTPATH=../corpus/
+
+#cat newmarked.mrk newmarked_coord.mrk | sort > newmarked_all.mrk.tmp
+foreach i (`echo $ORIGPATH`WSJ*.orig) 
+    set j=`echo $i|sed "s/[^\/]*\///g"` 
+    echo $j
+    cat $i | commentsentids | fixsay | markargs | articulate -c | normcase -i | discardbugs -c newmarked.bug | headify -c newmarked.mrk | headall -l | mergesentidssents > $TGTPATH$j.head
+end
+#rm newmarked_all.mrk.tmp
+
+
+
+

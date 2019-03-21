@@ -1,0 +1,38 @@
+{
+    "dataset_reader": {
+        "type": "conllu_pos"
+    },
+    "train_data_path": "data/pos/en_ewt-ud-train.conllu",
+    "validation_data_path": "data/pos/en_ewt-ud-dev.conllu",
+    "test_data_path": "data/pos/en_ewt-ud-test.conllu",
+    "evaluate_on_test" : true,
+    "model": {
+        "type": "tagger",
+        "contextualizer": {
+            "type": "elmo_contextualizer",
+            "batch_size": 80,
+            "elmo": {
+                "weight_file": "contextualizers/elmo_original_ptb_10/elmo_original_ptb_10_weights.hdf5",
+                "options_file": "contextualizers/elmo_original_ptb_10/elmo_original_ptb_10_options.json",
+                "num_output_representations": 1,
+                "dropout": 0.0,
+                "scalar_mix_parameters": [1.0, 0.0, 0.0]
+            }
+        },
+        "token_representation_dim": 1024
+    },
+    "iterator": {
+        "type": "basic",
+        "batch_size" : 80
+    },
+    "trainer": {
+        "num_epochs": 50,
+        "patience": 3,
+        "cuda_device": 0,
+        "validation_metric": "+accuracy",
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        }
+    }
+}

@@ -1,0 +1,31 @@
+#!/usr/local/bin/perl
+
+# Author: Jason Eisner, University of Pennsylvania
+
+# Usage: canonicalize [files ...]
+#
+# Filters parses that are in the format that "oneline" outputs.
+# The effect is to "canonicalize" the nonterminal tags, using the
+# canonicalizetag fuction in canon.inc.  This strips certain 
+# suffixes that we may not care about.  We also canonicalize
+# the several varieties of null lexemes.
+
+require("stamp.inc"); &stamp;                 # modify $0 and @INC, and print timestamp
+require("canon.inc");                         # this gives us canonicalizetag 
+
+die "$0: bad command line flags" if @ARGV && $ARGV[0] =~ /^-./;
+
+$token = "[^ ()]+";  # matches tokens: anything but parens or whitespace can be a token character
+
+while (<>) {      # for all sentences
+  s/^(\S+:[0-9]+:\t)?//, $location = $&;
+  unless (/^\#/) {    # unless a comment
+    $tags += s/\(($token)/"(".&canonicalizetag($1)/geo; # look for (FOO and replace the FOO part by its canonicalization
+    $nulls += s/ (\*$token)/" ".&canonicalizetag($1)/geo; # look for lexeme starting with * (i.e., a lexical null) and replace it by its canonicalization, e.g., strip off coreference index
+  }
+  print "$location$_";
+}
+print STDERR "$0: $tags tags and $nulls lexical nulls canonicalized\n";
+
+
+
