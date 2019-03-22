@@ -17,8 +17,6 @@ from contexteval.data.dataset_readers.constituency_ancestor_prediction import (
     ConstituencyAncestorPredictionDatasetReader)
 from contexteval.data.dataset_readers.coreference_arc_prediction import (
     CoreferenceArcPredictionDatasetReader)
-from contexteval.data.dataset_readers.dataset_reader_with_lm import (
-    DatasetReaderWithLM)
 from contexteval.data.dataset_readers.event_factuality import (
     EventFactualityDatasetReader)
 from contexteval.data.dataset_readers.grammatical_error_correction import (
@@ -45,7 +43,6 @@ __all__ = ["AdpositionSupersenseTaggingDatasetReader",
            "ConllXPOSDatasetReader",
            "ConstituencyAncestorPredictionDatasetReader",
            "CoreferenceArcPredictionDatasetReader",
-           "DatasetReaderWithLM",
            "DependencyArcPredictionDatasetReader",
            "EventFactualityDatasetReader",
            "GrammaticalErrorCorrectionDatasetReader",
