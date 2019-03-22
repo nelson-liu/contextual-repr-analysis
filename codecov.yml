@@ -13,4 +13,3 @@ comment: false
 ignore:
   - "scripts"
   - "tests"
-  - "dependencies"

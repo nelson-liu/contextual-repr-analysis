@@ -7,10 +7,6 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt -U
 
-# Install dependencies
-COPY dependencies/ dependencies
-RUN cd dependencies/calypso && make install
-
 COPY contexteval/ contexteval/
 COPY experiment_configs/ experiment_configs/
 COPY scripts/ scripts/

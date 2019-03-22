@@ -1,9 +1,6 @@
 # NLP building blocks
 git+git://github.com/allenai/allennlp.git@d78daa44cc90b3ea9090fe6c24e788ebafe84496
 
-# Cython for Calypso (TODO: remove when Calypso is properly packaged)
-cython
-
 # CoNLL-U format parsing
 conllu==0.11
 
