@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/nelson-liu/contextual-repr-analysis.svg?branch=master)](https://travis-ci.org/nelson-liu/contextual-repr-analysis)
+[![codecov](https://codecov.io/gh/nelson-liu/contextual-repr-analysis/branch/master/graph/badge.svg)](https://codecov.io/gh/nelson-liu/contextual-repr-analysis)
+
 # contextual-repr-analysis
 
 A toolkit for evaluating the linguistic knowledge and transferability of contextual word representations. Code for [_Linguistic Knowledge and Transferability of Contextual Representations_](http://nelsonliu.me/papers/liu+gardner+belinkov+peters+smith.naacl2019.pdf), to appear at NAACL 2019.
