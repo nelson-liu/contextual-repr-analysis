@@ -1,5 +1,7 @@
 # NLP building blocks
 git+git://github.com/allenai/allennlp.git@d78daa44cc90b3ea9090fe6c24e788ebafe84496
+overrides=1.9
+scikit-learn==0.20.3
 
 # CoNLL-U format parsing
 conllu==0.11
